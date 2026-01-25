@@ -26,7 +26,10 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
 
           paths.normalizePath(maybeBasePath)
 
-          maybeBasePath = paths.expandTilde(maybeBasePath)
+          if maybeBasePath.string[0] == '~':
+            maybeBasePath = paths.expandTilde(maybeBasePath)
+          elif not paths.isAbsolute(maybeBasePath):
+            maybeBasePath = paths.absolutePath(maybeBasePath)
 
           if maybeBasePath.dirExists():
             maybeConfig.basePath = maybeBasePath
