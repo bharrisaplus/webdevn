@@ -3,8 +3,8 @@ import std/[paths, os, parseopt, dirs, sequtils, strutils, strformat, files, net
 import type_defs, utils
 
 
-proc build_cli_config*(osCliParams: seq[string]): (webdevnConfig, seq[string]) =
-  var parseProblems: seq[string]
+proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
+  var cliProblems: seq[string]
   var maybeConfig = webdevnConfig(
     basePath: paths.getCurrentDir(),
     listenPort: 0,
@@ -39,11 +39,11 @@ proc build_cli_config*(osCliParams: seq[string]): (webdevnConfig, seq[string]) =
               if maybeListenPort > 0 and maybeListenPort <= 65535:
                 maybeConfig.listenPort = maybeListenPort
               else:
-                parseProblems.add("Issue with '-p/--port' ~> ValueError: Should be 0 .. 65535")
+                cliProblems.add("Issue with '-p/--port' ~> ValueError: Should be 0 .. 65535")
             except ValueError as valE:
-              parseProblems.add(&"Issue with '-p/--port' ~> {valE.name}: {valE.msg}")
+              cliProblems.add(&"Issue with '-p/--port' ~> {valE.name}: {valE.msg}")
           else:
-            parseProblems.add("Issue with '-p/--port' ~> ValueError: Should be integer")
+            cliProblems.add("Issue with '-p/--port' ~> ValueError: Should be integer")
 
         of "i", "index":
           maybeIndexFile = Path(optinput)
@@ -61,7 +61,7 @@ proc build_cli_config*(osCliParams: seq[string]): (webdevnConfig, seq[string]) =
     maybeConfig.indexFile = maybeIndexFile
   else:
     if not fileExists(maybeConfig.basePath / maybeConfig.indexFile):
-      parseProblems.add(&"Issue with '-i/--index' ~> IOError: Index file [{maybeIndexFile},{maybeConfig.indexFile}] index not found within directory"
+      cliProblems.add(&"Issue with '-i/--index' ~> IOError: Index file [{maybeIndexFile},{maybeConfig.indexFile}] index not found within directory"
       )
 
   # Check that port is available
@@ -70,7 +70,7 @@ proc build_cli_config*(osCliParams: seq[string]): (webdevnConfig, seq[string]) =
     checkSocket = newSocket()
     checkSocket.bindAddr(maybeConfig.listenPort.Port)
   except OSError as osE:
-    parseProblems.add(&"Issue with '-p/--port' ~> {osE.name}: {osE.msg}")
+    cliProblems.add(&"Issue with '-p/--port' ~> {osE.name}: {osE.msg}")
   finally:
     checkSocket.close()
 
@@ -78,10 +78,10 @@ proc build_cli_config*(osCliParams: seq[string]): (webdevnConfig, seq[string]) =
   #
   if not maybeConfig.inSilence:
     print_config("Cli", maybeConfig)
-    print_issues("Cli", parseProblems)
+    print_issues("Cli", cliProblems)
 
-  return (maybeConfig, parseProblems)
+  return (maybeConfig, cliProblems)
 
 
 when isMainModule:
-  discard build_cli_config(commandLineParams())
+  discard config_from_cli(commandLineParams())
