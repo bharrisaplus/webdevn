@@ -1,4 +1,13 @@
-# import webdevn/[cli, localserver]
+import std/[os]
+import webdevn/[type_defs, cli, utils]
 
 when isMainModule:
-  echo "No webdevn happening here yet"
+  var webdevnIssues: seq[string]
+  let (webdevnCliConfig, cliIssues) = configFromCLi(commandLineParams())
+
+  if cliIssues.len > 0:
+    webdevnIssues.add(cliIssues)
+
+  if not webdevnCliConfig.inSilence:
+    print_config("Cli", webdevnCliConfig)
+    print_Issues("Cli", webdevnIssues)
