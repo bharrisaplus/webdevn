@@ -1,4 +1,4 @@
-import std/[paths, strformat]
+import std/[paths, strformat, files]
 
 import type_defs
 
@@ -24,3 +24,7 @@ proc print_issues* (title: string = "webdevn", stuff: seq[string]) =
       outputStr.add(&"  * {issue}\n")
 
   echo outputStr
+
+
+proc dir_contains_file* (maybeParent, maybeChild: Path): (bool) =
+  return fileExists(maybeParent / maybeChild)

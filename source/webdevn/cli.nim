@@ -1,6 +1,6 @@
-import std/[paths, parseopt, dirs, sequtils, strutils, strformat, files, net, nativesockets]
+import std/[paths, parseopt, dirs, sequtils, strutils, strformat, net, nativesockets]
 
-import type_defs
+import type_defs, utils
 
 
 proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
@@ -57,12 +57,12 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
 
   # Check for index file in the basePath
   #
-  if fileExists(maybeConfig.basePath / maybeIndexFile):
+  if dir_contains_file(maybeConfig.basePath, maybeIndexFile):
     maybeConfig.indexFile = maybeIndexFile
   else:
-    if not fileExists(maybeConfig.basePath / maybeConfig.indexFile):
-      cliProblems.add(&"Issue with '-i/--index' ~> IOError: Index file [{maybeIndexFile},{maybeConfig.indexFile}] index not found within directory"
-      )
+    if not dir_contains_file(maybeConfig.basePath, maybeConfig.indexFile):
+      let msg = "Index file [{maybeIndexFile},{maybeConfig.indexFile}] not found within directory"
+      cliProblems.add(&"Issue with '-i/--index' ~> IOError: {msg}")
 
   # Check that port is available
   #
