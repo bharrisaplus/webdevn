@@ -1,6 +1,6 @@
-import std/[paths, os, parseopt, dirs, sequtils, strutils, strformat, files, net, nativesockets]
+import std/[paths, parseopt, dirs, sequtils, strutils, strformat, files, net, nativesockets]
 
-import type_defs, utils
+import type_defs
 
 
 proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
@@ -74,14 +74,4 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
   finally:
     checkSocket.close()
 
-  # Output results
-  #
-  if not maybeConfig.inSilence:
-    print_config("Cli", maybeConfig)
-    print_issues("Cli", cliProblems)
-
   return (maybeConfig, cliProblems)
-
-
-when isMainModule:
-  discard config_from_cli(commandLineParams())
