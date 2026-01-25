@@ -1,3 +1,4 @@
+import std/os
 # Meta
 version = "0.0.0"
 author = "bharrisaplus"
@@ -22,3 +23,6 @@ binDir = "distribution"
 
 task hellon, "A task for greeting":
   echo "Hello nim"
+
+task test_cli, "Run spec for cli suite":
+  exec "nim r --hints:off spec/cli_spec.nim"
