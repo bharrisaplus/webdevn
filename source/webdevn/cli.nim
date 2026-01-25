@@ -1,39 +1,11 @@
 import std/[paths, os, parseopt, dirs, sequtils, strutils, strformat, files, net, nativesockets]
 
-type cliConfig = object
-  basePath: Path
-  listenPort: int
-  indexFile: Path
-  inSilence: bool
-  writeLog: bool
-
-proc print_cliConfig(thingy: cliConfig) =
-  var outputStr = "Cli Config:\n"
-
-  outputStr.add(&"  - basePath => '{thingy.basePath}'\n")
-  outputStr.add(&"  - listenPort => {thingy.listenPort}\n")
-  outputStr.add(&"  - indexFile => '{thingy.indexFile}'\n")
-  outputStr.add(&"  - inSilence => {thingy.inSilence}\n")
-  outputStr.add(&"  - writeLog => {thingy.writeLog}\n")
-
-  echo outputStr
+import type_defs, utils
 
 
-proc print_cliConfigIssues(stuff: seq[string]) =
-  var outputStr = &"Cli Issue(s) - [{stuff.len}]:\n"
-
-  if stuff.len == 0:
-    outputStr.add("  * No issues!\n")
-  else:
-    for issue in stuff:
-      outputStr.add(&"  * {issue}\n")
-
-  echo outputStr
-
-
-proc buildCliConfig*(osCliParams: seq[string]): (cliConfig, seq[string]) =
+proc build_cli_config*(osCliParams: seq[string]): (webdevnConfig, seq[string]) =
   var parseProblems: seq[string]
-  var maybeConfig = cliConfig(
+  var maybeConfig = webdevnConfig(
     basePath: paths.getCurrentDir(),
     listenPort: 0,
     indexFile: Path("index.html"),
@@ -105,11 +77,11 @@ proc buildCliConfig*(osCliParams: seq[string]): (cliConfig, seq[string]) =
   # Output results
   #
   if not maybeConfig.inSilence:
-    print_cliConfig(maybeConfig)
-    print_cliConfigIssues(parseProblems)
+    print_config("Cli", maybeConfig)
+    print_issues("Cli", parseProblems)
 
   return (maybeConfig, parseProblems)
 
 
 when isMainModule:
-  discard buildCliConfig(commandLineParams())
+  discard build_cli_config(commandLineParams())
