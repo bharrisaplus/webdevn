@@ -1,4 +1,4 @@
-import std/[strformat]
+import std/[paths, strformat]
 
 import type_defs
 
