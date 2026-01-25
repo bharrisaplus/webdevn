@@ -1,8 +1,8 @@
-import std/[paths]
+import std/[paths, net]
 
 type webdevnConfig* = object
   basePath*: Path
-  listenPort*: int
+  listenPort*: Port
   indexFile*: Path
   inSilence*: bool
   writeLog*: bool

@@ -7,7 +7,7 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
   var cliProblems: seq[string]
   var maybeConfig = webdevnConfig(
     basePath: paths.getCurrentDir(),
-    listenPort: 0,
+    listenPort: 0.Port,
     indexFile: Path("index.html"),
     inSilence: true,
     writeLog: false
@@ -37,7 +37,7 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
               var maybeListenPort = optinput.parseInt()
 
               if maybeListenPort > 0 and maybeListenPort <= 65535:
-                maybeConfig.listenPort = maybeListenPort
+                maybeConfig.listenPort = maybeListenPort.Port
               else:
                 cliProblems.add("Issue with '-p/--port' ~> ValueError: Should be 0 .. 65535")
             except ValueError as valE:
@@ -68,7 +68,7 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
   #
   try:
     checkSocket = newSocket()
-    checkSocket.bindAddr(maybeConfig.listenPort.Port)
+    checkSocket.bindAddr(maybeConfig.listenPort)
   except OSError as osE:
     cliProblems.add(&"Issue with '-p/--port' ~> {osE.name}: {osE.msg}")
   finally:
