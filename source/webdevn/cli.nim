@@ -55,8 +55,7 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
         of "l", "log":
           maybeConfig.writeLog = true
 
-  # Check for index file in the basePath
-  #
+
   if dir_contains_file(maybeConfig.basePath, maybeIndexFile):
     maybeConfig.indexFile = maybeIndexFile
   else:
@@ -64,7 +63,7 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
       let msg = &"Index file [{maybeIndexFile},{maybeConfig.indexFile}] not found within directory"
       cliProblems.add(&"Issue with '-i/--index' ~> IOError: {msg}")
 
-  # Check that port is available
+  # Check that port can be bound
   #
   try:
     checkSocket = newSocket()
