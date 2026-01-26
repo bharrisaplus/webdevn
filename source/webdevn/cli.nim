@@ -22,17 +22,18 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
     else: # cmdShortOption and cmdLongOption:
       case optarg: # A valid path is required
         of "d", "dir":
-          var maybeBasePath = Path(optinput)
+          if not optinput.isEmptyOrWhitespace():
+            var maybeBasePath = Path(optinput)
 
-          paths.normalizePath(maybeBasePath)
+            paths.normalizePath(maybeBasePath)
 
-          if maybeBasePath.string[0] == '~':
-            maybeBasePath = paths.expandTilde(maybeBasePath)
-          elif not paths.isAbsolute(maybeBasePath):
-            maybeBasePath = paths.absolutePath(maybeBasePath)
+            if maybeBasePath.string[0] == '~':
+              maybeBasePath = paths.expandTilde(maybeBasePath)
+            elif not paths.isAbsolute(maybeBasePath):
+              maybeBasePath = paths.absolutePath(maybeBasePath)
 
-          if maybeBasePath.dirExists():
-            maybeConfig.basePath = maybeBasePath
+            if maybeBasePath.dirExists():
+              maybeConfig.basePath = maybeBasePath
 
         of "p", "port": # Convert input to an int and verify within general port range
           if not optinput.isEmptyOrWhitespace() and optinput.allIt(it.isDigit()):
