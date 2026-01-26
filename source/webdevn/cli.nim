@@ -40,7 +40,10 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
               )
 
         of "p", "port": # Convert input to an int and verify within general port range
-          if not optinput.isEmptyOrWhitespace() and optinput.allIt(it.isDigit()):
+          if optinput.isEmptyOrWhitespace():
+            continue
+
+          if optinput.allIt(it.isDigit()):
             try:
               var maybeListenPort = optinput.parseInt()
 
@@ -51,7 +54,7 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
             except ValueError as valE:
               cliProblems.add(&"Issue with '-p/--port' ~> {valE.name}: {valE.msg}")
           else:
-            cliProblems.add("Issue with '-p/--port' ~> ValueError: Should be integer")
+            cliProblems.add("Issue with '-p/--port' ~> ValueError: Should be an integer")
 
         of "i", "index":
           maybeIndexFile = Path(optinput)
