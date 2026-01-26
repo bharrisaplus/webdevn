@@ -3,6 +3,6 @@ import std/[paths, net]
 type webdevnConfig* = object
   basePath*: Path
   listenPort*: Port
-  indexFile*: Path
+  indexFile*: string
   inSilence*: bool
   writeLog*: bool

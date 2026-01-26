@@ -26,5 +26,9 @@ proc print_issues* (title: string = "webdevn", stuff: seq[string]) =
   echo outputStr
 
 
-proc dir_contains_file* (maybeParent, maybeChild: Path): bool =
-  return fileExists(maybeParent / maybeChild)
+proc dir_contains_file* (maybeParent: Path, maybeChild: string): bool =
+  var maybeChildpath = Path(maybeChild)
+
+  paths.normalizePath(maybeChildpath)
+
+  return fileExists(maybeParent / maybeChildPath)

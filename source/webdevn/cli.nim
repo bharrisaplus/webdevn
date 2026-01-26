@@ -8,12 +8,12 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
   var maybeConfig = webdevnConfig(
     basePath: paths.getCurrentDir(),
     listenPort: 0.Port,
-    indexFile: Path("index.html"),
+    indexFile: "index.html",
     inSilence: true,
     writeLog: false
   )
 
-  var maybeIndexFile: Path
+  var maybeIndexFile: string
   var checkSocket: Socket
 
   for optkind, optarg, optinput in getopt(cmdline = osCliParams, shortNoVal = {'v', 'l'}, longNoVal = @["verbose", "log"]):
@@ -56,8 +56,7 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
             cliProblems.add("Issue with '-p/--port' ~> ValueError: Should be an integer")
 
         of "i", "index":
-          maybeIndexFile = Path(optinput)
-          paths.normalizePath(maybeIndexFile)
+          maybeIndexFile = optinput
 
         of "v", "verbose":
           maybeConfig.inSilence = false
@@ -66,7 +65,7 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
           maybeConfig.writeLog = true
 
 
-  if maybeIndexFile == Path("") or maybeIndexFile == maybeConfig.indexFile:
+  if maybeIndexFile == "" or maybeIndexFile == maybeConfig.indexFile:
     if not dir_contains_file(maybeConfig.basePath, maybeConfig.indexFile):
       cliProblems.add(
         &"Issue with '-i/--index' ~> IOError: Index file '{maybeConfig.indexFile}' not found within directory"
