@@ -18,7 +18,7 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
 
   for optkind, optarg, optinput in getopt(cmdline = osCliParams, shortNoVal = {'v', 'l'}, longNoVal = @["verbose", "log"]):
     if optkind == cmdArgument or optkind == cmdEnd:
-        continue
+      continue
     else: # cmdShortOption and cmdLongOption:
       case optarg: # A valid path is required
         of "d", "dir":
