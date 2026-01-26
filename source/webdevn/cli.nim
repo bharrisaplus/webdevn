@@ -19,12 +19,12 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
   for optkind, optarg, optinput in getopt(cmdline = osCliParams, shortNoVal = {'v', 'l'}, longNoVal = @["verbose", "log"]):
     if optkind == cmdArgument or optkind == cmdEnd:
       continue
-    else: # cmdShortOption and cmdLongOption:
+    else: # cmdShortOption and cmdLongOption
+      if optinput.isEmptyOrWhitespace() and optarg != "v" and optarg != "verbose" and optarg != "l" and optarg != "log":
+        continue
+
       case optarg: # A valid path is required
         of "d", "dir":
-          if optinput.isEmptyOrWhitespace():
-            continue
-
           var maybeBasePath = Path(optinput)
 
           paths.normalizePath(maybeBasePath)
@@ -42,9 +42,6 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
             )
 
         of "p", "port": # Convert input to an int and verify within general port range
-          if optinput.isEmptyOrWhitespace():
-            continue
-
           if optinput.allIt(it.isDigit()):
             try:
               var maybeListenPort = optinput.parseInt()
