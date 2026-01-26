@@ -3,6 +3,9 @@ import std/[unittest, paths, net]
 import ../source/webdevn/[cli]
 
 suite "Cli_BS":
+  let specPort = 0.Port
+  let specIndex = "index.html"
+
   test "Should have 1 issues if no arguments provided and no index.html present":
 
     var specCmdLine:seq[string]
@@ -28,22 +31,22 @@ suite "Cli_BS":
     check:
       outputCliIssues.len() == 0
       paths.isAbsolute(outputCliConfig.basePath)
-      outputCliConfig.listenPort == 0.Port
-      outputCliConfig.indexFile == Path("index.html")
+      outputCliConfig.listenPort == specPort
+      outputCliConfig.indexFile == specIndex
       outputCliConfig.inSilence
       not outputCliConfig.writeLog
 
       shortCliIssues.len() == 0
       paths.isAbsolute(shortCliConfig.basePath)
-      shortCliConfig.listenPort == 0.Port
-      shortCliConfig.indexFile == Path("index.html")
+      shortCliConfig.listenPort == specPort
+      shortCliConfig.indexFile == specIndex
       shortCliConfig.inSilence
       not shortCliConfig.writeLog
 
       longCliIssues.len() == 0
       paths.isAbsolute(longCliConfig.basePath)
-      longCliConfig.listenPort == 0.Port
-      longCliConfig.indexFile == Path("index.html")
+      longCliConfig.listenPort == specPort
+      longCliConfig.indexFile == specIndex
       longCliConfig.inSilence
       not longCliConfig.writeLog
     ]#
@@ -59,16 +62,16 @@ suite "Cli_BS":
     check:
       shortCliIssues.len() == 0
       paths.isAbsolute(shortCliConfig.basePath)
-      shortCliConfig.listenPort == 0.Port
-      shortCliConfig.indexFile == Path("index.html")
+      shortCliConfig.listenPort == specPort
+      shortCliConfig.indexFile == specIndex
       shortCliConfig.inSilence
       not shortCliConfig.writeLog
 
 
       longCliIssues.len() == 0
       paths.isAbsolute(longCliConfig.basePath)
-      longCliConfig.listenPort == 0.Port
-      longCliConfig.indexFile == Path("index.html")
+      longCliConfig.listenPort == specPort
+      longCliConfig.indexFile == specIndex
       longCliConfig.inSilence
       not longCliConfig.writeLog
 
@@ -84,16 +87,16 @@ suite "Cli_BS":
     check:
       shortCliIssues.len() == 0
       paths.isAbsolute(shortCliConfig.basePath)
-      shortCliConfig.listenPort == 0.Port
-      shortCliConfig.indexFile == Path("index.html")
+      shortCliConfig.listenPort == specPort
+      shortCliConfig.indexFile == specIndex
       shortCliConfig.inSilence
       not shortCliConfig.writeLog
 
 
       longCliIssues.len() == 0
       paths.isAbsolute(longCliConfig.basePath)
-      longCliConfig.listenPort == 0.Port
-      longCliConfig.indexFile == Path("index.html")
+      longCliConfig.listenPort == specPort
+      longCliConfig.indexFile == specIndex
       longCliConfig.inSilence
       not longCliConfig.writeLog
 
@@ -110,16 +113,16 @@ suite "Cli_BS":
     check:
       shortCliIssues.len() == 0
       paths.isAbsolute(shortCliConfig.basePath)
-      shortCliConfig.listenPort == 0.Port
-      shortCliConfig.indexFile == Path("index.html")
+      shortCliConfig.listenPort == specPort
+      shortCliConfig.indexFile == specIndex
       shortCliConfig.inSilence
       not shortCliConfig.writeLog
 
 
       longCliIssues.len() == 0
       paths.isAbsolute(longCliConfig.basePath)
-      longCliConfig.listenPort == 0.Port
-      longCliConfig.indexFile == Path("index.html")
+      longCliConfig.listenPort == specPort
+      longCliConfig.indexFile == specIndex
       longCliConfig.inSilence
       not longCliConfig.writeLog
 
@@ -161,7 +164,7 @@ suite "Cli_BS":
       shortCliIssues_2[0] == "Issue with '-p/--port' ~> ValueError: Should be 0 .. 65535"
 
 
-  test "Should have issue with non present index file":
+  test "Should have 1 issue with non present index file":
     let specShortCmdLine = @["-d:./spec/appa/has_no_index"]
     let specLongCmdLine = @["--dir", "./spec/appa/has_index_custom", "--index", "ustom.html",]
     let specMixedCmdLine = @["--dir", "./spec/appa/has_index_custom"]
