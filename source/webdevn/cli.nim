@@ -34,6 +34,10 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
 
             if maybeBasePath.dirExists():
               maybeConfig.basePath = maybeBasePath
+            else:
+              cliProblems.add(
+                &"Issue with '-d/--dir' ~> IOError: Could not find path '{maybeBasePath}'"
+              )
 
         of "p", "port": # Convert input to an int and verify within general port range
           if not optinput.isEmptyOrWhitespace() and optinput.allIt(it.isDigit()):
