@@ -22,22 +22,24 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
     else: # cmdShortOption and cmdLongOption:
       case optarg: # A valid path is required
         of "d", "dir":
-          if not optinput.isEmptyOrWhitespace():
-            var maybeBasePath = Path(optinput)
+          if optinput.isEmptyOrWhitespace():
+            continue
 
-            paths.normalizePath(maybeBasePath)
+          var maybeBasePath = Path(optinput)
 
-            if maybeBasePath.string[0] == '~':
-              maybeBasePath = paths.expandTilde(maybeBasePath)
-            elif not paths.isAbsolute(maybeBasePath):
-              maybeBasePath = paths.absolutePath(maybeBasePath)
+          paths.normalizePath(maybeBasePath)
 
-            if maybeBasePath.dirExists():
-              maybeConfig.basePath = maybeBasePath
-            else:
-              cliProblems.add(
-                &"Issue with '-d/--dir' ~> IOError: Could not find path '{maybeBasePath}'"
-              )
+          if maybeBasePath.string[0] == '~':
+            maybeBasePath = paths.expandTilde(maybeBasePath)
+          elif not paths.isAbsolute(maybeBasePath):
+            maybeBasePath = paths.absolutePath(maybeBasePath)
+
+          if maybeBasePath.dirExists():
+            maybeConfig.basePath = maybeBasePath
+          else:
+            cliProblems.add(
+              &"Issue with '-d/--dir' ~> IOError: Could not find path '{maybeBasePath}'"
+            )
 
         of "p", "port": # Convert input to an int and verify within general port range
           if optinput.isEmptyOrWhitespace():
