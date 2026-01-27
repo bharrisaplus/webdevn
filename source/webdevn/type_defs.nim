@@ -7,3 +7,13 @@ type webdevnConfig* = object
   indexFile* :string
   inSilence* :bool
   writeLog* :bool
+
+proc defaultWebdevnConfig* :webdevnConfig =
+  return webdevnConfig(
+    basePath: paths.getCurrentDir(),
+    listenPort: 0.Port,
+    indexFile: "index.html",
+    indexFileExt: "html",
+    inSilence: true,
+    writeLog: false
+  )
