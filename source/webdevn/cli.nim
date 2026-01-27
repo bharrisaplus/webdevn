@@ -74,6 +74,9 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
   else:
     if dir_contains_file(maybeConfig.basePath, maybeIndexFile):
       maybeConfig.indexFile = maybeIndexFile
+      maybeConfig.indexFileExt = splitFile(
+        Path(maybeIndexFile)
+      ).ext.toLowerAscii().strip(chars = {'.'})
     else:
       cliProblems.add(
         &"Issue with '-i/--index' ~> IOError: Index file '{maybeindexFile}' not found within directory"
