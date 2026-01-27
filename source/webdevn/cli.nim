@@ -1,4 +1,11 @@
-import std/[paths, parseopt, dirs, sequtils, strutils, strformat, net, nativesockets]
+from std/paths import Path, normalizePath, expandTilde, isAbsolute, absolutePath, splitFile
+from std/parseopt import getopt, cmdArgument, cmdEnd
+from std/dirs import dirExists
+from std/sequtils import allIt
+from std/strutils import isEmptyOrWhitespace, isDigit, parseInt, toLowerAscii, strip
+from std/strformat import `&`
+from std/net import Socket, newSocket, bindAddr, close
+from std/nativesockets import Port
 
 import type_defs, utils
 
@@ -27,12 +34,12 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
         of "d", "dir":
           var maybeBasePath = Path(optinput)
 
-          paths.normalizePath(maybeBasePath)
+          normalizePath(maybeBasePath)
 
           if maybeBasePath.string[0] == '~':
-            maybeBasePath = paths.expandTilde(maybeBasePath)
-          elif not paths.isAbsolute(maybeBasePath):
-            maybeBasePath = paths.absolutePath(maybeBasePath)
+            maybeBasePath = expandTilde(maybeBasePath)
+          elif not isAbsolute(maybeBasePath):
+            maybeBasePath = absolutePath(maybeBasePath)
 
           if maybeBasePath.dirExists():
             maybeConfig.basePath = maybeBasePath
