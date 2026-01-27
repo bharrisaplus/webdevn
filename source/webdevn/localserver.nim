@@ -5,6 +5,10 @@ from system import debugEcho
 
 from checksums/md5 import getMD5
 
+import type_defs
+
+
+let localServerMilieu = webdevnMilieu(runConf: defaultWebdevnConfig())
 
 when isMainModule:
   let m = newMimeTypes()
@@ -15,10 +19,6 @@ when isMainModule:
     "ETag": getMD5("Hello, World"),
   }
 
-  var defg = newHttpHeaders(otfHeaders & @{
-    "Server": "webdevn; nim/c",
-    "Cache-Control": "no-cache",
-    "Clear-Site-Data": "*"
-  })
+  var defg = newHttpHeaders(otfHeaders & localServerMilieu.baseHeaders)
 
   debugEcho(defg)

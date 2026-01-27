@@ -20,3 +20,11 @@ proc defaultWebdevnConfig* :webdevnConfig =
   )
 
 type headerBits* = seq[tuple[key :string, val :string]]
+
+type webdevnMilieu* = object
+  runConf* :webdevnConfig
+  baseHeaders* :headerBits = @{
+    "Server": "webdevn; nim/c",
+    "Cache-Control": "no-store, no-cache",
+    "Clear-Site-Data": "\"cache\""
+  }
