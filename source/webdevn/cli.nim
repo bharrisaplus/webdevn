@@ -12,13 +12,7 @@ import type_defs, utils
 
 proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
   var cliProblems: seq[string]
-  var maybeConfig = webdevnConfig(
-    basePath: paths.getCurrentDir(),
-    listenPort: 0.Port,
-    indexFile: "index.html",
-    inSilence: true,
-    writeLog: false
-  )
+  var maybeConfig = defaultwebdevnConfig()
 
   var maybeIndexFile: string
   var checkSocket: Socket
