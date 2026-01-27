@@ -5,6 +5,7 @@ type webdevnConfig* = object
   basePath* :Path
   listenPort* :Port
   indexFile* :string
+  indexFileExt* :string
   inSilence* :bool
   writeLog* :bool
 
