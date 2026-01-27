@@ -1,9 +1,16 @@
-import std/[paths, strformat, files, net]
+from std/strformat import fmt, `&`
+from std/strutils import strip, toLowerAscii, startsWith, endsWith
+from std/paths import Path, normalizePath, absolutePath, splitFile, getCurrentDir, `/`, `$`, `/`
+from std/nativesockets import Port, `$`
+from std/files import fileExists
+from std/uri import Uri
+from std/times import now, utc, format
 
 import type_defs
 
-proc print_config* (title: string = "webdevn", thingy: webdevnConfig) =
-  var outputStr = &"{title} Config:\n"
+
+proc print_config* (title :string = "webdevn", thingy :webdevnConfig) =
+  var outputStr = title & " Config:\n"
 
   outputStr.add(&"  - basePath => '{thingy.basePath}'\n")
   outputStr.add(&"  - listenPort => {thingy.listenPort}\n")
@@ -14,8 +21,8 @@ proc print_config* (title: string = "webdevn", thingy: webdevnConfig) =
   echo outputStr
 
 
-proc print_issues* (title: string = "webdevn", stuff: seq[string]) =
-  var outputStr = &"{title} Issue(s) - [{stuff.len}]:\n"
+proc print_issues* (title :string = "webdevn", stuff :seq[string]) =
+  var outputStr = title & " Issue(s) - [{stuff.len}]:\n"
 
   if stuff.len == 0:
     outputStr.add("  * No issues!\n")
@@ -26,9 +33,9 @@ proc print_issues* (title: string = "webdevn", stuff: seq[string]) =
   echo outputStr
 
 
-proc dir_contains_file* (maybeParent: Path, maybeChild: string): bool =
+proc dir_contains_file* (maybeParent :Path, maybeChild :string): bool =
   var maybeChildpath = Path(maybeChild)
 
-  paths.normalizePath(maybeChildpath)
+  normalizePath(maybeChildpath)
 
   return fileExists(maybeParent / maybeChildPath)
