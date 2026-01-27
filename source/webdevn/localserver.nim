@@ -5,7 +5,7 @@ from system import debugEcho
 
 from checksums/md5 import getMD5
 
-import type_defs
+import type_defs, utils
 
 
 let localServerMilieu = webdevnMilieu(runConf: defaultWebdevnConfig())
@@ -21,4 +21,5 @@ when isMainModule:
 
   var defg = newHttpHeaders(otfHeaders & localServerMilieu.baseHeaders)
 
+  print_milieu("localserver", localServerMilieu)
   debugEcho(defg)

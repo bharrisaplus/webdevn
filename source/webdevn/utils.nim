@@ -33,7 +33,25 @@ proc print_issues* (title :string = "webdevn", stuff :seq[string]) =
   echo outputStr
 
 
-proc dir_contains_file* (maybeParent :Path, maybeChild :string): bool =
+proc print_milieu* (title :string = "webdevn", thingy :webdevnMilieu) =
+  var outputStr = title & " Milieu/Runtime_Env:\n"
+
+  outputStr.add("  runConf:\n")
+  outputStr.add(&"    - basePath => '{thingy.runConf.basePath}'\n")
+  outputStr.add(&"    - listenPort => {thingy.runConf.listenPort}\n")
+  outputStr.add(&"    - indexFile => '{thingy.runConf.indexFile}'\n")
+  outputStr.add(&"    - inSilence => {thingy.runConf.inSilence}\n")
+  outputStr.add(&"    - writeLog => {thingy.runConf.writeLog}\n")
+
+  outputStr.add("  baseHeaders:\n")
+
+  for rheader in thingy.baseHeaders:
+    outputStr.add("    {" & rheader.key & ": " & rheader.val & "}\n")
+
+  echo outputStr
+
+
+proc dir_contains_file* (maybeParent :Path, maybeChild :string) :bool =
   var maybeChildpath = Path(maybeChild)
 
   normalizePath(maybeChildpath)
