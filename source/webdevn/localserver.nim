@@ -18,3 +18,6 @@ proc newWebdevnLocalServer* (someMilieu :webdevnMilieu) :localServer =
     mimeLookup: newMimeTypes(),
     serverMilieu: someMilieu
   )
+
+proc aio_respond_for* () =
+  discard
