@@ -18,3 +18,5 @@ proc defaultWebdevnConfig* :webdevnConfig =
     inSilence: true,
     writeLog: false
   )
+
+type headerBits* = seq[tuple[key :string, val :string]]
