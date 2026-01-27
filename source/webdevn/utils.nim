@@ -58,6 +58,12 @@ proc dir_contains_file* (maybeParent :Path, maybeChild :string) :bool =
 
   return fileExists(maybeParent / maybeChildPath)
 
+proc lookup_from_url* (fsConfig :webdevnConfig, reqUrl :Uri) :lookupResult =
+  discard
+
+proc lazy_gobble* (morsel :string) =
+  discard
+
 # (m)ime(e)tag(c)ontent(t)ime_stamp
 proc mect_stamp* (mimeType, checksum :string; fileLen: int) :headerBits =
   let textLike = mimeType.startsWith("text/") or mimeType == "application/javascript" or 
