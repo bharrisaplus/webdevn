@@ -19,6 +19,16 @@ proc defaultWebdevnConfig* :webdevnConfig =
     writeLog: false
   )
 
+proc devWebdevnConfig* :webdevnConfig =
+  return webdevnConfig(
+    basePath: paths.getCurrentDir(),
+    listenPort: 0.Port,
+    indexFile: "index.html",
+    indexFileExt: "html",
+    inSilence: false,
+    writeLog: false
+  )
+
 type headerBits* = seq[tuple[key :string, val :string]]
 
 type webdevnMilieu* = object
