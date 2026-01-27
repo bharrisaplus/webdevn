@@ -1,6 +1,6 @@
-import std/[sugar, times, httpcore, mimetypes]
+import std/[times, httpcore, mimetypes]
 import checksums/md5
-
+from system import debugEcho
 
 when isMainModule:
   let m = newMimeTypes()
@@ -17,4 +17,4 @@ when isMainModule:
     "Clear-Site-Data": "*"
   })
 
-  dump(defg)
+  debugEcho(defg)
