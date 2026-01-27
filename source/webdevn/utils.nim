@@ -57,3 +57,17 @@ proc dir_contains_file* (maybeParent :Path, maybeChild :string) :bool =
   normalizePath(maybeChildpath)
 
   return fileExists(maybeParent / maybeChildPath)
+
+# (m)ime(e)tag(c)ontent(t)ime_stamp
+proc mect_stamp* (mimeType, checksum :string; fileLen: int) :headerBits =
+  let textLike = mimeType.startsWith("text/") or mimeType == "application/javascript" or 
+    mimeType == "application/json" or mimeType.endsWith("+xml")
+
+  let contentEncoding = if textLike: "; charset=utf-8" else: ""
+
+  return @{
+    "Content-Type": mimeType & contentEncoding,
+    "Content-Length": $fileLen,
+    "Date": now().utc().format("ddd, dd MMM yyyy HH:mm:ss") & " GMT",
+    "ETag": checksum,
+  }
