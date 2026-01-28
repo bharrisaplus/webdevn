@@ -65,15 +65,16 @@ proc lazy_gobble* (morsel :string) =
   discard
 
 # (m)ime(e)tag(c)ontent(t)ime_stamp
-proc mect_stamp* (mimeType, checksum :string; fileLen: int) :headerBits =
+proc mect_stamp* (mimeType :string, fileLen: int) :headerBits =
   let textLike = mimeType.startsWith("text/") or mimeType == "application/javascript" or 
     mimeType == "application/json" or mimeType.endsWith("+xml")
 
   let contentEncoding = if textLike: "; charset=utf-8" else: ""
+  let currentTime = now().utc()
 
   return @{
     "Content-Type": mimeType & contentEncoding,
     "Content-Length": $fileLen,
-    "Date": now().utc().format("ddd, dd MMM yyyy HH:mm:ss") & " GMT",
-    "ETag": checksum,
+    "Date": currentTime.format("ddd, dd MMM yyyy HH:mm:ss") & " GMT",
+    "ETag": "W/\"" & currentTime.format("ddMMyyHHmmss") & "-" & $fileLen
   }
