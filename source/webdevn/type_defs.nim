@@ -30,7 +30,8 @@ proc devWebdevnConfig* :webdevnConfig =
   )
 
 type lookupResult* = tuple
-  loc, ext, :string
+  loc :string
+  ext :string
   issues :seq[string]
 
 type gobbleResult* = tuple
@@ -44,39 +45,31 @@ type headerBits* = seq[
   ]
 ]
 
+type
+  scribeSkel* = ref object of RootObj
+    doFile* :bool
+    rotateFile* :bool
+    maxRotate* :int
+    logPath* :Path
+    logName* :string
+
+  rScribe* = ref object of scribeSkel
+  fScribe* = ref object of scribeSkel
+
+proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
+  return rScribe(
+    doFile: someConfig.writeLog,
+    rotateFile: true,
+    maxRotate: 3,
+    logPath: paths.getCurrentDir(),
+    logName: "webdevn.log.txt"
+  )
+
 type webdevnMilieu* = object
   runConf* :webdevnConfig
+  runScribe* :scribeSkel
   baseHeaders* :headerBits = @{
     "Server": "webdevn; nim/c",
     "Cache-Control": "no-store, no-cache",
     "Clear-Site-Data": "\"cache\""
   }
-
-type scribeSkel* = object
-  doFile* :bool
-  rotateFile* :bool
-  maxRotate* :int
-  logPath* :Path
-  logName* :string
-
-type
-  rScribe* = ref scribeSkel
-  fScribe* = ref scribeSkel
-
-proc defaultScribe* :rScribe =
-  return rScribe(
-    doFile: false,
-    rotateFile: false,
-    maxRotate: 0,
-    logPath: Path(""),
-    logName: ""
-  )
-
-proc devScribe* :rScribe =
-  return rScribe(
-    doFile: true,
-    rotateFile: true,
-    maxRotate: 3,
-    logPath: paths.getCurrentDir(),
-    logName: "webdevn_dev.log.txt"
-  )

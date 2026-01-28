@@ -49,29 +49,41 @@ proc print_line* (gab :string) =
   echo "webdevn - " & gab
 
 
-proc log_config* (s :rScribe, logTitle :string = "webdevn", logThingy :webdevnConfig) =
-  print_config(title = logTitle, thingy = logThingy)
+proc log_config* (s :scribeSkel, logTitle :string = "webdevn", logThingy :webdevnConfig) =
+  if s of rScribe:
+    print_config(title = logTitle, thingy = logThingy)
 
-  if s.doFile:
+    if s.doFile:
+      discard
+  else:
     discard
 
 
-proc log_issues* (s :rScribe, logTitle :string = "webdevn", logStuff :seq[string]) =
-  print_issues(title = logTitle, stuff = logStuff)
+proc log_issues* (s :scribeSkel, logTitle :string = "webdevn", logStuff :seq[string]) =
+  if s of rScribe:
+    print_issues(title = logTitle, stuff = logStuff)
 
-  if s.doFile:
+    if s.doFile:
+      discard
+  else:
     discard
 
 
-proc log_milieu* (s :rScribe, logTitle :string = "webdevn", logThingy :webdevnMilieu) =
-  print_milieu(title = logTitle, thingy = logThingy)
+proc log_milieu* (s :scribeSkel, logTitle :string = "webdevn", logThingy :webdevnMilieu) =
+  if s of rScribe:
+    print_milieu(title = logTitle, thingy = logThingy)
 
-  if s.doFile:
+    if s.doFile:
+      discard
+  else:
     discard
 
 
-proc log_line* (s :rScribe, logGab :string) =
-  print_line(gab = logGab)
+proc log_line* (s :scribeSkel, logGab :string) =
+  if s of rScribe:
+    print_line(gab = logGab)
 
-  if s.doFile:
+    if s.doFile:
+      discard
+  else:
     discard
