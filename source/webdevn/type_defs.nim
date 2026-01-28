@@ -29,9 +29,16 @@ proc devWebdevnConfig* :webdevnConfig =
     writeLog: false
   )
 
-type lookupResult* = tuple[loc, ext, :string; issues :seq[string]]
+type lookupResult* = tuple
+  loc, ext, :string
+  issues :seq[string]
 
-type headerBits* = seq[tuple[key :string, val :string]]
+type headerBits* = seq[
+  tuple[
+    key :string,
+    val :string
+  ]
+]
 
 type webdevnMilieu* = object
   runConf* :webdevnConfig
