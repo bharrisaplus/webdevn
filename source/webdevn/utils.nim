@@ -27,7 +27,7 @@ proc lookup_from_url* (fsConfig :webdevnConfig, reqUrl :Uri) :lookupResult =
     maybeFilePath :Path #= Path(urlPath)
     maybeFileExt :string
     foundIt = false
-    lookProblems :seq[string]
+    lookProblems :seq[string] = @[]
 
   if urlPath == "": # root directory
     maybeFilePath = fsConfig.basePath / Path(fsConfig.indexFile)
@@ -78,7 +78,7 @@ proc lazy_gobble* (gobbleConfig :webdevnConfig, morsel :string) :Future[gobbleRe
   var
     nomnom :string
     file_blob :AsyncFile
-    gobbleProblems :seq[string]
+    gobbleProblems :seq[string] = @[]
 
   try:
     file_blob = openAsync(morsel, fmRead)
