@@ -11,11 +11,13 @@ import type_defs, utils
 
 
 proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
-  var cliProblems: seq[string]
-  var maybeConfig = defaultwebdevnConfig()
+  var
+    cliProblems: seq[string]
+    maybeConfig = defaultwebdevnConfig()
 
-  var maybeIndexFile: string
-  var checkSocket: Socket
+  var
+    maybeIndexFile: string
+    checkSocket: Socket
 
   for optkind, optarg, optinput in getopt(cmdline = osCliParams, shortNoVal = {'v', 'l'}, longNoVal = @["verbose", "log"]):
     if optkind == cmdArgument or optkind == cmdEnd:
