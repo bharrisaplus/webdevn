@@ -2,7 +2,7 @@ import std/[os]
 from system import setControlCHook, quit
 from asyncdispatch import waitFor
 
-import webdevn/[type_defs, cli, utils, localServer]
+import webdevn/[type_defs, scribe, cli, localServer]
 
 
 when isMainModule:

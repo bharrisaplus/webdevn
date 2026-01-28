@@ -9,7 +9,7 @@ from std/sugar import `=>`
 from std/asynchttpserver import AsyncHttpServer, Request,
   newAsyncHttpServer, listen, getPort, shouldAcceptRequest, acceptRequest, respond
 
-import type_defs, utils
+import type_defs, scribe, utils
 
 
 type localServer* = object
