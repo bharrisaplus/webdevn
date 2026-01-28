@@ -4,6 +4,9 @@ from std/nativesockets import Port, `$`
 from std/files import fileExists
 from std/uri import Uri, `$`
 from std/times import now, utc, format
+from std/asyncfutures import Future, newFuture, complete
+from std/asyncmacro import `async`, `await`
+from std/asyncfile import AsyncFile, openAsync, readAll, close
 from std/paths import Path,
   normalizePath, absolutePath, parentDir, splitFile, getCurrentDir, isRelativeTo,
   `/`, `$`, `/`
@@ -113,8 +116,26 @@ proc lookup_from_url* (fsConfig :webdevnConfig, reqUrl :Uri) :lookupResult =
   return (loc: maybeFilePath.string, ext: maybeFileExt, issues: lookProblems)
 
 
-proc lazy_gobble* (morsel :string) =
-  discard
+proc lazy_gobble* (gobbleConfig :webdevnConfig, morsel :string) :Future[gobbleResult] {.async.} =
+  var
+    nomnom :string
+    file_blob :AsyncFile
+    gobbleProblems :seq[string]
+
+  try:
+    file_blob = openAsync(morsel, fmRead)
+    nomnom = await file_blob.readAll()
+  except CatchableError as cE:
+    # Issues
+    gobbleProblems.add(&"Issue with reading file from path:\n    {cE.name}: {cE.msg}\n    Path: {morsel}")
+  finally:
+    file_blob.close()
+  
+  if not gobbleConfig.inSilence:
+    echo "Reading file and returning contents"
+
+  return (contents: nomnom, issues: gobbleProblems)
+
 
 # (m)ime(e)tag(c)ontent(t)ime_stamp
 proc mect_stamp* (mimeType :string, fileLen: int) :headerBits =

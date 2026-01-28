@@ -33,6 +33,10 @@ type lookupResult* = tuple
   loc, ext, :string
   issues :seq[string]
 
+type gobbleResult* = tuple
+  contents :string
+  issues :seq[string]
+
 type headerBits* = seq[
   tuple[
     key :string,
