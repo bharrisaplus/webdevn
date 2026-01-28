@@ -1,9 +1,11 @@
 from std/strformat import fmt, `&`
 from std/strutils import strip, toLowerAscii, startsWith, endsWith
-from std/paths import Path, normalizePath, absolutePath, splitFile, getCurrentDir, `/`, `$`, `/`
+from std/paths import Path,
+  normalizePath, absolutePath, parentDir, splitFile, getCurrentDir, isRelativeTo,
+  `/`, `$`, `/`
 from std/nativesockets import Port, `$`
 from std/files import fileExists
-from std/uri import Uri
+from std/uri import Uri, `$`
 from std/times import now, utc, format
 
 import type_defs
@@ -59,7 +61,57 @@ proc dir_contains_file* (maybeParent :Path, maybeChild :string) :bool =
   return fileExists(maybeParent / maybeChildPath)
 
 proc lookup_from_url* (fsConfig :webdevnConfig, reqUrl :Uri) :lookupResult =
-  discard
+  let urlPath = reqUrl.path.strip(chars ={'/'})
+  var
+    maybeFilePath :Path #= Path(urlPath)
+    maybeFileExt :string
+    foundIt = false
+    lookProblems :seq[string]
+
+  if urlPath == "": # root directory
+    maybeFilePath = fsConfig.basePath / Path(fsConfig.indexFile)
+    maybeFileExt = fsConfig.indexFileExt
+    foundIt = true
+  else: # file or other directory (do lookup)
+    maybeFilePath = absolutePath(path = Path(urlPath), root = fsConfig.basePath)
+
+    let safeSearch = (
+      maybeFilePath.isRelativeTo(fsConfig.basePath) or
+      maybeFilePath.isRelativeTo(parentDir(fsConfig.basePath)) or
+      maybeFilePath.isRelativeTo(parentDir(parentDir(fsConfig.basePath)))
+    )
+
+    if safeSearch:
+      let maybeFileParts = splitFile(maybeFilePath)
+
+      if maybeFileParts.ext == "": # other directory (look for indexFile)
+        maybeFilePath = maybeFilePath / Path(fsConfig.indexFile)
+
+        if dir_contains_file(maybeFilePath, fsConfig.indexFile):
+          maybeFileExt = fsConfig.indexFileExt
+          foundIt = true
+      else: # file (do lookup)
+        if fileExists(maybeFilePath):
+          maybeFileExt = maybeFileParts.ext.toLowerAscii().strip(chars = {'.'})
+          foundIt = true
+  
+  if not fsConfig.inSilence:
+    echo "\nLooking up request"
+    echo "Request URL: " & $reqUrl
+    echo "Request URL Path: " & reqUrl.path
+    echo "Request Absolute Path: " & maybeFilePath.string
+    echo "basePath: " & fsConfig.basePath.string
+    echo "basePath-Parent: " & parentDir(fsConfig.basePath).string
+    echo "basePath-Parent-Parent: " & parentDir(parentDir(fsConfig.basePath)).string & "\n\n"
+
+  if not foundIt:
+    lookProblems.add(
+      &"Issue with finding file from requested url:\n    Url:{reqUrl}\n    FilePath:{maybeFilePath}"
+    )
+    maybeFilePath = Path("")
+
+  return (loc: maybeFilePath.string, ext: maybeFileExt, issues: lookProblems)
+
 
 proc lazy_gobble* (morsel :string) =
   discard
