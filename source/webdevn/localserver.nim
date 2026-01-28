@@ -1,5 +1,3 @@
-from std/asynchttpserver import AsyncHttpServer, Request,
-  newAsyncHttpServer, listen, getPort, shouldAcceptRequest, acceptRequest, respond
 from std/mimetypes import MimeDB, newMimeTypes, getMimeType
 from asyncdispatch import sleepAsync
 from std/asyncfutures import Future, newFuture
@@ -8,6 +6,8 @@ from std/strutils import strip, startsWith
 from std/httpcore import HttpHeaders, HttpCode, Http200, Http404, newHttpHeaders, `$`
 from std/nativesockets import `$`
 from std/sugar import `=>`
+from std/asynchttpserver import AsyncHttpServer, Request,
+  newAsyncHttpServer, listen, getPort, shouldAcceptRequest, acceptRequest, respond
 
 import type_defs, utils
 

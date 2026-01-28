@@ -1,12 +1,12 @@
 from std/strformat import fmt, `&`
 from std/strutils import strip, toLowerAscii, startsWith, endsWith
-from std/paths import Path,
-  normalizePath, absolutePath, parentDir, splitFile, getCurrentDir, isRelativeTo,
-  `/`, `$`, `/`
 from std/nativesockets import Port, `$`
 from std/files import fileExists
 from std/uri import Uri, `$`
 from std/times import now, utc, format
+from std/paths import Path,
+  normalizePath, absolutePath, parentDir, splitFile, getCurrentDir, isRelativeTo,
+  `/`, `$`, `/`
 
 import type_defs
 
