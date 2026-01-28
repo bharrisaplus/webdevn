@@ -1,5 +1,8 @@
 from std/paths import Path
 from std/net import Port
+from std/asynchttpserver import AsyncHttpServer, newAsyncHttpServer
+from std/mimetypes import MimeDB, newMimeTypes
+
 
 type webdevnConfig* = object
   basePath* :Path
@@ -73,3 +76,15 @@ type webdevnMilieu* = object
     "Cache-Control": "no-store, no-cache",
     "Clear-Site-Data": "\"cache\""
   }
+
+type localServer* = object
+  innerDaemon* :AsyncHttpServer
+  mimeLookup* :MimeDB
+  serverMilieu* :webdevnMilieu
+
+proc webdevnLocalServer* (someMilieu :webdevnMilieu) :localServer =
+  return localServer(
+    innerDaemon: newAsyncHttpServer(),
+    mimeLookup: newMimeTypes(),
+    serverMilieu: someMilieu
+  )

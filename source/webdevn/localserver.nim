@@ -1,4 +1,4 @@
-from std/mimetypes import MimeDB, newMimeTypes, getMimeType
+from std/mimetypes import getMimeType
 from asyncdispatch import sleepAsync
 from std/asyncfutures import Future, newFuture
 from std/asyncmacro import `async`, `await`
@@ -6,23 +6,10 @@ from std/strutils import strip, startsWith
 from std/httpcore import HttpHeaders, HttpCode, Http200, Http404, newHttpHeaders, `$`
 from std/nativesockets import `$`
 from std/sugar import `=>`
-from std/asynchttpserver import AsyncHttpServer, Request,
-  newAsyncHttpServer, listen, getPort, shouldAcceptRequest, acceptRequest, respond
+from std/asynchttpserver import Request,
+  listen, getPort, shouldAcceptRequest, acceptRequest, respond
 
 import type_defs, scribe, utils
-
-
-type localServer* = object
-  innerDaemon* :AsyncHttpServer
-  mimeLookup* :MimeDB
-  serverMilieu* :webdevnMilieu
-
-proc webdevnLocalServer* (someMilieu :webdevnMilieu) :localServer =
-  return localServer(
-    innerDaemon: newAsyncHttpServer(),
-    mimeLookup: newMimeTypes(),
-    serverMilieu: someMilieu
-  )
 
 
 proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.async.} =
