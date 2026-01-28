@@ -9,7 +9,7 @@ from std/asyncmacro import `async`, `await`
 from std/asyncfile import AsyncFile, openAsync, readAll, close
 from std/paths import Path,
   normalizePath, absolutePath, parentDir, splitFile, getCurrentDir, isRelativeTo,
-  `/`, `$`, `/`
+  `/`, `$`
 
 import type_defs
 
