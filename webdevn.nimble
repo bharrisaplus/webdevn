@@ -24,19 +24,19 @@ binDir = "distribution"
 task hellon, "A task for greeting":
   echo "Hello nim"
 
-task check_cli, "A task to check the cli module for compile errors":
+task lint_cli, "A task to check the cli module for compile errors":
   exec "nim check source/webdevn/cli.nim"
 
-task check_localserver, "A task to check the localserver module for compile errors":
+task lint_localserver, "A task to check the localserver module for compile errors":
   exec "nim check source/webdevn/localserver.nim"
 
-task check_loggo, "A task to check the loggo module for compile errors":
+task lint_loggo, "A task to check the loggo module for compile errors":
   exec "nim check source/webdevn/loggo.nim"
 
-task check_typeds, "A task to check the type_defs module for compile errors":
+task lint_typeds, "A task to check the type_defs module for compile errors":
   exec "nim check source/webdevn/type_defs.nim"
 
-task check_utils, "A task to check the utils module for compile errors":
+task lint_utils, "A task to check the utils module for compile errors":
   exec "nim check source/webdevn/utils.nim"
 
 # Testing
