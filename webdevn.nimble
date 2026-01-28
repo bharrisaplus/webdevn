@@ -26,3 +26,6 @@ task hellon, "A task for greeting":
 
 task test_cli, "Run spec for cli suite":
   exec "nim r --hints:off spec/cli_spec.nim \"Cli_BS::\""
+
+task test_utils, "Run spec for util suite":
+  exec "nim r --hints:off spec/utils_spec.nim \"Utils_BS::\""
