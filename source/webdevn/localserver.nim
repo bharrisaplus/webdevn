@@ -17,7 +17,7 @@ type localServer* = object
   mimeLookup* :MimeDB
   serverMilieu* :webdevnMilieu
 
-proc newWebdevnLocalServer* (someMilieu :webdevnMilieu) :localServer =
+proc webdevnLocalServer* (someMilieu :webdevnMilieu) :localServer =
   return localServer(
     innerDaemon: newAsyncHttpServer(),
     mimeLookup: newMimeTypes(),

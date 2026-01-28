@@ -6,15 +6,15 @@ import webdevn/[type_defs, cli, utils, localServer]
 
 
 when isMainModule:
-  var webdevnIssues :seq[string]
-  let (cliConfig, cliIssues) = configFromCLi(commandLineParams())
+  let
+    (cliConfig, cliIssues) = configFromCLi(commandLineParams())
+    currentMilieu = webdevnMilieu(runConf: cliConfig)
 
   if cliIssues.len > 0:
-    webdevnIssues.add(cliIssues)
-    print_Issues("Cli", webdevnIssues)
+    print_Issues("Cli", cliIssues)
     quit("\nwebdevn - shutting down...\n", 0)
 
-  let loser = newWebdevnLocalServer(webdevnMilieu(runConf: cliConfig))
+  let loser = webdevnLocalServer(currentMilieu)
 
   setControlCHook(proc() {.noconv.} =
     if not loser.serverMilieu.runConf.inSilence:
