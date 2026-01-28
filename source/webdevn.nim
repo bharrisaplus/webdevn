@@ -1,11 +1,9 @@
 import std/[os]
 from system import setControlCHook, quit
-from std/httpcore import HttpHeaders, newHttpHeaders, `$`
-from std/mimetypes import getMimeType
+from asyncdispatch import waitFor
 
-from checksums/md5 import getMD5
+import webdevn/[type_defs, cli, utils, localServer]
 
-import webdevn/[type_defs, cli, utils, localserver]
 
 when isMainModule:
   var webdevnIssues :seq[string]
@@ -17,7 +15,6 @@ when isMainModule:
     quit("\nwebdevn - shutting down...\n", 0)
 
   let loser = newWebdevnLocalServer(webdevnMilieu(runConf: cliConfig))
-  let grettingContent = "Hello, World"
 
   setControlCHook(proc() {.noconv.} =
     if not loser.serverMilieu.runConf.inSilence:
@@ -28,15 +25,5 @@ when isMainModule:
 
   if not loser.serverMilieu.runConf.inSilence:
     print_milieu("localserver", loser.serverMilieu)
-
-  var otfHeaders = newHttpHeaders(loser.serverMilieu.baseHeaders & mect_stamp(
-    loser.mimeLookup.getMimeType(loser.serverMilieu.runConf.indexFileExt),
-    getMD5(grettingContent),
-    grettingContent.len
-  ))
-
-  echo "Stamped Headers: " & $otfHeaders
-
-  echo "\nPress 'Ctrl+C' to exit"
-  while true:
-    discard
+  
+  waitFor loser.wake_up(500)
