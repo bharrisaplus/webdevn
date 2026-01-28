@@ -29,14 +29,13 @@ proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.a
   let
     grettingContent = "<h2>Hello, World</h2>"
     errorContent = "<h2>404: Not Found</h2>"
+    lookupInfo = lookup_from_url(s.serverMilieu.runConf, aioReq.url)
 
   var
     resContent :string
     resCode :HttpCode
     resHeaders :HttpHeaders
     isOk :bool
-
-  let lookupInfo = lookup_from_url(s.serverMilieu.runConf, aioReq.url)
 
   if lookupInfo.issues.len == 0:
     isOk = true
