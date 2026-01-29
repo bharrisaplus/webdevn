@@ -114,3 +114,24 @@ proc log_line* (s :scribeSkel, logGab :string) =
       discard
   else:
     discard
+
+
+proc spam_issues* (s :scribeSkel, spamTitle :string = "webdevn", spamStuff :seq[string]) =
+  if s of rScribe:
+    print_issues(title = spamTitle, stuff = spamStuff)
+  else:
+    discard
+
+
+proc spam_milieu* (s :scribeSkel, spamTitle :string = "webdevn", spamThingy :webdevnMilieu) =
+  if s of rScribe:
+    print_milieu(title = spamTitle, thingy = spamThingy)
+  else:
+    discard
+
+
+proc spam_line* (s :scribeSkel, spamGab :string) =
+  if s of rScribe:
+    print_line(gab = spamGab)
+  else:
+    discard
