@@ -3,6 +3,7 @@ from asyncdispatch import sleepAsync
 from std/asyncfutures import Future, newFuture
 from std/asyncmacro import `async`, `await`
 from std/strutils import strip, startsWith
+from std/strformat import `&`
 from std/httpcore import HttpHeaders, HttpCode, Http200, Http404, newHttpHeaders, `$`
 from std/nativesockets import `$`
 from std/sugar import `=>`
@@ -27,7 +28,7 @@ proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.a
   if lookupInfo.issues.len == 0:
     isOk = true
   elif not s.serverMilieu.runConf.inSilence:
-    print_issues("File lookup", lookupInfo.issues)
+    s.serverMilieu.runScribe.log_issues("File lookup", lookupInfo.issues)
 
   if isOk:
     resContent = grettingContent
@@ -42,9 +43,8 @@ proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.a
       s.mimeLookup.getMimeType("html"), errorContent.len
     ))
 
-  if not s.serverMilieu.runConf.inSilence:
-    echo "\nResponding to request"
-    echo "\nStamped Headers: " & $resHeaders & "\n\n"
+  s.serverMilieu.runScribe.log_line(&"Stamped Headers: {resHeaders}\n\n")
+  s.serverMilieu.runScribe.log_line("Responding to request\n=============\n\n")
 
   await aioReq.respond(resCode, resContent, resHeaders)
 
@@ -52,9 +52,8 @@ proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.a
 proc wake_up* (s: localServer, napTime: int) :Future[void] {.async.} =
   s.innerDaemon.listen(s.serverMilieu.runConf.listenPort)
 
-  if not s.serverMilieu.runConf.inSilence:
-    echo "webdevn - Starting up server"
-    echo "webdevn - Using port " & $s.innerDaemon.getPort
+  s.serverMilieu.runScribe.log_line("Starting up server")
+  s.serverMilieu.runScribe.log_line(&"Using port {s.innerDaemon.getPort}")
 
   echo "\nPress 'Ctrl+C' to exit"
   while true:
