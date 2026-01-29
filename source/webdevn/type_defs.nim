@@ -1,4 +1,4 @@
-from std/paths import Path
+from std/paths import Path, getCurrentDir
 from std/net import Port
 from std/asynchttpserver import AsyncHttpServer, newAsyncHttpServer
 from std/mimetypes import MimeDB, newMimeTypes
@@ -14,8 +14,8 @@ type webdevnConfig* = object
 
 proc defaultWebdevnConfig* :webdevnConfig =
   return webdevnConfig(
-    basePath: paths.getCurrentDir(),
-    listenPort: 0.Port,
+    basePath: getCurrentDir(),
+    listenPort: Port(0),
     indexFile: "index.html",
     indexFileExt: "html",
     inSilence: true,
@@ -24,7 +24,7 @@ proc defaultWebdevnConfig* :webdevnConfig =
 
 proc devWebdevnConfig* :webdevnConfig =
   return webdevnConfig(
-    basePath: paths.getCurrentDir(),
+    basePath: getCurrentDir(),
     listenPort: 0.Port,
     indexFile: "index.html",
     indexFileExt: "html",
@@ -64,7 +64,7 @@ proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
     doFile: someConfig.writeLog,
     rotateFile: true,
     maxRotate: 3,
-    logPath: paths.getCurrentDir(),
+    logPath: getCurrentDir(),
     logName: "webdevn.log.txt"
   )
 
