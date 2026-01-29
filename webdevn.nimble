@@ -30,8 +30,8 @@ task lint_cli, "A task to check the cli module for compile errors":
 task lint_localserver, "A task to check the localserver module for compile errors":
   exec "nim check source/webdevn/localserver.nim"
 
-task lint_loggo, "A task to check the loggo module for compile errors":
-  exec "nim check source/webdevn/loggo.nim"
+task lint_scribe, "A task to check the loggo module for compile errors":
+  exec "nim check source/webdevn/scribe.nim"
 
 task lint_typeds, "A task to check the type_defs module for compile errors":
   exec "nim check source/webdevn/type_defs.nim"
@@ -46,3 +46,6 @@ task test_cli, "Run spec for cli suite":
 
 task test_utils, "Run spec for util suite":
   exec "nim r --hints:off spec/utils_spec.nim \"Utils_BS::\""
+
+task test_scribe, "Run spec for scribe suite":
+  exec "nim r --hints:off spec/scribe_spec.nim \"Scribe_BS::\""
