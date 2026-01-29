@@ -51,7 +51,8 @@ proc print_line* (gab :string) =
 
 proc log_config* (s :scribeSkel, logTitle :string = "webdevn", logThingy :webdevnConfig) =
   if s of rScribe:
-    print_config(title = logTitle, thingy = logThingy)
+    if s.willYap:
+      print_config(title = logTitle, thingy = logThingy)
 
     if s.doFile:
       discard
@@ -61,7 +62,8 @@ proc log_config* (s :scribeSkel, logTitle :string = "webdevn", logThingy :webdev
 
 proc log_issues* (s :scribeSkel, logTitle :string = "webdevn", logStuff :seq[string]) =
   if s of rScribe:
-    print_issues(title = logTitle, stuff = logStuff)
+    if s.willYap:
+      print_issues(title = logTitle, stuff = logStuff)
 
     if s.doFile:
       discard
@@ -71,7 +73,8 @@ proc log_issues* (s :scribeSkel, logTitle :string = "webdevn", logStuff :seq[str
 
 proc log_milieu* (s :scribeSkel, logTitle :string = "webdevn", logThingy :webdevnMilieu) =
   if s of rScribe:
-    print_milieu(title = logTitle, thingy = logThingy)
+    if s.willYap:
+      print_milieu(title = logTitle, thingy = logThingy)
 
     if s.doFile:
       discard
@@ -81,7 +84,8 @@ proc log_milieu* (s :scribeSkel, logTitle :string = "webdevn", logThingy :webdev
 
 proc log_line* (s :scribeSkel, logGab :string) =
   if s of rScribe:
-    print_line(gab = logGab)
+    if s.willYap:
+      print_line(gab = logGab)
 
     if s.doFile:
       discard

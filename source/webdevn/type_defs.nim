@@ -50,6 +50,7 @@ type headerBits* = seq[
 
 type
   scribeSkel* = ref object of RootObj
+    willYap* :bool
     doFile* :bool
     rotateFile* :bool
     maxRotate* :int
@@ -61,6 +62,7 @@ type
 
 proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
   return rScribe(
+    willYap: not someConfig.inSilence,
     doFile: someConfig.writeLog,
     rotateFile: true,
     maxRotate: 3,
