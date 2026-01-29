@@ -11,7 +11,7 @@ from std/paths import Path,
   normalizePath, absolutePath, parentDir, splitFile, getCurrentDir, isRelativeTo,
   `/`, `$`
 
-import type_defs
+import type_defs, scribe
 
 
 proc dir_contains_file* (maybeParent :Path, maybeChild :string) :bool =
@@ -21,49 +21,49 @@ proc dir_contains_file* (maybeParent :Path, maybeChild :string) :bool =
 
   return fileExists(maybeParent / maybeChildPath)
 
-proc lookup_from_url* (fsConfig :webdevnConfig, reqUrl :Uri) :lookupResult =
+proc lookup_from_url* (fsMilieu :webdevnMilieu, reqUrl :Uri) :lookupResult =
   let urlPath = reqUrl.path.strip(chars ={'/'})
   var
-    maybeFilePath :Path #= Path(urlPath)
+    maybeFilePath :Path
     maybeFileExt :string
     foundIt = false
     lookProblems :seq[string] = @[]
 
   if urlPath == "": # root directory
-    maybeFilePath = fsConfig.basePath / Path(fsConfig.indexFile)
-    maybeFileExt = fsConfig.indexFileExt
+    maybeFilePath = fsMilieu.runConf.basePath / Path(fsMilieu.runConf.indexFile)
+    maybeFileExt = fsMilieu.runConf.indexFileExt
     foundIt = true
   else: # file or other directory (do lookup)
-    maybeFilePath = absolutePath(path = Path(urlPath), root = fsConfig.basePath)
+    maybeFilePath = absolutePath(path = Path(urlPath), root = fsMilieu.runConf.basePath)
 
     let safeSearch = (
-      maybeFilePath.isRelativeTo(fsConfig.basePath) or
-      maybeFilePath.isRelativeTo(parentDir(fsConfig.basePath)) or
-      maybeFilePath.isRelativeTo(parentDir(parentDir(fsConfig.basePath)))
+      maybeFilePath.isRelativeTo(fsMilieu.runConf.basePath) or
+      maybeFilePath.isRelativeTo(parentDir(fsMilieu.runConf.basePath)) or
+      maybeFilePath.isRelativeTo(parentDir(parentDir(fsMilieu.runConf.basePath)))
     )
 
     if safeSearch:
       let maybeFileParts = splitFile(maybeFilePath)
 
       if maybeFileParts.ext == "": # other directory (look for indexFile)
-        maybeFilePath = maybeFilePath / Path(fsConfig.indexFile)
+        maybeFilePath = maybeFilePath / Path(fsMilieu.runConf.indexFile)
 
-        if dir_contains_file(maybeFilePath, fsConfig.indexFile):
-          maybeFileExt = fsConfig.indexFileExt
+        if dir_contains_file(maybeFilePath, fsMilieu.runConf.indexFile):
+          maybeFileExt = fsMilieu.runConf.indexFileExt
           foundIt = true
       else: # file (do lookup)
         if fileExists(maybeFilePath):
           maybeFileExt = maybeFileParts.ext.toLowerAscii().strip(chars = {'.'})
           foundIt = true
-  
-  if not fsConfig.inSilence:
-    echo "\nLooking up request"
-    echo "Request URL: " & $reqUrl
-    echo "Request URL Path: " & reqUrl.path
-    echo "Request Absolute Path: " & maybeFilePath.string
-    echo "basePath: " & fsConfig.basePath.string
-    echo "basePath-Parent: " & parentDir(fsConfig.basePath).string
-    echo "basePath-Parent-Parent: " & parentDir(parentDir(fsConfig.basePath)).string & "\n\n"
+
+  if fsMilieu.runScribe.willYap:
+    fsMilieu.runScribe.log_line("\nLooking up request")
+    fsMilieu.runScribe.log_line("Request URL: " & $reqUrl)
+    fsMilieu.runScribe.log_line("Request URL Path: " & reqUrl.path)
+    fsMilieu.runScribe.log_line("Request Absolute Path: " & maybeFilePath.string)
+    fsMilieu.runScribe.log_line("basePath: " & fsMilieu.runConf.basePath.string)
+    fsMilieu.runScribe.log_line("basePath-Parent: " & parentDir(fsMilieu.runConf.basePath).string)
+    fsMilieu.runScribe.log_line("basePath-Parent-Parent: " & parentDir(parentDir(fsMilieu.runConf.basePath)).string & "\n\n")
 
   if not foundIt:
     lookProblems.add(
@@ -74,7 +74,7 @@ proc lookup_from_url* (fsConfig :webdevnConfig, reqUrl :Uri) :lookupResult =
   return (loc: maybeFilePath.string, ext: maybeFileExt, issues: lookProblems)
 
 
-proc lazy_gobble* (gobbleConfig :webdevnConfig, morsel :string) :Future[gobbleResult] {.async.} =
+proc lazy_gobble* (gobbleMilieu :webdevnMilieu, morsel :string) :Future[gobbleResult] {.async.} =
   var
     nomnom :string
     file_blob :AsyncFile
@@ -89,8 +89,8 @@ proc lazy_gobble* (gobbleConfig :webdevnConfig, morsel :string) :Future[gobbleRe
   finally:
     file_blob.close()
   
-  if not gobbleConfig.inSilence:
-    echo "Reading file and returning contents"
+  if not gobbleMilieu.runScribe.willYap:
+    gobbleMilieu.runScribe.log_line("Reading file and returning contents")
 
   return (contents: nomnom, issues: gobbleProblems)
 

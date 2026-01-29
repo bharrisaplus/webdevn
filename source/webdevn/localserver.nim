@@ -16,7 +16,7 @@ proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.a
   let
     grettingContent = "<h2>Hello, World</h2>"
     errorContent = "<h2>404: Not Found</h2>"
-    lookupInfo = lookup_from_url(s.serverMilieu.runConf, aioReq.url)
+    lookupInfo = lookup_from_url(s.serverMilieu, aioReq.url)
 
   var
     resContent :string
