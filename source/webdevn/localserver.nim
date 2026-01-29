@@ -27,7 +27,7 @@ proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.a
 
   if lookupInfo.issues.len == 0:
     isOk = true
-  elif not s.serverMilieu.runConf.inSilence:
+  else:
     s.serverMilieu.runScribe.log_issues("File lookup", lookupInfo.issues)
 
   if isOk:
