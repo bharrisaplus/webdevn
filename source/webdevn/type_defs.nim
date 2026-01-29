@@ -11,6 +11,7 @@ type webdevnConfig* = object
   indexFileExt* :string
   inSilence* :bool
   writeLog* :bool
+  zeroHost* :bool
 
 proc defaultWebdevnConfig* :webdevnConfig =
   return webdevnConfig(
@@ -19,7 +20,8 @@ proc defaultWebdevnConfig* :webdevnConfig =
     indexFile: "index.html",
     indexFileExt: "html",
     inSilence: true,
-    writeLog: false
+    writeLog: false,
+    zeroHost: false
   )
 
 proc devWebdevnConfig* :webdevnConfig =
@@ -29,7 +31,8 @@ proc devWebdevnConfig* :webdevnConfig =
     indexFile: "index.html",
     indexFileExt: "html",
     inSilence: false,
-    writeLog: false
+    writeLog: false,
+    zeroHost: false
   )
 
 type lookupResult* = tuple

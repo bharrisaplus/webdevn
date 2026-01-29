@@ -50,10 +50,11 @@ proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.a
 
 
 proc wake_up* (s: localServer, napTime: int) :Future[void] {.async.} =
-  s.innerDaemon.listen(s.serverMilieu.runConf.listenPort)
+  let listenAddress = if s.serverMilieu.runConf.zeroHost: "0.0.0.0" else: "localhost"
 
+  s.innerDaemon.listen(s.serverMilieu.runConf.listenPort)
   s.serverMilieu.runScribe.spam_line("Starting up server")
-  s.serverMilieu.runScribe.spam_line(&"Using port {s.innerDaemon.getPort}")
+  s.serverMilieu.runScribe.spam_line(&"Listening on {listenAddress}:{s.innerDaemon.getPort}")
   s.serverMilieu.runScribe.spam_line("Press 'Ctrl+C' to exit\n\n")
   while true:
     if s.innerDaemon.shouldAcceptRequest():
