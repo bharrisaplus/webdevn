@@ -2,14 +2,14 @@ from std/strformat import fmt, `&`
 from std/strutils import strip, toLowerAscii, startsWith, endsWith
 from std/nativesockets import Port, `$`
 from std/files import fileExists
-from std/uri import Uri, `$`
+from std/uri import Uri
 from std/times import now, utc, format
 from std/asyncfutures import Future, newFuture, complete
 from std/asyncmacro import `async`, `await`
 from std/asyncfile import AsyncFile, openAsync, readAll, close
 from std/paths import Path,
   normalizePath, absolutePath, parentDir, splitFile, getCurrentDir, isRelativeTo,
-  `/`, `$`
+  `/`
 
 import type_defs, scribe
 
@@ -56,14 +56,9 @@ proc lookup_from_url* (fsMilieu :webdevnMilieu, reqUrl :Uri) :lookupResult =
           maybeFileExt = maybeFileParts.ext.toLowerAscii().strip(chars = {'.'})
           foundIt = true
 
-  if fsMilieu.runScribe.willYap:
-    fsMilieu.runScribe.log_line("\nLooking up request")
-    fsMilieu.runScribe.log_line("Request URL: " & $reqUrl)
-    fsMilieu.runScribe.log_line("Request URL Path: " & reqUrl.path)
-    fsMilieu.runScribe.log_line("Request Absolute Path: " & maybeFilePath.string)
-    fsMilieu.runScribe.log_line("basePath: " & fsMilieu.runConf.basePath.string)
-    fsMilieu.runScribe.log_line("basePath-Parent: " & parentDir(fsMilieu.runConf.basePath).string)
-    fsMilieu.runScribe.log_line("basePath-Parent-Parent: " & parentDir(parentDir(fsMilieu.runConf.basePath)).string & "\n\n")
+  fsMilieu.runScribe.log_lookup(
+    logReq = reqUrl, logMPath = maybeFilePath, logThingy = fsMilieu.runConf
+  )
 
   if not foundIt:
     lookProblems.add(
@@ -84,20 +79,18 @@ proc lazy_gobble* (gobbleMilieu :webdevnMilieu, morsel :string) :Future[gobbleRe
     file_blob = openAsync(morsel, fmRead)
     nomnom = await file_blob.readAll()
   except CatchableError as cE:
-    # Issues
     gobbleProblems.add(&"Issue with reading file from path:\n    {cE.name}: {cE.msg}\n    Path: {morsel}")
   finally:
     file_blob.close()
-  
-  if not gobbleMilieu.runScribe.willYap:
-    gobbleMilieu.runScribe.log_line("Reading file and returning contents")
+
+  gobbleMilieu.runScribe.log_line("Reading file and returning contents")
 
   return (contents: nomnom, issues: gobbleProblems)
 
 
 # (m)ime(e)tag(c)ontent(t)ime_stamp
 proc mect_stamp* (mimeType :string, fileLen: int) :headerBits =
-  let textLike = mimeType.startsWith("text/") or mimeType == "application/javascript" or 
+  let textLike = mimeType.startsWith("text/") or mimeType == "application/javascript" or
     mimeType == "application/json" or mimeType.endsWith("+xml")
 
   let contentEncoding = if textLike: "; charset=utf-8" else: ""
