@@ -24,6 +24,9 @@ binDir = "distribution"
 task hellon, "A task for greeting":
   echo "Hello nim"
 
+task lint, "A task to check the main(webdevn) module for compile errors":
+  exec "nim check source/webdevn.nim"
+
 task lint_cli, "A task to check the cli module for compile errors":
   exec "nim check source/webdevn/cli.nim"
 
