@@ -44,7 +44,7 @@ proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.a
     ))
 
   s.serverMilieu.runScribe.log_line(&"Stamped Headers: {resHeaders}\n\n")
-  s.serverMilieu.runScribe.log_line("Responding to request\n=============\n\n")
+  s.serverMilieu.runScribe.spam_line(&"Responding to request: {aioReq.url}\n=============\n\n")
 
   await aioReq.respond(resCode, resContent, resHeaders)
 
@@ -52,10 +52,9 @@ proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.a
 proc wake_up* (s: localServer, napTime: int) :Future[void] {.async.} =
   s.innerDaemon.listen(s.serverMilieu.runConf.listenPort)
 
-  s.serverMilieu.runScribe.log_line("Starting up server")
-  s.serverMilieu.runScribe.log_line(&"Using port {s.innerDaemon.getPort}")
-
-  echo "\nPress 'Ctrl+C' to exit"
+  s.serverMilieu.runScribe.spam_line("Starting up server")
+  s.serverMilieu.runScribe.spam_line(&"Using port {s.innerDaemon.getPort}")
+  s.serverMilieu.runScribe.spam_line("Press 'Ctrl+C' to exit\n\n")
   while true:
     if s.innerDaemon.shouldAcceptRequest():
       await s.innerDaemon.acceptRequest((r: Request) => s.aio_respond_for(aioReq = r))

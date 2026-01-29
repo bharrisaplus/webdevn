@@ -11,7 +11,7 @@ when isMainModule:
     currentMilieu = webdevnMilieu(runConf: cliConfig, runScribe: webdevnScribe(cliConfig))
 
   if cliIssues.len > 0:
-    currentMilieu.runScribe.log_issues("Cli", cliIssues)
+    currentMilieu.runScribe.spam_issues("Cli", cliIssues)
     quit("\nwebdevn - shutting down...\n", 0)
 
   let loser = webdevnLocalServer(currentMilieu)
@@ -21,6 +21,6 @@ when isMainModule:
     quit("\nwebdevn - shutting down...\n", 0)
   )
 
-  currentMilieu.runScribe.log_milieu("localserver", loser.serverMilieu)
+  currentMilieu.runScribe.spam_milieu("localserver", loser.serverMilieu)
   
   waitFor loser.wake_up(500)
