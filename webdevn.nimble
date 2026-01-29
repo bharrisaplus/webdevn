@@ -1,4 +1,5 @@
-import std/os
+from std/distros import Distribution, detectOs
+
 # Meta
 version = "0.0.0"
 author = "bharrisaplus"
@@ -16,7 +17,9 @@ requires "zip >= 0.3.1"
 
 
 # Build
-binDir = "distribution"
+if Distribution.Windows.detectOs():
+  bin = @["webdevn"]
+  binDir = "distribution/win"
 
 
 # Tasks
