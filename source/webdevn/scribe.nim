@@ -59,7 +59,7 @@ proc print_lookup* (title :string = "webdevn", req :Uri, mPath :Path, thingy :we
   echo outputStr
 
 proc print_line* (gab :string) =
-  echo "webdevn - " & gab
+  echo "\nwebdevn - " & gab
 
 
 proc log_config* (s :scribeSkel, logTitle :string = "webdevn", logThingy :webdevnConfig) =
