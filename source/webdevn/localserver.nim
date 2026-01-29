@@ -15,7 +15,6 @@ import type_defs, scribe, utils
 
 proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.async.} =
   let
-    grettingContent = "<h2>Hello, World</h2>"
     errorContent = "<h2>404: Not Found</h2>"
     lookupInfo = lookup_from_url(s.serverMilieu, aioReq.url)
 
@@ -31,20 +30,30 @@ proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.a
     s.serverMilieu.runScribe.log_issues("File lookup", lookupInfo.issues)
 
   if isOk:
-    resContent = grettingContent
-    resCode = Http200
-    resHeaders = newHttpHeaders(s.serverMilieu.baseHeaders & mect_stamp(
-      s.mimeLookup.getMimeType("html"), grettingContent.len
-    ))
-  else:
+    let gobbleInfo = await lazy_gobble(s.serverMilieu, lookupInfo.loc)
+
+    if gobbleInfo.issues.len == 0:
+      s.serverMilieu.runScribe.log_line(&"(200) Found File\n\n")
+      resContent = gobbleInfo.contents
+      resCode = Http200
+      resHeaders = newHttpHeaders(s.serverMilieu.baseHeaders & mect_stamp(
+        s.mimeLookup.getMimeType(lookupInfo.ext), resContent.len
+      ))
+
+    else:
+      s.serverMilieu.runScribe.log_issues("File read", gobbleInfo.issues)
+      isOk = false
+  
+  if not isOk:
+    s.serverMilieu.runScribe.log_line(&"(404) File Not Found\n\n")
     resContent = errorContent
     resCode = Http404
     resHeaders = newHttpHeaders(s.serverMilieu.baseHeaders & mect_stamp(
-      s.mimeLookup.getMimeType("html"), errorContent.len
+      s.mimeLookup.getMimeType("html"), resContent.len
     ))
 
-  s.serverMilieu.runScribe.log_line(&"Stamped Headers: {resHeaders}\n\n")
-  s.serverMilieu.runScribe.spam_line(&"Responding to request: {aioReq.url}\n=============\n\n")
+  s.serverMilieu.runScribe.log_line(&"Stamped Headers: {resHeaders}\n")
+  s.serverMilieu.runScribe.spam_line(&"Responding to request: {aioReq.url}\n=============")
 
   await aioReq.respond(resCode, resContent, resHeaders)
 
