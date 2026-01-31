@@ -12,6 +12,7 @@ type webdevnConfig* = object
   inSilence* :bool
   writeLog* :bool
   zeroHost* :bool
+  oneOff* = false
 
 proc defaultWebdevnConfig* :webdevnConfig =
   return webdevnConfig(
