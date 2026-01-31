@@ -25,9 +25,8 @@ requires "checksums >= 0.2.1"
 
 
 # Build
-if Distribution.Windows.detectOs():
-  bin = @["webdevn"]
-  binDir = "distribution/win"
+bin = @["webdevn"]
+binDir = getEnv(key = "BUILD_OUTPUT_DIR", default = "distribution")
 
 
 # Tasks
@@ -52,6 +51,7 @@ task lint_typeds, "A task to check the type_defs module for compile errors":
 
 task lint_utils, "A task to check the utils module for compile errors":
   exec "nim check source/webdevn/utils.nim"
+
 
 # Testing
 
