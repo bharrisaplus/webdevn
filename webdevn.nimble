@@ -14,6 +14,7 @@ skipDirs = @["spec"]
 
 # Dependencies
 requires "zip >= 0.3.1"
+requires "checksums >= 0.2.1"
 
 
 # Build
