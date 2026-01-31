@@ -78,8 +78,10 @@ proc lazy_gobble* (gobbleMilieu :webdevnMilieu, morsel :string) :Future[gobbleRe
   try:
     file_blob = openAsync(morsel, fmRead)
     nomnom = await file_blob.readAll()
-  except CatchableError as cE:
-    gobbleProblems.add(&"Issue with reading file from path:\n    {cE.name}: {cE.msg}\n    Path: {morsel}")
+  except ValueError as vE:
+    gobbleProblems.add(&"Issue with reading file from path:\n    {vE.name}: {vE.msg}\n    Path: {morsel}")
+  except Exception as bigE:
+    gobbleProblems.add(&"Something occured while reading the file:\n    {bigE.name}: {bigE.msg}\n    Path: {morsel}")
   finally:
     file_blob.close()
 
