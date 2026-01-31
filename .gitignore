@@ -2,3 +2,5 @@ nimcache/
 nimble.develop
 nimble.paths
 nimbledeps
+
+_build.envrc
