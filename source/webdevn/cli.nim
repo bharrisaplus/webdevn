@@ -7,12 +7,13 @@ from std/strformat import `&`
 from std/net import Socket, newSocket, bindAddr, close
 from std/nativesockets import Port
 
-import type_defs, utils
+import type_defs, meta, scribe, utils
 
 const helpManual = &"""
 source lang: nim
 package manager: nimble
-binary version: 0.0.0
+binary version: {webdevnVersion}
+dependency versions: {webdevnDependencyVersions}
 
 Usage:
   webdevn [OPTION]
@@ -93,12 +94,12 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
           maybeConfig.writeLog = true
 
         of "V", "version":
-          echo "0.0.0"
+          scribe.printLine("webdevn verion: " & webdevnVersion)
           maybeConfig.oneOff = true
           break
 
         of "h", "help":
-          echo helpManual
+          scribe.printLine(helpManual)
           maybeConfig.oneOff = true
           break
 
