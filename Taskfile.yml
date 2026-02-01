@@ -96,6 +96,7 @@ tasks:
       - nim check {{.SOURCE_DIR}}/webdevn/cli.nim
 
   lint-localserver:
+    aliases: [lint-loser]
     desc: A task to check the localserver module for compile errors
     cmds:
       - nim check {{.SOURCE_DIR}}/webdevn/localserver.nim
@@ -105,7 +106,8 @@ tasks:
     cmds:
       - nim check {{.SOURCE_DIR}}/webdevn/scribe.nim
 
-  lint-typeds:
+  lint-typedefs:
+    aliases: [lint-typeds]
     desc: A task to check the type_defs module for compile errors
     cmds:
       - nim check {{.SOURCE_DIR}}/webdevn/type_defs.nim
