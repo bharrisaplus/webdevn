@@ -31,8 +31,11 @@ proc lookup_from_url* (fsMilieu :webdevnMilieu, reqUrl :Uri) :lookupResult =
 
   if urlPath == "": # root directory
     maybeFilePath = fsMilieu.runConf.basePath / Path(fsMilieu.runConf.indexFile)
-    maybeFileExt = fsMilieu.runConf.indexFileExt
-    foundIt = true
+
+    if fileExists(maybeFilePath):
+      maybeFileExt = fsMilieu.runConf.indexFileExt
+      foundIt = true
+
   else: # file or other directory (do lookup)
     maybeFilePath = absolutePath(path = Path(urlPath), root = fsMilieu.runConf.basePath)
 
@@ -51,6 +54,7 @@ proc lookup_from_url* (fsMilieu :webdevnMilieu, reqUrl :Uri) :lookupResult =
         if dir_contains_file(maybeFilePath, fsMilieu.runConf.indexFile):
           maybeFileExt = fsMilieu.runConf.indexFileExt
           foundIt = true
+
       else: # file (do lookup)
         if fileExists(maybeFilePath):
           maybeFileExt = maybeFileParts.ext.toLowerAscii().strip(chars = {'.'})
