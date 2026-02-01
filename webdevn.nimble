@@ -28,11 +28,6 @@ requires "zip >= 0.3.1"
 requires "checksums >= 0.2.1"
 
 
-# Build
-bin = @["webdevn"]
-binDir = getEnv(key = "BUILD_OUTPUT_DIR", default = "distribution")
-
-
 # Tasks
 
 task hellon, "A task for greeting":
