@@ -3,7 +3,8 @@
 version: '3'
 
 tasks:
-
-  rear-intel:
+  rear-x64:
+    env:
+      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/gnu/x64'
     cmds:
       - echo "Hey, it's gnu here"

@@ -3,7 +3,8 @@
 version: '3'
 
 tasks:
-
   rear-x64:
+    env:
+      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/win/x64'
     cmds:
       - echo "Hey, it's windows running on 64bit here"

@@ -3,11 +3,14 @@
 version: '3'
 
 tasks:
-
   rear-intel:
+    env:
+      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/intel'
     cmds:
       - echo "Hey, it's macos running intel here"
 
   rear-apple:
+    env:
+      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/apple'
     cmds:
       - echo "Hey, it's macos running apple-silicone here"
