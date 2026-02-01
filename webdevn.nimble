@@ -36,7 +36,7 @@ binDir = getEnv(key = "BUILD_OUTPUT_DIR", default = "distribution")
 # Tasks
 
 task hellon, "A task for greeting":
-  echo "Hello nim"
+  echo "Hello from nimble"
 
 task lint, "A task to check the main(webdevn) module for compile errors":
   exec "nim check source/webdevn.nim"
