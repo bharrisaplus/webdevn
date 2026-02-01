@@ -24,7 +24,7 @@ tasks:
       - zip -j $BUILD_OUTPUT_DIR/webdevn_winx64-$VERSION_NUM.zip $BUILD_OUTPUT_DIR/webdevn.exe $BUILD_OUTPUT_DIR/webdevn.exe.sha256
       - shasum -a 256 $BUILD_OUTPUT_DIR/webdevn_winx64-$VERSION_NUM.zip | cut -d ' ' -f 1 > $BUILD_OUTPUT_DIR/webdevn_winx64-$VERSION_NUM.zip.sha256
 
-  clean-x64:
+  sweep-x64:
     env:
       BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/win/x64'
     cmds:

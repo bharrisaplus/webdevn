@@ -55,6 +55,16 @@ tasks:
     cmds:
       - task: winbuild:rear-x64
 
+  wrap-winbuild:
+    aliases: [wrap-win]
+    cmds:
+      - task: winbuild:wrap-x64
+
+  sweep-winbuild:
+    aliases: [sweep-win]
+    cmds:
+      - task: winbuild:sweep-x64
+
 
   rear-macbuid:
     aliases: [rear-mac]
