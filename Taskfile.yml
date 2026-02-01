@@ -16,7 +16,8 @@ includes:
 
 vars:
   NIMBLEPKGDEPSVER:
-    sh: jq -r '.packages | to_entries | map("\(.key)@\(.value.version)") | join(", ")' nimble.lock
+    # Ensure the dev only dependencies are excluded here
+    sh: jq -r '[.packages | to_entries[] | select(.key | IN("checksums") | not) | "\(.key)@\(.value.version)"] | join(", ")' nimble.lock
 
 tasks:
   check_env:
