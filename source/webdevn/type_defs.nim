@@ -53,7 +53,7 @@ type headerBits* = seq[
 ]
 
 type
-  scribeSkel* = ref object of RootObj
+  aScribe* = ref object of RootObj
     willYap* :bool
     doFile* :bool
     rotateFile* :bool
@@ -61,8 +61,8 @@ type
     logPath* :Path
     logName* :string
 
-  rScribe* = ref object of scribeSkel
-  fScribe* = ref object of scribeSkel
+  rScribe* = ref object of aScribe
+  fScribe* = ref object of aScribe
 
 proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
   return rScribe(
@@ -76,7 +76,7 @@ proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
 
 type webdevnMilieu* = object
   runConf* :webdevnConfig
-  runScribe* :scribeSkel
+  runScribe* :aScribe
   baseHeaders* :headerBits = @{
     "Server": "webdevn; nim/c",
     "Cache-Control": "no-store, no-cache",

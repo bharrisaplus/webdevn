@@ -1,5 +1,5 @@
 from std/paths import Path, getCurrentDir, parentDir, `$`
-from std/strformat import fmt, `&`
+from std/strformat import `&`
 from std/nativesockets import `$`
 from std/uri import Uri, `$`
 
@@ -62,7 +62,7 @@ proc print_line* (gab :string) =
   echo "\nwebdevn - " & gab
 
 
-proc log_config* (s :scribeSkel, logTitle :string = "webdevn", logThingy :webdevnConfig) =
+proc log_config* (s :aScribe, logTitle :string = "webdevn", logThingy :webdevnConfig) =
   if s of rScribe:
     if s.willYap:
       print_config(title = logTitle, thingy = logThingy)
@@ -73,7 +73,7 @@ proc log_config* (s :scribeSkel, logTitle :string = "webdevn", logThingy :webdev
     discard
 
 
-proc log_issues* (s :scribeSkel, logTitle :string = "webdevn", logStuff :seq[string]) =
+proc log_issues* (s :aScribe, logTitle :string = "webdevn", logStuff :seq[string]) =
   if s of rScribe:
     if s.willYap:
       print_issues(title = logTitle, stuff = logStuff)
@@ -84,7 +84,7 @@ proc log_issues* (s :scribeSkel, logTitle :string = "webdevn", logStuff :seq[str
     discard
 
 
-proc log_milieu* (s :scribeSkel, logTitle :string = "webdevn", logThingy :webdevnMilieu) =
+proc log_milieu* (s :aScribe, logTitle :string = "webdevn", logThingy :webdevnMilieu) =
   if s of rScribe:
     if s.willYap:
       print_milieu(title = logTitle, thingy = logThingy)
@@ -94,7 +94,7 @@ proc log_milieu* (s :scribeSkel, logTitle :string = "webdevn", logThingy :webdev
   else:
     discard
 
-proc log_lookup* (s :scribeSkel, logTitle :string = "webdevn", logReq :Uri, logMPath :Path, logthingy :webdevnConfig) =
+proc log_lookup* (s :aScribe, logTitle :string = "webdevn", logReq :Uri, logMPath :Path, logthingy :webdevnConfig) =
   if s of rScribe:
     if s.willYap:
       print_lookup(title = logTitle, req = logReq, mPath = logMPath, thingy = logThingy)
@@ -105,7 +105,7 @@ proc log_lookup* (s :scribeSkel, logTitle :string = "webdevn", logReq :Uri, logM
     discard
 
 
-proc log_line* (s :scribeSkel, logGab :string) =
+proc log_line* (s :aScribe, logGab :string) =
   if s of rScribe:
     if s.willYap:
       print_line(gab = logGab)
@@ -116,21 +116,21 @@ proc log_line* (s :scribeSkel, logGab :string) =
     discard
 
 
-proc spam_issues* (s :scribeSkel, spamTitle :string = "webdevn", spamStuff :seq[string]) =
+proc spam_issues* (s :aScribe, spamTitle :string = "webdevn", spamStuff :seq[string]) =
   if s of rScribe:
     print_issues(title = spamTitle, stuff = spamStuff)
   else:
     discard
 
 
-proc spam_milieu* (s :scribeSkel, spamTitle :string = "webdevn", spamThingy :webdevnMilieu) =
+proc spam_milieu* (s :aScribe, spamTitle :string = "webdevn", spamThingy :webdevnMilieu) =
   if s of rScribe:
     print_milieu(title = spamTitle, thingy = spamThingy)
   else:
     discard
 
 
-proc spam_line* (s :scribeSkel, spamGab :string) =
+proc spam_line* (s :aScribe, spamGab :string) =
   if s of rScribe:
     print_line(gab = spamGab)
   else:
