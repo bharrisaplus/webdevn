@@ -30,6 +30,14 @@ tasks:
       - 'echo nimble package deps: {{.NIMBLEPKGDEPSVER}}'
       - 'echo Unix timestamp: {{now | unixEpoch}}'
 
+  # Package Mangement
+
+  update-nimble-pkgver:
+    aliases: [update-saniv]
+    desc: Sync version number in .nimble file with environment variable as nimble requires variable to be string literal
+    cmds:
+      - sed -i 's/^version *= *".*"/version = "{{.VERSION_FOR_NIMBLE}}"/' webdevn.nimble
+
   # Top level aliases for convenience
 
   rear-winbuid:
