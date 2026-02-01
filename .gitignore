@@ -3,4 +3,7 @@ nimble.develop
 nimble.paths
 nimbledeps
 
-_build.envrc
+distribution/**/*.exe
+distribution/**/*.exe.sha256
+distribution/**/*.zip
+distribution/**/*.zip.sha256
