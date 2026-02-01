@@ -41,6 +41,7 @@ task hellon, "A task for greeting":
 # Misc
 
 # Dependent on parsing the output of nimble
+#  Old regex: └── @\K([\w\d.\s]*)\s
 proc getPkgDeps () :string =
   let (listInstalledWVersions, gorgeExitCode) = gorgeEx("nimble list -i --ver")
   var pkgNameVers: seq[string] = @[]
