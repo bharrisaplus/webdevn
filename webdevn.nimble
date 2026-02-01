@@ -24,8 +24,6 @@ requires "zip >= 0.3.1"
 
 # Dev dependencies (Used in building application)
 
-## checksums - For build distribution to determine if files have been tampered with
-requires "checksums >= 0.2.1"
 
 
 # Tasks
