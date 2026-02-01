@@ -16,8 +16,8 @@ Usage:
 
 OPTION:
   What to serve:
-    [-d:PATH, --dir PATH]: Location of the folder that will be the base from which to find requested files
-    [-i:PATTERN, --index PATTERN]: Filename (with ext) of the file served when the root ('/') is requested
+    [-d:PATH, --dir PATH]: Location of the base folder from which to find requested files
+    [-i:PATTERN, --index PATTERN]: Filename (with ext) of the file served when a directory is requested
   How to serve:
     [-p:54321, --port 54321]: Number for which port to listen for requests on
   How to yap:
