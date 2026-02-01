@@ -14,12 +14,20 @@ includes:
   macbuild: ./build/mac/_tasks.yml
   gnubuild: ./build/gnu/_tasks.yml
 
+vars:
+  NIMBLEPKGDEPSVER:
+    sh: jq -r '.packages | to_entries | map("\(.key)@\(.value.version)") | join(", ")' nimble.lock
+
 tasks:
   check_env:
+    silent: true
     cmds:
-      - echo $PROJECT_DIR
-      - echo $SOURCE_DIR
-      - echo "Unix timestamp {{now | unixEpoch}}"
+      - 'echo version: $VERSION_NUM'
+      - 'echo version for nimble $VERSION_FOR_NIMBLE'
+      - 'echo project in: $PROJECT_DIR'
+      - 'echo source files: $SOURCE_DIR'
+      - 'echo nimble package deps: {{.NIMBLEPKGDEPSVER}}'
+      - 'echo Unix timestamp: {{now | unixEpoch}}'
 
   # Top level aliases for convenience
 
