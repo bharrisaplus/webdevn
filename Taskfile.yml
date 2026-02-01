@@ -38,6 +38,14 @@ tasks:
     cmds:
       - sed -i 's/^version *= *".*"/version = "{{.VERSION_FOR_NIMBLE}}"/' webdevn.nimble
 
+
+  # Running
+  run_project:
+    aliases: [runit]
+    desc: Compiles and executes code with cli args (after '--')
+    cmds:
+      - nim r $SOURCE_DIR/webdevn.nim {{.CLI_ARGS}}
+
   # Top level aliases for convenience
 
   rear-winbuid:
