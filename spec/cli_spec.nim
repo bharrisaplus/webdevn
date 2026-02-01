@@ -3,14 +3,15 @@ import std/[unittest, paths, net]
 import ../source/webdevn/[cli]
 
 suite "Cli_BS":
-  let specPort = 0.Port
-  let specIndex = "index.html"
+  let
+    specPort = 0.Port
+    specIndex = "index.html"
 
   test "Should have 1 issues if no arguments provided and no index.html present":
 
-    var specCmdLine:seq[string]
-
-    var (outputCliConfig, outputCliIssues) = config_from_cli(specCmdLine)
+    var
+      specCmdLine:seq[string]
+      (outputCliConfig, outputCliIssues) = config_from_cli(specCmdLine)
 
     check:
       outputCliIssues.len() == 1
@@ -53,11 +54,13 @@ suite "Cli_BS":
 
 
   test "Should have no issue with relative path":
-    let specShortCmdLine = @["-d:./spec/appa/has_index"]
-    let specLongCmdLine = @["--dir ", "./spec/appa/has_index"]
+    let
+      specShortCmdLine = @["-d:./spec/appa/has_index"]
+      specLongCmdLine = @["--dir ", "./spec/appa/has_index"]
 
-    var (shortCliConfig, shortCliIssues) = config_from_cli(specShortCmdLine)
-    var (longCliConfig, longCliIssues) = config_from_cli(specLongCmdLine)
+    var
+      (shortCliConfig, shortCliIssues) = config_from_cli(specShortCmdLine)
+      (longCliConfig, longCliIssues) = config_from_cli(specLongCmdLine)
 
     check:
       shortCliIssues.len() == 0
@@ -77,12 +80,14 @@ suite "Cli_BS":
 
 
   test "Should have no issue with absolute path":
-    let absPath = paths.absolutePath(Path("./spec/appa/has_index")).string
-    let specShortCmdLine = @["-d:"&absPath]
-    let specLongCmdLine = @["--dir ", absPath]
+    let
+      absPath = paths.absolutePath(Path("./spec/appa/has_index")).string
+      specShortCmdLine = @["-d:"&absPath]
+      specLongCmdLine = @["--dir ", absPath]
 
-    var (shortCliConfig, shortCliIssues) = config_from_cli(specShortCmdLine)
-    var (longCliConfig, longCliIssues) = config_from_cli(specLongCmdLine)
+    var
+      (shortCliConfig, shortCliIssues) = config_from_cli(specShortCmdLine)
+      (longCliConfig, longCliIssues) = config_from_cli(specLongCmdLine)
 
     check:
       shortCliIssues.len() == 0
@@ -102,13 +107,14 @@ suite "Cli_BS":
 
 
   test "Should have no issue with tilde path":
-    #skip()
-    let tildePath = Path("~/Bucket/bharrisaplus/webdevn/spec/appa/has_index").string
-    let specShortCmdLine = @["-d:"&tildePath]
-    let specLongCmdLine = @["--dir", tildePath]
+    let
+      tildePath = Path("~/Bucket/bharrisaplus/webdevn/spec/appa/has_index").string
+      specShortCmdLine = @["-d:"&tildePath]
+      specLongCmdLine = @["--dir", tildePath]
 
-    var (shortCliConfig, shortCliIssues) = config_from_cli(specShortCmdLine)
-    var (longCliConfig, longCliIssues) = config_from_cli(specLongCmdLine)
+    var
+      (shortCliConfig, shortCliIssues) = config_from_cli(specShortCmdLine)
+      (longCliConfig, longCliIssues) = config_from_cli(specLongCmdLine)
 
     check:
       shortCliIssues.len() == 0
@@ -128,13 +134,15 @@ suite "Cli_BS":
 
 
   test "Should have an issue with non number value used in port":
-    let specShortCmdLine = @["-d:./spec/appa/has_index", "-p:abc"]
-    let specShortCmdLine_2 = @["-d:./spec/appa/has_index", "--port", "!"]
-    let specLongCmdLine = @["--dir", "./spec/appa/has_index", "--port", "true"]
+    let
+      specShortCmdLine = @["-d:./spec/appa/has_index", "-p:abc"]
+      specShortCmdLine_2 = @["-d:./spec/appa/has_index", "--port", "!"]
+      specLongCmdLine = @["--dir", "./spec/appa/has_index", "--port", "true"]
 
-    var (_, shortCliIssues) = config_from_cli(specShortCmdLine)
-    var (_, shortCliIssues_2) = config_from_cli(specShortCmdLine_2)
-    var (_, longCliIssues) = config_from_cli(specLongCmdLine)
+    var
+      (_, shortCliIssues) = config_from_cli(specShortCmdLine)
+      (_, shortCliIssues_2) = config_from_cli(specShortCmdLine_2)
+      (_, longCliIssues) = config_from_cli(specLongCmdLine)
 
     check:
       shortCliIssues.len() == 1
@@ -148,13 +156,15 @@ suite "Cli_BS":
 
 
   test "Should have an issue with non-compatible integer for port":
-    let specOverInt = "9223372036854775808"
-    let specOverPort = "65536"
-    let specShortCmdLine = @["-d:./spec/appa/has_index", "-p:"&specOverInt]
-    let specShortCmdLine_2 = @["--dir", "./spec/appa/has_index", "--port", specOverPort]
+    let
+      specOverInt = "9223372036854775808"
+      specOverPort = "65536"
+      specShortCmdLine = @["-d:./spec/appa/has_index", "-p:"&specOverInt]
+      specShortCmdLine_2 = @["--dir", "./spec/appa/has_index", "--port", specOverPort]
 
-    var (shortCliConfig, shortCliIssues) = config_from_cli(specShortCmdLine)
-    var (shortCliConfig_2, shortCliIssues_2) = config_from_cli(specShortCmdLine_2)
+    var
+      (shortCliConfig, shortCliIssues) = config_from_cli(specShortCmdLine)
+      (shortCliConfig_2, shortCliIssues_2) = config_from_cli(specShortCmdLine_2)
 
     check:
       shortCliIssues.len() == 1
@@ -165,13 +175,15 @@ suite "Cli_BS":
 
 
   test "Should have 1 issue with non present index file":
-    let specShortCmdLine = @["-d:./spec/appa/has_no_index"]
-    let specLongCmdLine = @["--dir", "./spec/appa/has_index_custom", "--index", "ustom.html",]
-    let specMixedCmdLine = @["--dir", "./spec/appa/has_index_custom"]
+    let
+      specShortCmdLine = @["-d:./spec/appa/has_no_index"]
+      specLongCmdLine = @["--dir", "./spec/appa/has_index_custom", "--index", "ustom.html",]
+      specMixedCmdLine = @["--dir", "./spec/appa/has_index_custom"]
 
-    var (shortCliConfig, shortCliIssues) = config_from_cli(specShortCmdLine)
-    var (longCliConfig, longCliIssues) = config_from_cli(specLongCmdLine)
-    var (mixedCliConfig, mixedCliIssues) = config_from_cli(specMixedCmdLine)
+    var
+      (shortCliConfig, shortCliIssues) = config_from_cli(specShortCmdLine)
+      (longCliConfig, longCliIssues) = config_from_cli(specLongCmdLine)
+      (mixedCliConfig, mixedCliIssues) = config_from_cli(specMixedCmdLine)
 
     check:
       shortCliIssues.len() == 1
@@ -185,13 +197,15 @@ suite "Cli_BS":
 
 
   test "Should be verbose with flag present":
-    let specShortCmdLine = @["-d:./spec/appa/has_index", "-v"]
-    let specLongCmdLine = @["--dir", "./spec/appa/has_index", "--verbose"]
-    let specMixedCmdLine = @["-d:./spec/appa/has_index", "--verbose"]
+    let
+      specShortCmdLine = @["-d:./spec/appa/has_index", "-v"]
+      specLongCmdLine = @["--dir", "./spec/appa/has_index", "--verbose"]
+      specMixedCmdLine = @["-d:./spec/appa/has_index", "--verbose"]
 
-    var (shortCliConfig, shortCliIssues) = config_from_cli(specShortCmdLine)
-    var (longCliConfig, longCliIssues) = config_from_cli(specLongCmdLine)
-    var (mixedCliConfig, mixedCliIssues) = config_from_cli(specMixedCmdLine)
+    var
+      (shortCliConfig, shortCliIssues) = config_from_cli(specShortCmdLine)
+      (longCliConfig, longCliIssues) = config_from_cli(specLongCmdLine)
+      (mixedCliConfig, mixedCliIssues) = config_from_cli(specMixedCmdLine)
 
     check:
       shortCliIssues.len() == 0
@@ -205,13 +219,15 @@ suite "Cli_BS":
 
 
   test "Should write logfile with flag present":
-    let specShortCmdLine = @["-d:./spec/appa/has_index", "-l"]
-    let specLongCmdLine = @["--dir", "./spec/appa/has_index", "--log"]
-    let specMixedCmdLine = @["--dir", "./spec/appa/has_index", "-l"]
+    let
+      specShortCmdLine = @["-d:./spec/appa/has_index", "-l"]
+      specLongCmdLine = @["--dir", "./spec/appa/has_index", "--log"]
+      specMixedCmdLine = @["--dir", "./spec/appa/has_index", "-l"]
 
-    var (shortCliConfig, shortCliIssues) = config_from_cli(specShortCmdLine)
-    var (longCliConfig, longCliIssues) = config_from_cli(specLongCmdLine)
-    var (mixedCliConfig, mixedCliIssues) = config_from_cli(specMixedCmdLine)
+    var
+      (shortCliConfig, shortCliIssues) = config_from_cli(specShortCmdLine)
+      (longCliConfig, longCliIssues) = config_from_cli(specLongCmdLine)
+      (mixedCliConfig, mixedCliIssues) = config_from_cli(specMixedCmdLine)
 
     check:
       shortCliIssues.len() == 0
