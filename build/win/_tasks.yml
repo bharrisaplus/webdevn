@@ -3,8 +3,31 @@
 version: '3'
 
 tasks:
+  rear-x64-debug:
+    env:
+      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/win/x64'
+    cmds:
+      - nim c --outDir:$BUILD_OUTPUT_DIR $SOURCE_DIR/webdevn.nim
+
   rear-x64:
     env:
       BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/win/x64'
     cmds:
-      - echo "Hey, it's windows running on 64bit here"
+      - nim c -d:release --outDir:$BUILD_OUTPUT_DIR $SOURCE_DIR/webdevn.nim
+
+  wrap-x64:
+    deps: [rear-x64]
+    env:
+      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/win/x64'
+    cmds:
+      - shasum -a 256 $BUILD_OUTPUT_DIR/webdevn.exe | cut -d ' ' -f 1 > $BUILD_OUTPUT_DIR/webdevn.exe.sha256
+      - zip -j $BUILD_OUTPUT_DIR/webdevn_winx64-$VERSION_NUM.zip $BUILD_OUTPUT_DIR/webdevn.exe $BUILD_OUTPUT_DIR/webdevn.exe.sha256
+      - shasum -a 256 $BUILD_OUTPUT_DIR/webdevn_winx64-$VERSION_NUM.zip | cut -d ' ' -f 1 > $BUILD_OUTPUT_DIR/webdevn_winx64-$VERSION_NUM.zip.sha256
+
+  clean-x64:
+    env:
+      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/win/x64'
+    cmds:
+      - rm -rf $BUILD_OUTPUT_DIR/*.exe
+      - rm -rf $BUILD_OUTPUT_DIR/*.zip
+      - rm -rf $BUILD_OUTPUT_DIR/*.sha256
