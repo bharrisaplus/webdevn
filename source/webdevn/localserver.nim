@@ -2,7 +2,8 @@ from std/mimetypes import getMimeType
 from asyncdispatch import sleepAsync
 from std/asyncfutures import Future, newFuture
 from std/asyncmacro import `async`, `await`
-from std/strutils import strip, startsWith
+from std/strutils import startsWith, endsWith
+from std/times import now, utc, format
 from std/strformat import `&`
 from std/httpcore import HttpHeaders, HttpCode, Http200, Http404, newHttpHeaders, `$`
 from std/nativesockets import `$`
@@ -12,6 +13,23 @@ from std/asynchttpserver import Request,
 
 import type_defs, scribe, utils
 
+
+proc stamp_headers* (s :localServer, fileExt :string, fileLen: int) :HttpHeaders =
+  let mimeType = s.mimeLookup.getMimeType(fileExt)
+
+  let textLike = mimeType.startsWith("text/") or mimeType == "application/javascript" or
+    mimeType == "application/json" or mimeType.endsWith("+xml")
+
+  let
+    contentEncoding = if textLike: "; charset=utf-8" else: ""
+    currentTime = now().utc()
+
+  return newHttpHeaders(s.serverMilieu.baseHeaders & @{
+    "Content-Type": mimeType & contentEncoding,
+    "Content-Length": $fileLen,
+    "Date": currentTime.format("ddd, dd MMM yyyy HH:mm:ss") & " GMT",
+    "ETag": "W/\"" & currentTime.format("ddMMyyHHmmss") & "-" & $fileLen
+  })
 
 proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.async.} =
   let
@@ -36,21 +54,17 @@ proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.a
       s.serverMilieu.runScribe.log_line(&"(200) Found File\n\n")
       resContent = gobbleInfo.contents
       resCode = Http200
-      resHeaders = newHttpHeaders(s.serverMilieu.baseHeaders & mect_stamp(
-        s.mimeLookup.getMimeType(lookupInfo.ext), resContent.len
-      ))
+      resHeaders = s.stamp_headers(fileExt = lookupInfo.ext, fileLen = resContent.len)
 
     else:
       s.serverMilieu.runScribe.log_issues("File read", gobbleInfo.issues)
       isOk = false
-  
+
   if not isOk:
     s.serverMilieu.runScribe.log_line(&"(404) File Not Found\n\n")
     resContent = errorContent
     resCode = Http404
-    resHeaders = newHttpHeaders(s.serverMilieu.baseHeaders & mect_stamp(
-      s.mimeLookup.getMimeType("html"), resContent.len
-    ))
+    resHeaders = s.stamp_headers(fileExt = "html", fileLen = resContent.len)
 
   s.serverMilieu.runScribe.log_line(&"Stamped Headers: {resHeaders}\n")
   s.serverMilieu.runScribe.spam_line(&"Responding to request: {aioReq.url}\n=============")

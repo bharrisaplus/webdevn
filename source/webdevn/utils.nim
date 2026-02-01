@@ -1,9 +1,7 @@
-from std/strformat import fmt, `&`
-from std/strutils import strip, toLowerAscii, startsWith, endsWith
-from std/nativesockets import Port, `$`
+from std/strformat import `&`
+from std/strutils import strip, toLowerAscii
 from std/files import fileExists
 from std/uri import Uri
-from std/times import now, utc, format
 from std/asyncfutures import Future, newFuture, complete
 from std/asyncmacro import `async`, `await`
 from std/asyncfile import AsyncFile, openAsync, readAll, close
@@ -92,19 +90,3 @@ proc lazy_gobble* (gobbleMilieu :webdevnMilieu, morsel :string) :Future[gobbleRe
   gobbleMilieu.runScribe.log_line("Reading file and returning contents")
 
   return (contents: nomnom, issues: gobbleProblems)
-
-
-# (m)ime(e)tag(c)ontent(t)ime_stamp
-proc mect_stamp* (mimeType :string, fileLen: int) :headerBits =
-  let textLike = mimeType.startsWith("text/") or mimeType == "application/javascript" or
-    mimeType == "application/json" or mimeType.endsWith("+xml")
-
-  let contentEncoding = if textLike: "; charset=utf-8" else: ""
-  let currentTime = now().utc()
-
-  return @{
-    "Content-Type": mimeType & contentEncoding,
-    "Content-Length": $fileLen,
-    "Date": currentTime.format("ddd, dd MMM yyyy HH:mm:ss") & " GMT",
-    "ETag": "W/\"" & currentTime.format("ddMMyyHHmmss") & "-" & $fileLen
-  }
