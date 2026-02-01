@@ -30,6 +30,7 @@ tasks:
       - 'echo nimble package deps: {{.NIMBLEPKGDEPSVER}}'
       - 'echo Unix timestamp: {{now | unixEpoch}}'
 
+
   # Package Mangement
 
   update-nimble-pkgver:
@@ -45,6 +46,7 @@ tasks:
     desc: Compiles and executes code with cli args (after '--')
     cmds:
       - nim r $SOURCE_DIR/webdevn.nim {{.CLI_ARGS}}
+
 
   # Top level aliases for convenience
 
@@ -102,6 +104,7 @@ tasks:
     desc: A task to check the utils module for compile errors
     cmds:
       - nim check {{.SOURCE_DIR}}/webdevn/utils.nim
+
 
   # Testing
 
