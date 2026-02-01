@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+tasks:
+
+  rear-x64:
+    cmds:
+      - echo "Hey, it's windows running on 64bit here"

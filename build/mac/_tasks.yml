@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+tasks:
+
+  rear-intel:
+    cmds:
+      - echo "Hey, it's macos running intel here"
+
+  rear-apple:
+    cmds:
+      - echo "Hey, it's macos running apple-silicone here"

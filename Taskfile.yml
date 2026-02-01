@@ -1,0 +1,46 @@
+# Be sure to have direnv allow the .envrc file before running this
+#   OR load the variables from .envrc yourself
+
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+# 
+# (see build/README.md)
+# 
+
+version: '3'
+
+includes:
+  winbuild: ./build/win/_tasks.yml
+  macbuild: ./build/mac/_tasks.yml
+  gnubuild: ./build/win/_tasks.yml
+
+tasks:
+  check_env:
+    cmds:
+      - echo $PROJECT_DIR
+      - echo $SOURCE_DIR
+      - echo "Unix timestamp {{now | unixEpoch}}"
+
+  # Top level aliases for convenience
+
+  rear-winbuid:
+    aliases: [rear-win]
+    cmds:
+      - task: winbuild:rear-x64
+
+
+  rear-macbuid:
+    aliases: [rear-mac]
+    cmds:
+      - task: macbuild:rear-intel
+
+  rear-macasbuid:
+    aliases: [rear-macas]
+    cmds:
+      - task: macbuild:rear-apple
+
+
+  rear-gnubuid:
+    aliases: [rear-gnu]
+    cmds:
+      - task: gnubuild:rear-x64
