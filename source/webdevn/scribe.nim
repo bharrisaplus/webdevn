@@ -59,8 +59,8 @@ proc print_lookup* (title :string = "webdevn", req :Uri, mPath, dRoot :Path) =
   echo outputStr
 
 
-proc print_line* (gab :string) =
-  echo "\nwebdevn - " & gab
+proc print_it* (itBeing :string) =
+  echo "\nwebdevn - " & itBeing
 
 
 proc log_config* (s :aScribe, logTitle :string = "webdevn", logThingy :webdevnConfig) =
@@ -106,10 +106,10 @@ proc log_lookup* (s :aScribe, logTitle :string = "webdevn", logReq :Uri, logMPat
     discard
 
 
-proc log_line* (s :aScribe, logGab :string) =
+proc log_it* (s :aScribe, logItBeing :string) =
   if s of rScribe:
     if s.willYap:
-      print_line(gab = logGab)
+      print_it(itBeing = logItBeing)
 
     if s.doFile:
       discard
@@ -131,8 +131,8 @@ proc spam_milieu* (s :aScribe, spamTitle :string = "webdevn", spamThingy :webdev
     discard
 
 
-proc spam_line* (s :aScribe, spamGab :string) =
+proc spam_it* (s :aScribe, spamItBeing :string) =
   if s of rScribe:
-    print_line(gab = spamGab)
+    print_it(itBeing = spamItBeing)
   else:
     discard

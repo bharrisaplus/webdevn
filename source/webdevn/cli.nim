@@ -94,12 +94,12 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
           maybeConfig.writeLog = true
 
         of "V", "version":
-          scribe.printLine("webdevn verion: " & webdevnVersion)
+          scribe.print_it("webdevn verion: " & webdevnVersion)
           maybeConfig.oneOff = true
           break
 
         of "h", "help":
-          scribe.printLine(helpManual)
+          scribe.print_it(helpManual)
           maybeConfig.oneOff = true
           break
 

@@ -88,6 +88,6 @@ proc lazy_gobble* (gobbleMilieu :webdevnMilieu, morsel :string) :Future[gobbleRe
   finally:
     file_blob.close()
 
-  gobbleMilieu.runScribe.log_line("Reading file and returning contents")
+  gobbleMilieu.runScribe.log_it("Reading file and returning contents")
 
   return (contents: nomnom, issues: gobbleProblems)

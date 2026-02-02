@@ -53,7 +53,7 @@ proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.a
     let gobbleInfo = await lazy_gobble(s.serverMilieu, lookupInfo.loc)
 
     if gobbleInfo.issues.len == 0:
-      s.serverMilieu.runScribe.log_line(&"(200) Found File\n\n")
+      s.serverMilieu.runScribe.log_it(&"(200) Found File\n\n")
       resContent = gobbleInfo.contents
       resCode = Http200
       resHeaders = s.stamp_headers(lookupInfo.ext, resContent.len)
@@ -63,13 +63,13 @@ proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.a
       isOk = false
 
   if not isOk:
-    s.serverMilieu.runScribe.log_line(&"(404) File Not Found\n\n")
+    s.serverMilieu.runScribe.log_it(&"(404) File Not Found\n\n")
     resContent = errorContent
     resCode = Http404
     resHeaders = s.stamp_headers("html", resContent.len)
 
-  s.serverMilieu.runScribe.log_line(&"Stamped Headers: {resHeaders}\n")
-  s.serverMilieu.runScribe.spam_line(&"Responding to request: {aioReq.url}\n=============")
+  s.serverMilieu.runScribe.log_it(&"Stamped Headers: {resHeaders}\n")
+  s.serverMilieu.runScribe.spam_it(&"Responding to request: {aioReq.url}\n=============")
 
   await aioReq.respond(resCode, resContent, resHeaders)
 
@@ -78,9 +78,9 @@ proc wake_up* (s: localServer, napTime: int) :Future[void] {.async.} =
   let listenAddress = if s.serverMilieu.runConf.zeroHost: "0.0.0.0" else: "localhost"
 
   s.innerDaemon.listen(s.serverMilieu.runConf.listenPort)
-  s.serverMilieu.runScribe.spam_line("Starting up server")
-  s.serverMilieu.runScribe.spam_line(&"Listening on {listenAddress}:{s.innerDaemon.getPort}")
-  s.serverMilieu.runScribe.spam_line("Press 'Ctrl+C' to exit\n\n")
+  s.serverMilieu.runScribe.spam_it("Starting up server")
+  s.serverMilieu.runScribe.spam_it(&"Listening on {listenAddress}:{s.innerDaemon.getPort}")
+  s.serverMilieu.runScribe.spam_it("Press 'Ctrl+C' to exit\n\n")
   while true:
     if s.innerDaemon.shouldAcceptRequest():
       await s.innerDaemon.acceptRequest((r: Request) => s.aio_respond_for(aioReq = r))
