@@ -114,5 +114,6 @@ type webdevnMilieu* = object
 proc defaultWebdevnMilieu* (someConfig :webdevnConfig) :webdevnMilieu =
   return webdevnMilieu(
     runConf: someConfig,
+    listenPort: Port(someConfig.inputPortNum),
     mimeLookup: newMimeTypes()
   )
