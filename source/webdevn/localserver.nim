@@ -8,11 +8,13 @@ from std/strformat import `&`
 from std/httpcore import HttpHeaders, HttpCode, Http200, Http404, newHttpHeaders, `$`
 from std/nativesockets import `$`
 from std/sugar import `=>`
-from std/asynchttpserver import Request,
+from std/asynchttpserver import Request, newAsyncHttpServer,
   listen, getPort, shouldAcceptRequest, acceptRequest, respond
 
 import type_defs, scribe, utils
 
+
+let innerDaemon = newAsyncHttpServer()
 
 proc stamp_headers* (loser :localServer, fileExt :string, fileLen: int) :HttpHeaders =
   let mimeType = loser.mimeLookup.getMimeType(fileExt)
@@ -77,13 +79,13 @@ proc aio_respond_for* (loser :localServer, aioScribe :aScribe, aioReq :Request) 
 proc wake_up* (loser: localServer, wakeupScribe: aScribe, napTime: int) :Future[void] {.async.} =
   let listenAddress = if loser.laMilieu.runConf.zeroHost: "0.0.0.0" else: "localhost"
 
-  loser.innerDaemon.listen(loser.laMilieu.runConf.listenPort)
+  innerDaemon.listen(loser.laMilieu.runConf.listenPort)
   wakeupScribe.spam_it("Starting up server")
-  wakeupScribe.spam_it(&"Listening on {listenAddress}:{loser.innerDaemon.getPort}")
+  wakeupScribe.spam_it(&"Listening on {listenAddress}:{innerDaemon.getPort}")
   wakeupScribe.spam_it("Press 'Ctrl+C' to exit\n\n")
   while true:
-    if loser.innerDaemon.shouldAcceptRequest():
-      await loser.innerDaemon.acceptRequest(
+    if innerDaemon.shouldAcceptRequest():
+      await innerDaemon.acceptRequest(
         (r: Request) => loser.aio_respond_for(aioScribe = wakeupScribe, aioReq = r)
       )
     else:

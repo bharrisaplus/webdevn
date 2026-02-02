@@ -1,6 +1,5 @@
 from std/paths import Path, getCurrentDir
 from std/net import Port
-from std/asynchttpserver import AsyncHttpServer, newAsyncHttpServer
 from std/mimetypes import MimeDB, newMimeTypes
 
 
@@ -105,13 +104,11 @@ type webdevnMilieu* = object
 # Server
 
 type localServer* = object
-  innerDaemon* :AsyncHttpServer
   mimeLookup* :MimeDB
   laMilieu* :webdevnMilieu
 
 proc webdevnLocalServer* (someMilieu :webdevnMilieu) :localServer =
   return localServer(
-    innerDaemon: newAsyncHttpServer(),
     mimeLookup: newMimeTypes(),
     laMilieu: someMilieu
   )
