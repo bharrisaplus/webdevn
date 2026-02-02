@@ -2,6 +2,8 @@ import std/unittest
 from std/paths import Path, absolutePath, `/`
 from std/net import Port
 from std/uri import Uri, parseUri
+from asyncdispatch import waitFor
+from std/strutils import startsWith, unindent
 
 import ../source/webdevn/[type_defs, utils]
 
@@ -167,10 +169,32 @@ suite "Utils_BS":
 
 
   test "Should have no issues if file is read successfully":
-    skip()
+    let swearMorsel = absolutePath(Path("./spec/appa/has_index/index.html")).string
+
+    let maybeSolution = waitFor lazy_gobble(gobbleScribe = quietUtilSpecScribe, morsel = swearMorsel)
+
+    check:
+      maybeSolution.issues.len == 0
+      maybeSolution.contents == (
+        """<!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <title>webdevn demo</title>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+          </head>
+          <body>
+            <h2>Hello World</h2>
+          </body>
+        </html>
+        """
+      ).unindent(count = 8)
 
   test "Should have 1 issue if file is not found when attempting to read":
-    skip()
+    let swearMorsel = absolutePath(Path("./spec/appa/has_index/about.html")).string
 
-  test "Should have 1 isuue if some exception happens when attempting to read":
-    skip()
+    let maybeSolution = waitFor lazy_gobble(gobbleScribe = quietUtilSpecScribe, morsel = swearMorsel)
+
+    check:
+      maybeSolution.issues.len == 1
+      maybeSolution.issues[0].startsWith("OS")
