@@ -16,8 +16,8 @@ import type_defs, scribe, utils
 
 let innerDaemon = newAsyncHttpServer()
 
-proc stamp_headers* (loser :localServer, fileExt :string, fileLen: int) :HttpHeaders =
-  let mimeType = loser.mimeLookup.getMimeType(fileExt)
+proc stamp_headers* (stampMilieu :webdevnMilieu, fileExt :string, fileLen: int) :HttpHeaders =
+  let mimeType = stampMilieu.mimeLookup.getMimeType(fileExt)
 
   let textLike = mimeType.startsWith("text/") or mimeType == "application/javascript" or
     mimeType == "application/json" or mimeType.endsWith("+xml")
@@ -26,18 +26,18 @@ proc stamp_headers* (loser :localServer, fileExt :string, fileLen: int) :HttpHea
     contentEncoding = if textLike: "; charset=utf-8" else: ""
     currentTime = now().utc()
 
-  return newHttpHeaders(loser.laMilieu.baseHeaders & @{
+  return newHttpHeaders(stampMilieu.baseHeaders & @{
     "Content-Type": mimeType & contentEncoding,
     "Content-Length": $fileLen,
     "Date": currentTime.format("ddd, dd MMM yyyy HH:mm:ss") & " GMT",
     "ETag": "W/\"" & currentTime.format("ddMMyyHHmmss") & "-" & $fileLen
   })
 
-proc aio_respond_for* (loser :localServer, aioScribe :aScribe, aioReq :Request) :owned(Future[void]) {.async.} =
+proc aio_respond_for* (aioMilieu :webdevnMilieu, aioScribe :aScribe, aioReq :Request) :owned(Future[void]) {.async.} =
   let
     errorContent = "<h2>404: Not Found</h2>"
     lookupInfo = lookup_from_url(
-      webdevnLookupParts(loser.laMilieu.runConf), aioScribe, aioReq.url
+      webdevnLookupParts(aioMilieu.runConf), aioScribe, aioReq.url
     )
 
   var
@@ -58,7 +58,7 @@ proc aio_respond_for* (loser :localServer, aioScribe :aScribe, aioReq :Request) 
       aioScribe.log_it(&"(200) Found File\n\n")
       resContent = gobbleInfo.contents
       resCode = Http200
-      resHeaders = loser.stamp_headers(lookupInfo.ext, resContent.len)
+      resHeaders = stamp_headers(aioMilieu, lookupInfo.ext, resContent.len)
 
     else:
       aioScribe.log_issues("File read", gobbleInfo.issues)
@@ -68,7 +68,7 @@ proc aio_respond_for* (loser :localServer, aioScribe :aScribe, aioReq :Request) 
     aioScribe.log_it(&"(404) File Not Found\n\n")
     resContent = errorContent
     resCode = Http404
-    resHeaders = loser.stamp_headers("html", resContent.len)
+    resHeaders = stamp_headers(aioMilieu, "html", resContent.len)
 
   aioScribe.log_it(&"Stamped Headers: {resHeaders}\n")
   aioScribe.spam_it(&"Responding to request: {aioReq.url}\n=============")
@@ -76,17 +76,17 @@ proc aio_respond_for* (loser :localServer, aioScribe :aScribe, aioReq :Request) 
   await aioReq.respond(resCode, resContent, resHeaders)
 
 
-proc wake_up* (loser: localServer, wakeupScribe: aScribe, napTime: int) :Future[void] {.async.} =
-  let listenAddress = if loser.laMilieu.runConf.zeroHost: "0.0.0.0" else: "localhost"
+proc wake_up* (wakeupMilieu: webdevnMilieu, wakeupScribe: aScribe, napTime: int) :Future[void] {.async.} =
+  let listenAddress = if wakeupMilieu.runConf.zeroHost: "0.0.0.0" else: "localhost"
 
-  innerDaemon.listen(loser.laMilieu.runConf.listenPort)
+  innerDaemon.listen(wakeupMilieu.runConf.listenPort)
   wakeupScribe.spam_it("Starting up server")
   wakeupScribe.spam_it(&"Listening on {listenAddress}:{innerDaemon.getPort}")
   wakeupScribe.spam_it("Press 'Ctrl+C' to exit\n\n")
   while true:
     if innerDaemon.shouldAcceptRequest():
       await innerDaemon.acceptRequest(
-        (r: Request) => loser.aio_respond_for(aioScribe = wakeupScribe, aioReq = r)
+        (r: Request) => aio_respond_for(aioMilieu = wakeupMilieu, aioScribe = wakeupScribe, aioReq = r)
       )
     else:
       await sleepAsync(napTime)

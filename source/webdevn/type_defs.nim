@@ -91,24 +91,20 @@ proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
     logName: "webdevn.log.txt"
   )
 
-# Runtime environment / Server config
+# Runtime environment
 
 type webdevnMilieu* = object
   runConf* :webdevnConfig
-  baseHeaders* :headerBits = @{
-    "Server": "webdevn; nim/c",
-    "Cache-Control": "no-store, no-cache",
-    "Clear-Site-Data": "\"cache\""
-  }
-
-# Server
-
-type localServer* = object
   mimeLookup* :MimeDB
-  laMilieu* :webdevnMilieu
+  baseHeaders* :headerBits
 
-proc webdevnLocalServer* (someMilieu :webdevnMilieu) :localServer =
-  return localServer(
+proc defaultWebdevnMilieu* (someConfig :webdevnConfig) :webdevnMilieu =
+  return webdevnMilieu(
+    runConf: someConfig,
     mimeLookup: newMimeTypes(),
-    laMilieu: someMilieu
+    baseHeaders: @{
+      "Server": "webdevn; nim/c",
+      "Cache-Control": "no-store, no-cache",
+      "Clear-Site-Data": "\"cache\""
+    }
   )
