@@ -10,7 +10,7 @@ const flagOpts* :seq[string]= @["v", "verbose", "l", "log", "V", "version", "h",
 
 type webdevnConfig* = object
   basePath* :Path
-  listenPort* :Port
+  inputPortNum* :int
   indexFile* :string
   indexFileExt* :string
   inSilence* :bool
@@ -21,7 +21,7 @@ type webdevnConfig* = object
 proc defaultWebdevnConfig* :webdevnConfig =
   return webdevnConfig(
     basePath: getCurrentDir(),
-    listenPort: Port(0),
+    inputPortNum: 0,
     indexFile: "index.html",
     indexFileExt: "html",
     inSilence: true,
@@ -32,7 +32,7 @@ proc defaultWebdevnConfig* :webdevnConfig =
 proc devWebdevnConfig* :webdevnConfig =
   return webdevnConfig(
     basePath: getCurrentDir(),
-    listenPort: 0.Port,
+    inputPortNum: 0,
     indexFile: "index.html",
     indexFileExt: "html",
     inSilence: false,
@@ -102,6 +102,7 @@ proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
 
 type webdevnMilieu* = object
   runConf* :webdevnConfig
+  listenPort* :Port
   mimeLookup* :MimeDB
   napTime* = 500 # How many ms to wait when server is busy
 

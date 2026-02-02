@@ -9,7 +9,7 @@ proc print_config* (title :string = "webdevn", thingy :webdevnConfig) =
   var outputStr = title & " Config:\n"
 
   outputStr.add(&"  - basePath => '{thingy.basePath}'\n")
-  outputStr.add(&"  - listenPort => {thingy.listenPort}\n")
+  outputStr.add(&"  - inputPortNum => {thingy.inputPortNum}\n")
   outputStr.add(&"  - indexFile => '{thingy.indexFile}'\n")
   outputStr.add(&"  - inSilence => {thingy.inSilence}\n")
   outputStr.add(&"  - writeLog => {thingy.writeLog}\n")
@@ -34,7 +34,7 @@ proc print_milieu* (title :string = "webdevn", thingy :webdevnMilieu) =
 
   outputStr.add("  runConf:\n")
   outputStr.add(&"    - basePath => '{thingy.runConf.basePath}'\n")
-  outputStr.add(&"    - listenPort => {thingy.runConf.listenPort}\n")
+  outputStr.add(&"    - listenPort => {thingy.listenPort}\n")
   outputStr.add(&"    - indexFile => '{thingy.runConf.indexFile}'\n")
   outputStr.add(&"    - inSilence => {thingy.runConf.inSilence}\n")
   outputStr.add(&"    - writeLog => {thingy.runConf.writeLog}\n")

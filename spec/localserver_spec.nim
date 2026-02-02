@@ -19,7 +19,7 @@ let quietLoserSpecScribe = fScribe(
 proc loserSpecWebDevnConfig (lBasePath :string, lIndexfile :string = "index.html") :webdevnConfig =
   return webdevnConfig(
     basePath: absolutePath(Path(lBasePath)),
-    listenPort: Port(0),
+    inputPortNum: 0,
     indexFile: lIndexfile,
     indexFileExt: "html",
     inSilence: true,

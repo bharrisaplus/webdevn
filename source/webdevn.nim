@@ -15,7 +15,7 @@ proc wake_up* (wakeupMilieu :webdevnMilieu, journal :aScribe) {.async.} =
     listenAddress = if wakeupMilieu.runConf.zeroHost: "0.0.0.0" else: "localhost"
     innerDaemon = newAsyncHttpServer()
 
-  innerDaemon.listen(wakeupMilieu.runConf.listenPort)
+  innerDaemon.listen(wakeupMilieu.listenPort)
   journal.spam_it("Starting up server")
   journal.spam_it("Listening on " & listenAddress & ":{localserver.innerDaemon.getPort}")
   journal.spam_it("Press 'Ctrl+C' to exit\n\n")

@@ -74,7 +74,7 @@ proc config_from_cli* (osCliParams :seq[string]) :(webdevnConfig, seq[string]) =
               var maybeListenPort = optinput.parseInt()
 
               if maybeListenPort > 0 and maybeListenPort <= 65535:
-                maybeConfig.listenPort = maybeListenPort.Port
+                maybeConfig.inputPortNum = maybeListenPort
               else:
                 cliProblems.add("Issue with '-p/--port' ~> ValueError: Should be 0 .. 65535")
             except ValueError as valE:
@@ -122,7 +122,7 @@ proc config_from_cli* (osCliParams :seq[string]) :(webdevnConfig, seq[string]) =
     #
     try:
       checkSocket = newSocket()
-      checkSocket.bindAddr(maybeConfig.listenPort)
+      checkSocket.bindAddr(Port(maybeConfig.inputPortNum))
     except OSError as osE:
       cliProblems.add(&"Issue with '-p/--port' ~> {osE.name}: {osE.msg}")
     finally:

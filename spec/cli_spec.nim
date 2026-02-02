@@ -3,9 +3,7 @@ import std/[unittest, paths, net]
 import ../source/webdevn/[cli]
 
 suite "Cli_BS":
-  let
-    specPort = 0.Port
-    specIndex = "index.html"
+  let specIndex = "index.html"
 
   test "Should have 1 issues if no arguments provided and no index.html present":
 
@@ -32,21 +30,21 @@ suite "Cli_BS":
     check:
       outputCliIssues.len() == 0
       paths.isAbsolute(outputCliConfig.basePath)
-      outputCliConfig.listenPort == specPort
+      outputCliConfig.inputPortNum == 0
       outputCliConfig.indexFile == specIndex
       outputCliConfig.inSilence
       not outputCliConfig.writeLog
 
       shortCliIssues.len() == 0
       paths.isAbsolute(shortCliConfig.basePath)
-      shortCliConfig.listenPort == specPort
+      shortCliConfig.inputPortNum == 0
       shortCliConfig.indexFile == specIndex
       shortCliConfig.inSilence
       not shortCliConfig.writeLog
 
       longCliIssues.len() == 0
       paths.isAbsolute(longCliConfig.basePath)
-      longCliConfig.listenPort == specPort
+      longCliConfig.inputPortNum == 0
       longCliConfig.indexFile == specIndex
       longCliConfig.inSilence
       not longCliConfig.writeLog
@@ -65,7 +63,7 @@ suite "Cli_BS":
     check:
       shortCliIssues.len() == 0
       paths.isAbsolute(shortCliConfig.basePath)
-      shortCliConfig.listenPort == specPort
+      shortCliConfig.inputPortNum == 0
       shortCliConfig.indexFile == specIndex
       shortCliConfig.inSilence
       not shortCliConfig.writeLog
@@ -73,7 +71,7 @@ suite "Cli_BS":
 
       longCliIssues.len() == 0
       paths.isAbsolute(longCliConfig.basePath)
-      longCliConfig.listenPort == specPort
+      longCliConfig.inputPortNum == 0
       longCliConfig.indexFile == specIndex
       longCliConfig.inSilence
       not longCliConfig.writeLog
@@ -92,7 +90,7 @@ suite "Cli_BS":
     check:
       shortCliIssues.len() == 0
       paths.isAbsolute(shortCliConfig.basePath)
-      shortCliConfig.listenPort == specPort
+      shortCliConfig.inputPortNum == 0
       shortCliConfig.indexFile == specIndex
       shortCliConfig.inSilence
       not shortCliConfig.writeLog
@@ -100,7 +98,7 @@ suite "Cli_BS":
 
       longCliIssues.len() == 0
       paths.isAbsolute(longCliConfig.basePath)
-      longCliConfig.listenPort == specPort
+      longCliConfig.inputPortNum == 0
       longCliConfig.indexFile == specIndex
       longCliConfig.inSilence
       not longCliConfig.writeLog
@@ -119,7 +117,7 @@ suite "Cli_BS":
     check:
       shortCliIssues.len() == 0
       paths.isAbsolute(shortCliConfig.basePath)
-      shortCliConfig.listenPort == specPort
+      shortCliConfig.inputPortNum == 0
       shortCliConfig.indexFile == specIndex
       shortCliConfig.inSilence
       not shortCliConfig.writeLog
@@ -127,7 +125,7 @@ suite "Cli_BS":
 
       longCliIssues.len() == 0
       paths.isAbsolute(longCliConfig.basePath)
-      longCliConfig.listenPort == specPort
+      longCliConfig.inputPortNum == 0
       longCliConfig.indexFile == specIndex
       longCliConfig.inSilence
       not longCliConfig.writeLog
