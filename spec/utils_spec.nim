@@ -22,9 +22,6 @@ proc utilSpecLookupParts (drStr :string) :lookupParts =
     docIndexExt: "html"
   )
 
-proc makeAbstr (pathStr :string) :Path =
-  return absolutePath(Path(pathStr))
-
 
 suite "Utils_BS":
 
@@ -35,6 +32,7 @@ suite "Utils_BS":
 
     check:
       utils.dir_contains_file(maybeParent = swearPath, maybeChild = swearFile)
+
 
   test "Should be false if filename pattern is not within directory":
     let
