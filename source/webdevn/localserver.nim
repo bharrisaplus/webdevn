@@ -34,7 +34,9 @@ proc stamp_headers* (s :localServer, fileExt :string, fileLen: int) :HttpHeaders
 proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.async.} =
   let
     errorContent = "<h2>404: Not Found</h2>"
-    lookupInfo = lookup_from_url(s.serverMilieu, aioReq.url)
+    lookupInfo = lookup_from_url(
+      webdevnLookupParts(s.serverMilieu.runConf), s.serverMilieu.runScribe, aioReq.url
+    )
 
   var
     resContent :string
@@ -54,7 +56,7 @@ proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.a
       s.serverMilieu.runScribe.log_line(&"(200) Found File\n\n")
       resContent = gobbleInfo.contents
       resCode = Http200
-      resHeaders = s.stamp_headers(fileExt = lookupInfo.ext, fileLen = resContent.len)
+      resHeaders = s.stamp_headers(lookupInfo.ext, resContent.len)
 
     else:
       s.serverMilieu.runScribe.log_issues("File read", gobbleInfo.issues)
@@ -64,7 +66,7 @@ proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.a
     s.serverMilieu.runScribe.log_line(&"(404) File Not Found\n\n")
     resContent = errorContent
     resCode = Http404
-    resHeaders = s.stamp_headers(fileExt = "html", fileLen = resContent.len)
+    resHeaders = s.stamp_headers("html", resContent.len)
 
   s.serverMilieu.runScribe.log_line(&"Stamped Headers: {resHeaders}\n")
   s.serverMilieu.runScribe.spam_line(&"Responding to request: {aioReq.url}\n=============")

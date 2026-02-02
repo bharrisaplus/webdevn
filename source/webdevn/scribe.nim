@@ -46,17 +46,18 @@ proc print_milieu* (title :string = "webdevn", thingy :webdevnMilieu) =
 
   echo outputStr
 
-proc print_lookup* (title :string = "webdevn", req :Uri, mPath :Path, thingy :webdevnConfig) =
+proc print_lookup* (title :string = "webdevn", req :Uri, mPath, dRoot :Path) =
   var outputStr = "\n" & title & "Looking up request\n"
 
   outputStr.add(&"  - Request URL: {req}\n")
   outputStr.add(&"  - Request URL Path: {req.path}\n")
   outputStr.add(&"  - Request Absolute Path: {mPath}\n")
-  outputStr.add(&"  - basePath: {thingy.basePath}\n")
-  outputStr.add(&"  - basePath-Parent: {parentDir(thingy.basePath)}\n")
-  outputStr.add(&"  - basePath-Parent-Parent: {parentDir(parentDir(thingy.basePath))}\n")
+  outputStr.add(&"  - basePath: {dRoot}\n")
+  outputStr.add(&"  - basePath-Parent: {parentDir(dRoot)}\n")
+  outputStr.add(&"  - basePath-Parent-Parent: {parentDir(parentDir(dRoot))}\n")
 
   echo outputStr
+
 
 proc print_line* (gab :string) =
   echo "\nwebdevn - " & gab
@@ -94,10 +95,10 @@ proc log_milieu* (s :aScribe, logTitle :string = "webdevn", logThingy :webdevnMi
   else:
     discard
 
-proc log_lookup* (s :aScribe, logTitle :string = "webdevn", logReq :Uri, logMPath :Path, logthingy :webdevnConfig) =
+proc log_lookup* (s :aScribe, logTitle :string = "webdevn", logReq :Uri, logMPath, logDRoot :Path) =
   if s of rScribe:
     if s.willYap:
-      print_lookup(title = logTitle, req = logReq, mPath = logMPath, thingy = logThingy)
+      print_lookup(title = logTitle, req = logReq, mPath = logMPath, dRoot = logDRoot)
 
     if s.doFile:
       discard

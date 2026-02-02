@@ -19,7 +19,8 @@ proc dir_contains_file* (maybeParent :Path, maybeChild :string) :bool =
 
   return fileExists(maybeParent / maybeChildPath)
 
-proc lookup_from_url* (fsMilieu :webdevnMilieu, reqUrl :Uri) :lookupResult =
+
+proc lookup_from_url* (virtualFS :lookupParts, urlScribe :aScribe, reqUrl :Uri) :lookupResult =
   let urlPath = reqUrl.path.strip(chars ={'/'})
   var
     maybeFilePath :Path
@@ -28,29 +29,29 @@ proc lookup_from_url* (fsMilieu :webdevnMilieu, reqUrl :Uri) :lookupResult =
     lookProblems :seq[string] = @[]
 
   if urlPath == "": # root directory
-    maybeFilePath = fsMilieu.runConf.basePath / Path(fsMilieu.runConf.indexFile)
+    maybeFilePath = virtualFS.docRoot / Path(virtualFS.docIndex)
 
     if fileExists(maybeFilePath):
-      maybeFileExt = fsMilieu.runConf.indexFileExt
+      maybeFileExt = virtualFS.docIndexExt
       foundIt = true
 
   else: # file or other directory (do lookup)
-    maybeFilePath = absolutePath(path = Path(urlPath), root = fsMilieu.runConf.basePath)
+    maybeFilePath = absolutePath(path = Path(urlPath), root = virtualFS.docRoot)
 
     let safeSearch = (
-      maybeFilePath.isRelativeTo(fsMilieu.runConf.basePath) or
-      maybeFilePath.isRelativeTo(parentDir(fsMilieu.runConf.basePath)) or
-      maybeFilePath.isRelativeTo(parentDir(parentDir(fsMilieu.runConf.basePath)))
+      maybeFilePath.isRelativeTo(virtualFS.docRoot) or
+      maybeFilePath.isRelativeTo(parentDir(virtualFS.docRoot)) or
+      maybeFilePath.isRelativeTo(parentDir(parentDir(virtualFS.docRoot)))
     )
 
     if safeSearch:
       let maybeFileParts = splitFile(maybeFilePath)
 
       if maybeFileParts.ext == "": # other directory (look for indexFile)
-        maybeFilePath = maybeFilePath / Path(fsMilieu.runConf.indexFile)
+        maybeFilePath = maybeFilePath / Path(virtualFS.docIndex)
 
-        if dir_contains_file(maybeFilePath, fsMilieu.runConf.indexFile):
-          maybeFileExt = fsMilieu.runConf.indexFileExt
+        if dir_contains_file(maybeFilePath, virtualFS.docIndex):
+          maybeFileExt = virtualFS.docIndexExt
           foundIt = true
 
       else: # file (do lookup)
@@ -58,8 +59,8 @@ proc lookup_from_url* (fsMilieu :webdevnMilieu, reqUrl :Uri) :lookupResult =
           maybeFileExt = maybeFileParts.ext.toLowerAscii().strip(chars = {'.'})
           foundIt = true
 
-  fsMilieu.runScribe.log_lookup(
-    logReq = reqUrl, logMPath = maybeFilePath, logThingy = fsMilieu.runConf
+  urlScribe.log_lookup(
+    logReq = reqUrl, logMPath = maybeFilePath, logDRoot = virtualFS.docRoot
   )
 
   if not foundIt:

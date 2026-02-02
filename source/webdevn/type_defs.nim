@@ -36,6 +36,18 @@ proc devWebdevnConfig* :webdevnConfig =
     zeroHost: false
   )
 
+type lookupParts* = tuple
+  docRoot :Path # webdevnConfig.basePath
+  docIndex :string # webdevnConfig.indexFile
+  docIndexExt :string # webdevnConfig.indexFileExt
+
+proc webdevnLookupParts* (someConfig :webdevnConfig) :lookupParts =
+  return (
+    docRoot: someConfig.basePath,
+    docIndex: someConfig.indexFile,
+    docIndexExt: someConfig.indexFileExt
+  )
+
 type lookupResult* = tuple
   loc :string
   ext :string
