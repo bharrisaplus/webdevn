@@ -15,13 +15,13 @@ when isMainModule:
       currentMilieu.runScribe.spam_issues("Cli", cliIssues)
       quit("\nwebdevn - shutting down...\n", 0)
 
-    let loser = webdevnLocalServer(currentMilieu)
+    let webdevnLoser = webdevnLocalServer(currentMilieu)
 
     setControlCHook(proc() {.noconv.} =
-      currentMilieu.runScribe.log_milieu("\nlocalserver", loser.serverMilieu)
+      currentMilieu.runScribe.log_milieu("\nlocalserver", webdevnLoser.serverMilieu)
       quit("\nwebdevn - shutting down...\n", 0)
     )
 
-    currentMilieu.runScribe.spam_milieu("localserver", loser.serverMilieu)
+    currentMilieu.runScribe.spam_milieu("localserver", webdevnLoser.serverMilieu)
     
-    waitFor loser.wake_up(500)
+    waitFor webdevnLoser.wake_up(500)
