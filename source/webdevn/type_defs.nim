@@ -42,17 +42,6 @@ proc defaultWebdevnConfig* :webdevnConfig =
     zeroHost: false
   )
 
-proc devWebdevnConfig* :webdevnConfig =
-  return webdevnConfig(
-    basePath: getCurrentDir(),
-    inputPortNum: 0,
-    indexFile: "index.html",
-    indexFileExt: "html",
-    inSilence: false,
-    writeLog: false,
-    zeroHost: false
-  )
-
 
 # Misc
 
