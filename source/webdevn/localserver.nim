@@ -1,19 +1,14 @@
 from std/mimetypes import getMimeType
-from asyncdispatch import sleepAsync
 from std/asyncfutures import Future, newFuture, complete
 from std/asyncmacro import `async`, `await`
 from std/strutils import startsWith, endsWith
 from std/times import now, utc, format
 from std/strformat import `&`
 from std/httpcore import HttpHeaders, HttpCode, Http200, Http404, newHttpHeaders, `$`
-from std/nativesockets import `$`
-from std/asynchttpserver import Request, newAsyncHttpServer,
-  listen, getPort, shouldAcceptRequest, acceptRequest, respond
+from std/asynchttpserver import Request
 
 import type_defs, scribe, utils
 
-
-let innerDaemon = newAsyncHttpServer()
 
 proc stamp_headers* (stampMilieu :webdevnMilieu, fileExt :string, fileLen: int) :HttpHeaders =
   let mimeType = stampMilieu.mimeLookup.getMimeType(fileExt)
@@ -74,20 +69,3 @@ proc aio_for* (aioMilieu :webdevnMilieu, aioScribe :aScribe, aioReq :Request) :F
   aioScribe.spam_it(&"Responding to request: {aioReq.url}\n=============")
 
   return (responseCode: resCode, responseContent: resContent, responseHeaders: resHeaders)
-
-
-proc wake_up* (wakeupMilieu: webdevnMilieu, wakeupScribe: aScribe, napTime: int) :Future[void] {.async.} =
-  let listenAddress = if wakeupMilieu.runConf.zeroHost: "0.0.0.0" else: "localhost"
-
-  innerDaemon.listen(wakeupMilieu.runConf.listenPort)
-  wakeupScribe.spam_it("Starting up server")
-  wakeupScribe.spam_it(&"Listening on {listenAddress}:{innerDaemon.getPort}")
-  wakeupScribe.spam_it("Press 'Ctrl+C' to exit\n\n")
-  while true:
-    if innerDaemon.shouldAcceptRequest():
-      await innerDaemon.acceptRequest() do (aRequest: Request) {.async.}:
-        let (aioCode, aioContent, aioHeaders) = await aio_for(wakeupMilieu, wakeupScribe, aRequest)
-
-        await aRequest.respond(aioCode, aioContent, aioHeaders)
-    else:
-      await sleepAsync(napTime)
