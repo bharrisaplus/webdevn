@@ -108,11 +108,11 @@ type webdevnMilieu* = object
 type localServer* = object
   innerDaemon* :AsyncHttpServer
   mimeLookup* :MimeDB
-  serverMilieu* :webdevnMilieu
+  laMilieu* :webdevnMilieu
 
 proc webdevnLocalServer* (someMilieu :webdevnMilieu) :localServer =
   return localServer(
     innerDaemon: newAsyncHttpServer(),
     mimeLookup: newMimeTypes(),
-    serverMilieu: someMilieu
+    laMilieu: someMilieu
   )

@@ -18,10 +18,10 @@ when isMainModule:
     let webdevnLoser = webdevnLocalServer(currentMilieu)
 
     setControlCHook(proc() {.noconv.} =
-      currentMilieu.runScribe.log_milieu("\nlocalserver", webdevnLoser.serverMilieu)
+      currentMilieu.runScribe.log_milieu("\nlocalserver", webdevnLoser.laMilieu)
       quit("\nwebdevn - shutting down...\n", 0)
     )
 
-    currentMilieu.runScribe.spam_milieu("localserver", webdevnLoser.serverMilieu)
+    currentMilieu.runScribe.spam_milieu("localserver", webdevnLoser.laMilieu)
     
     waitFor webdevnLoser.wake_up(500)
