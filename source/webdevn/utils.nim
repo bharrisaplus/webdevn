@@ -86,7 +86,8 @@ proc lazy_gobble* (gobbleMilieu :webdevnMilieu, morsel :string) :Future[gobbleRe
   except Exception as bigE:
     gobbleProblems.add(&"Something occured while reading the file:\n    {bigE.name}: {bigE.msg}\n    Path: {morsel}")
   finally:
-    file_blob.close()
+    if file_blob != nil:
+      file_blob.close()
 
   gobbleMilieu.runScribe.log_it("Reading file and returning contents")
 
