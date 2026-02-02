@@ -4,9 +4,22 @@ from std/mimetypes import MimeDB, newMimeTypes
 from std/httpcore import HttpHeaders, HttpCode
 
 
-# Startup config / POST
+const
+  # Cli options that don't need input
+  flagOpts* :seq[string] = @["v", "verbose", "l", "log", "V", "version", "h", "help"]
+  # Number of log files to keep
+  maxRotate* :int = 3
+  # How many ms to wait when server is busy
+  napTime* = 500
+  # Headers that aren't generated for every request
+  baseHeaderBits* = @{
+    "Server": "webdevn; nim/c",
+    "Cache-Control": "no-store, no-cache",
+    "Clear-Site-Data": "\"cache\""
+  }
 
-const flagOpts* :seq[string]= @["v", "verbose", "l", "log", "V", "version", "h", "help"]
+
+# Startup config / POST
 
 type webdevnConfig* = object
   basePath* :Path
@@ -40,6 +53,7 @@ proc devWebdevnConfig* :webdevnConfig =
     zeroHost: false
   )
 
+
 # Misc
 
 type lookupParts* = tuple
@@ -63,16 +77,11 @@ type gobbleResult* = tuple
   contents :string
   issues :seq[string]
 
-const baseHeaderBits* = @{
-  "Server": "webdevn; nim/c",
-  "Cache-Control": "no-store, no-cache",
-  "Clear-Site-Data": "\"cache\""
-}
-
 type aioResponse* = tuple
   responseCode :HttpCode
   responseContent :string
   responseHeaders :HttpHeaders
+
 
 # Logger
 
@@ -80,7 +89,6 @@ type
   aScribe* = ref object of RootObj
     willYap* :bool
     doFile* :bool
-    maxRotate* :int
     logPath* :Path
     logName* :string
 
@@ -91,10 +99,10 @@ proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
   return rScribe(
     willYap: not someConfig.inSilence,
     doFile: someConfig.writeLog,
-    maxRotate: 3,
     logPath: getCurrentDir(),
     logName: "webdevn.log.txt"
   )
+
 
 # Runtime environment
 
@@ -102,7 +110,6 @@ type webdevnMilieu* = object
   runConf* :webdevnConfig
   listenPort* :Port
   mimeLookup* :MimeDB
-  napTime* = 500 # How many ms to wait when server is busy
 
 proc defaultWebdevnMilieu* (someConfig :webdevnConfig) :webdevnMilieu =
   return webdevnMilieu(

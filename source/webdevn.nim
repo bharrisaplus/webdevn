@@ -28,7 +28,7 @@ proc wake_up* (wakeupMilieu :webdevnMilieu, journal :aScribe) {.async.} =
 
         await okRequest.respond(aioCode, aioContent, aioHeaders)
     else:
-      await sleepAsync(wakeupMilieu.napTime)
+      await sleepAsync(napTime)
 
 
 when isMainModule:

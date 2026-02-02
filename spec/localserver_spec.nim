@@ -10,7 +10,6 @@ import ../source/webdevn/[type_defs, localserver]
 let quietLoserSpecScribe = fScribe(
   willYap: false,
   doFile: false,
-  maxRotate: 0,
   logPath: Path(""),
   logName: ""
 )
