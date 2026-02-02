@@ -12,7 +12,7 @@ import webdevn/[type_defs, scribe, cli, localServer]
 
 proc wake_up* (wakeupMilieu :webdevnMilieu, journal :aScribe) {.async.} =
   let
-    listenAddress = if wakeupMilieu.runConf.zeroHost: "0.0.0.0" else: "localhost"
+    listenAddress = if wakeupMilieu.anyAddr: "0.0.0.0" else: "localhost"
     innerDaemon = newAsyncHttpServer()
 
   innerDaemon.listen(wakeupMilieu.listenPort)

@@ -109,11 +109,13 @@ proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
 type webdevnMilieu* = object
   runConf* :webdevnConfig
   listenPort* :Port
+  anyAddr* :bool
   mimeLookup* :MimeDB
 
 proc defaultWebdevnMilieu* (someConfig :webdevnConfig) :webdevnMilieu =
   return webdevnMilieu(
     runConf: someConfig,
     listenPort: Port(someConfig.inputPortNum),
+    anyAddr: someConfig.zeroHost,
     mimeLookup: newMimeTypes()
   )
