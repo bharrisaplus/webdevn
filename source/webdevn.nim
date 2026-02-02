@@ -8,20 +8,21 @@ import webdevn/[type_defs, scribe, cli, localServer]
 when isMainModule:
   let
     (cliConfig, cliIssues) = configFromCLi(commandLineParams())
-    currentMilieu = webdevnMilieu(runConf: cliConfig, runScribe: webdevnScribe(cliConfig))
+    runScribe = webdevnScribe(cliConfig)
+    currentMilieu = webdevnMilieu(runConf: cliConfig)
 
   if not cliConfig.oneOff:
     if cliIssues.len > 0:
-      currentMilieu.runScribe.spam_issues("Cli", cliIssues)
+      runScribe.spam_issues("Cli", cliIssues)
       quit("\nwebdevn - shutting down...\n", 0)
 
     let webdevnLoser = webdevnLocalServer(currentMilieu)
 
     setControlCHook(proc() {.noconv.} =
-      currentMilieu.runScribe.log_milieu("\nlocalserver", webdevnLoser.laMilieu)
+      runScribe.log_milieu("\nlocalserver", webdevnLoser.laMilieu)
       quit("\nwebdevn - shutting down...\n", 0)
     )
 
-    currentMilieu.runScribe.spam_milieu("localserver", webdevnLoser.laMilieu)
+    runScribe.spam_milieu("localserver", webdevnLoser.laMilieu)
     
-    waitFor webdevnLoser.wake_up(500)
+    waitFor webdevnLoser.wake_up(runScribe, 500)

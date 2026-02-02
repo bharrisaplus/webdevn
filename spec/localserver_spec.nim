@@ -36,8 +36,7 @@ suite "LocalServer_BS":
       swearFileExt_2 = "jpg"
       swearFileLen_2 = 0
       swearLoser = webdevnLocalServer(webdevnMilieu(
-        runConf: loserSpecWebDevnConfig(lBasePath = "./spec/appa/has_index"),
-        runScribe: quietLoserSpecScribe
+        runConf: loserSpecWebDevnConfig(lBasePath = "./spec/appa/has_index")
       ))
 
     let

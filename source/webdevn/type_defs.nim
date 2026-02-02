@@ -96,7 +96,6 @@ proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
 
 type webdevnMilieu* = object
   runConf* :webdevnConfig
-  runScribe* :aScribe
   baseHeaders* :headerBits = @{
     "Server": "webdevn; nim/c",
     "Cache-Control": "no-store, no-cache",

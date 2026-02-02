@@ -31,11 +31,11 @@ proc stamp_headers* (loser :localServer, fileExt :string, fileLen: int) :HttpHea
     "ETag": "W/\"" & currentTime.format("ddMMyyHHmmss") & "-" & $fileLen
   })
 
-proc aio_respond_for* (loser :localServer, aioReq :Request) :owned(Future[void]) {.async.} =
+proc aio_respond_for* (loser :localServer, aioScribe :aScribe, aioReq :Request) :owned(Future[void]) {.async.} =
   let
     errorContent = "<h2>404: Not Found</h2>"
     lookupInfo = lookup_from_url(
-      webdevnLookupParts(loser.laMilieu.runConf), loser.laMilieu.runScribe, aioReq.url
+      webdevnLookupParts(loser.laMilieu.runConf), aioScribe, aioReq.url
     )
 
   var
@@ -47,42 +47,44 @@ proc aio_respond_for* (loser :localServer, aioReq :Request) :owned(Future[void])
   if lookupInfo.issues.len == 0:
     isOk = true
   else:
-    loser.laMilieu.runScribe.log_issues("File lookup", lookupInfo.issues)
+    aioScribe.log_issues("File lookup", lookupInfo.issues)
 
   if isOk:
-    let gobbleInfo = await lazy_gobble(loser.laMilieu.runScribe, lookupInfo.loc)
+    let gobbleInfo = await lazy_gobble(aioScribe, lookupInfo.loc)
 
     if gobbleInfo.issues.len == 0:
-      loser.laMilieu.runScribe.log_it(&"(200) Found File\n\n")
+      aioScribe.log_it(&"(200) Found File\n\n")
       resContent = gobbleInfo.contents
       resCode = Http200
       resHeaders = loser.stamp_headers(lookupInfo.ext, resContent.len)
 
     else:
-      loser.laMilieu.runScribe.log_issues("File read", gobbleInfo.issues)
+      aioScribe.log_issues("File read", gobbleInfo.issues)
       isOk = false
 
   if not isOk:
-    loser.laMilieu.runScribe.log_it(&"(404) File Not Found\n\n")
+    aioScribe.log_it(&"(404) File Not Found\n\n")
     resContent = errorContent
     resCode = Http404
     resHeaders = loser.stamp_headers("html", resContent.len)
 
-  loser.laMilieu.runScribe.log_it(&"Stamped Headers: {resHeaders}\n")
-  loser.laMilieu.runScribe.spam_it(&"Responding to request: {aioReq.url}\n=============")
+  aioScribe.log_it(&"Stamped Headers: {resHeaders}\n")
+  aioScribe.spam_it(&"Responding to request: {aioReq.url}\n=============")
 
   await aioReq.respond(resCode, resContent, resHeaders)
 
 
-proc wake_up* (loser: localServer, napTime: int) :Future[void] {.async.} =
+proc wake_up* (loser: localServer, wakeupScribe: aScribe, napTime: int) :Future[void] {.async.} =
   let listenAddress = if loser.laMilieu.runConf.zeroHost: "0.0.0.0" else: "localhost"
 
   loser.innerDaemon.listen(loser.laMilieu.runConf.listenPort)
-  loser.laMilieu.runScribe.spam_it("Starting up server")
-  loser.laMilieu.runScribe.spam_it(&"Listening on {listenAddress}:{loser.innerDaemon.getPort}")
-  loser.laMilieu.runScribe.spam_it("Press 'Ctrl+C' to exit\n\n")
+  wakeupScribe.spam_it("Starting up server")
+  wakeupScribe.spam_it(&"Listening on {listenAddress}:{loser.innerDaemon.getPort}")
+  wakeupScribe.spam_it("Press 'Ctrl+C' to exit\n\n")
   while true:
     if loser.innerDaemon.shouldAcceptRequest():
-      await loser.innerDaemon.acceptRequest((r: Request) => loser.aio_respond_for(aioReq = r))
+      await loser.innerDaemon.acceptRequest(
+        (r: Request) => loser.aio_respond_for(aioScribe = wakeupScribe, aioReq = r)
+      )
     else:
       await sleepAsync(napTime)
