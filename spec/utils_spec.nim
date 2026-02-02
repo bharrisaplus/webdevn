@@ -11,7 +11,6 @@ import ../source/webdevn/[type_defs, utils]
 let quietUtilSpecScribe = fScribe(
   willYap: false,
   doFile: false,
-  rotateFile: false,
   maxRotate: 0,
   logPath: Path(""),
   logName: ""

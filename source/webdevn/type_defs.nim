@@ -80,7 +80,6 @@ type
   aScribe* = ref object of RootObj
     willYap* :bool
     doFile* :bool
-    rotateFile* :bool
     maxRotate* :int
     logPath* :Path
     logName* :string
@@ -92,7 +91,6 @@ proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
   return rScribe(
     willYap: not someConfig.inSilence,
     doFile: someConfig.writeLog,
-    rotateFile: true,
     maxRotate: 3,
     logPath: getCurrentDir(),
     logName: "webdevn.log.txt"
