@@ -4,6 +4,8 @@ from std/asynchttpserver import AsyncHttpServer, newAsyncHttpServer
 from std/mimetypes import MimeDB, newMimeTypes
 
 
+# Startup config / POST
+
 type webdevnConfig* = object
   basePath* :Path
   listenPort* :Port
@@ -36,6 +38,8 @@ proc devWebdevnConfig* :webdevnConfig =
     zeroHost: false
   )
 
+# Misc params and/or return types
+
 type lookupParts* = tuple
   docRoot :Path # webdevnConfig.basePath
   docIndex :string # webdevnConfig.indexFile
@@ -64,6 +68,8 @@ type headerBits* = seq[
   ]
 ]
 
+# Logger
+
 type
   aScribe* = ref object of RootObj
     willYap* :bool
@@ -86,6 +92,8 @@ proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
     logName: "webdevn.log.txt"
   )
 
+# Runtime environment / Server config
+
 type webdevnMilieu* = object
   runConf* :webdevnConfig
   runScribe* :aScribe
@@ -94,6 +102,8 @@ type webdevnMilieu* = object
     "Cache-Control": "no-store, no-cache",
     "Clear-Site-Data": "\"cache\""
   }
+
+# Server
 
 type localServer* = object
   innerDaemon* :AsyncHttpServer
