@@ -20,7 +20,7 @@ proc stamp_headers* (stampMilieu :webdevnMilieu, fileExt :string, fileLen: int) 
     contentEncoding = if textLike: "; charset=utf-8" else: ""
     currentTime = now().utc()
 
-  return newHttpHeaders(stampMilieu.baseHeaders & @{
+  return newHttpHeaders(baseHeaderBits & @{
     "Content-Type": mimeType & contentEncoding,
     "Content-Length": $fileLen,
     "Date": currentTime.format("ddd, dd MMM yyyy HH:mm:ss") & " GMT",

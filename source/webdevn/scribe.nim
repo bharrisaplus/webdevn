@@ -39,11 +39,6 @@ proc print_milieu* (title :string = "webdevn", thingy :webdevnMilieu) =
   outputStr.add(&"    - inSilence => {thingy.runConf.inSilence}\n")
   outputStr.add(&"    - writeLog => {thingy.runConf.writeLog}\n")
 
-  outputStr.add("  baseHeaders:\n")
-
-  for rheader in thingy.baseHeaders:
-    outputStr.add("    {" & rheader.key & ": " & rheader.val & "}\n")
-
   echo outputStr
 
 proc print_lookup* (title :string = "webdevn", req :Uri, mPath, dRoot :Path) =

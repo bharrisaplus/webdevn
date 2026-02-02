@@ -40,7 +40,7 @@ proc devWebdevnConfig* :webdevnConfig =
     zeroHost: false
   )
 
-# Misc params and/or return types
+# Misc
 
 type lookupParts* = tuple
   docRoot :Path # webdevnConfig.basePath
@@ -63,12 +63,11 @@ type gobbleResult* = tuple
   contents :string
   issues :seq[string]
 
-type headerBits* = seq[
-  tuple[
-    key :string,
-    val :string
-  ]
-]
+const baseHeaderBits* = @{
+  "Server": "webdevn; nim/c",
+  "Cache-Control": "no-store, no-cache",
+  "Clear-Site-Data": "\"cache\""
+}
 
 type aioResponse* = tuple
   responseCode :HttpCode
@@ -104,16 +103,10 @@ proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
 type webdevnMilieu* = object
   runConf* :webdevnConfig
   mimeLookup* :MimeDB
-  baseHeaders* :headerBits
   napTime* = 500 # How many ms to wait when server is busy
 
 proc defaultWebdevnMilieu* (someConfig :webdevnConfig) :webdevnMilieu =
   return webdevnMilieu(
     runConf: someConfig,
-    mimeLookup: newMimeTypes(),
-    baseHeaders: @{
-      "Server": "webdevn; nim/c",
-      "Cache-Control": "no-store, no-cache",
-      "Clear-Site-Data": "\"cache\""
-    }
+    mimeLookup: newMimeTypes()
   )
