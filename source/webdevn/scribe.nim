@@ -32,12 +32,10 @@ proc print_issues* (title :string = "webdevn", stuff :seq[string]) =
 proc print_milieu* (title :string = "webdevn", thingy :webdevnMilieu) =
   var outputStr = title & " Milieu/Runtime_Env:\n"
 
-  outputStr.add("  runConf:\n")
-  outputStr.add(&"    - basePath => '{thingy.runConf.basePath}'\n")
-  outputStr.add(&"    - listenPort => {thingy.listenPort}\n")
-  outputStr.add(&"    - indexFile => '{thingy.runConf.indexFile}'\n")
-  outputStr.add(&"    - inSilence => {thingy.runConf.inSilence}\n")
-  outputStr.add(&"    - writeLog => {thingy.runConf.writeLog}\n")
+  outputStr.add(&"  - docRoot => '{thingy.virtualFS.docRoot}'\n")
+  outputStr.add(&"  - docIndex => '{thingy.virtualFS.docIndex}'\n")
+  outputStr.add(&"  - docIndexExt => '{thingy.virtualFS.docIndexExt}'\n")
+  outputStr.add(&"  - listenPort => {thingy.listenPort}\n")
 
   echo outputStr
 

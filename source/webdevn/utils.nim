@@ -20,7 +20,7 @@ proc dir_contains_file* (maybeParent :Path, maybeChild :string) :bool =
   return fileExists(maybeParent / maybeChildPath)
 
 
-proc lookup_from_url* (reqUrl :Uri, virtualFS :lookupParts, urlScribe :aScribe) :lookupResult =
+proc lookup_from_url* (reqUrl :Uri, lookupFS :webFS, urlScribe :aScribe) :lookupResult =
   let urlPath = reqUrl.path.strip(chars ={'/'})
   var
     maybeFilePath :Path
@@ -29,29 +29,29 @@ proc lookup_from_url* (reqUrl :Uri, virtualFS :lookupParts, urlScribe :aScribe) 
     lookProblems :seq[string] = @[]
 
   if urlPath == "": # root directory
-    maybeFilePath = virtualFS.docRoot / Path(virtualFS.docIndex)
+    maybeFilePath = lookupFS.docRoot / Path(lookupFS.docIndex)
 
     if fileExists(maybeFilePath):
-      maybeFileExt = virtualFS.docIndexExt
+      maybeFileExt = lookupFS.docIndexExt
       foundIt = true
 
   else: # file or other directory (do lookup)
-    maybeFilePath = absolutePath(path = Path(urlPath), root = virtualFS.docRoot)
+    maybeFilePath = absolutePath(path = Path(urlPath), root = lookupFS.docRoot)
 
     let safeSearch = (
-      maybeFilePath.isRelativeTo(virtualFS.docRoot) or
-      maybeFilePath.isRelativeTo(parentDir(virtualFS.docRoot)) or
-      maybeFilePath.isRelativeTo(parentDir(parentDir(virtualFS.docRoot)))
+      maybeFilePath.isRelativeTo(lookupFS.docRoot) or
+      maybeFilePath.isRelativeTo(parentDir(lookupFS.docRoot)) or
+      maybeFilePath.isRelativeTo(parentDir(parentDir(lookupFS.docRoot)))
     )
 
     if safeSearch:
       let maybeFileParts = splitFile(maybeFilePath)
 
       if maybeFileParts.ext == "": # other directory (look for indexFile)
-        maybeFilePath = maybeFilePath / Path(virtualFS.docIndex)
+        maybeFilePath = maybeFilePath / Path(lookupFS.docIndex)
 
-        if dir_contains_file(maybeFilePath, virtualFS.docIndex):
-          maybeFileExt = virtualFS.docIndexExt
+        if dir_contains_file(maybeFilePath, lookupFS.docIndex):
+          maybeFileExt = lookupFS.docIndexExt
           foundIt = true
 
       else: # file (do lookup)
@@ -60,7 +60,7 @@ proc lookup_from_url* (reqUrl :Uri, virtualFS :lookupParts, urlScribe :aScribe) 
           foundIt = true
 
   urlScribe.log_lookup(
-    logReq = reqUrl, logMPath = maybeFilePath, logDRoot = virtualFS.docRoot
+    logReq = reqUrl, logMPath = maybeFilePath, logDRoot = lookupFS.docRoot
   )
 
   if not foundIt:

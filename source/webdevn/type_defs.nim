@@ -29,7 +29,7 @@ type webdevnConfig* = object
   inSilence* :bool
   writeLog* :bool
   zeroHost* :bool
-  oneOff* = false
+  oneOff* :bool = false
 
 proc defaultWebdevnConfig* :webdevnConfig =
   return webdevnConfig(
@@ -56,13 +56,13 @@ proc devWebdevnConfig* :webdevnConfig =
 
 # Misc
 
-type lookupParts* = tuple
-  docRoot :Path # webdevnConfig.basePath
-  docIndex :string # webdevnConfig.indexFile
-  docIndexExt :string # webdevnConfig.indexFileExt
+type webFS* = ref object
+  docRoot* :Path
+  docIndex* :string
+  docIndexExt* :string
 
-proc webdevnLookupParts* (someConfig :webdevnConfig) :lookupParts =
-  return (
+proc webdevnFS* (someConfig :webdevnConfig) :webFS =
+  return webFs(
     docRoot: someConfig.basePath,
     docIndex: someConfig.indexFile,
     docIndexExt: someConfig.indexFileExt
@@ -107,14 +107,14 @@ proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
 # Runtime environment
 
 type webdevnMilieu* = object
-  runConf* :webdevnConfig
+  virtualFS* :webFS
   listenPort* :Port
   anyAddr* :bool
   mimeLookup* :MimeDB
 
 proc defaultWebdevnMilieu* (someConfig :webdevnConfig) :webdevnMilieu =
   return webdevnMilieu(
-    runConf: someConfig,
+    virtualFS: webdevnFS(someConfig),
     listenPort: Port(someConfig.inputPortNum),
     anyAddr: someConfig.zeroHost,
     mimeLookup: newMimeTypes()
