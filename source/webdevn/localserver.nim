@@ -1,13 +1,12 @@
 from std/mimetypes import getMimeType
 from asyncdispatch import sleepAsync
-from std/asyncfutures import Future, newFuture
+from std/asyncfutures import Future, newFuture, complete
 from std/asyncmacro import `async`, `await`
 from std/strutils import startsWith, endsWith
 from std/times import now, utc, format
 from std/strformat import `&`
 from std/httpcore import HttpHeaders, HttpCode, Http200, Http404, newHttpHeaders, `$`
 from std/nativesockets import `$`
-from std/sugar import `=>`
 from std/asynchttpserver import Request, newAsyncHttpServer,
   listen, getPort, shouldAcceptRequest, acceptRequest, respond
 
@@ -33,7 +32,8 @@ proc stamp_headers* (stampMilieu :webdevnMilieu, fileExt :string, fileLen: int) 
     "ETag": "W/\"" & currentTime.format("ddMMyyHHmmss") & "-" & $fileLen
   })
 
-proc aio_respond_for* (aioMilieu :webdevnMilieu, aioScribe :aScribe, aioReq :Request) :owned(Future[void]) {.async.} =
+
+proc aio_for* (aioMilieu :webdevnMilieu, aioScribe :aScribe, aioReq :Request) :Future[aioResponse] {.async.} =
   let
     errorContent = "<h2>404: Not Found</h2>"
     lookupInfo = lookup_from_url(
@@ -73,7 +73,7 @@ proc aio_respond_for* (aioMilieu :webdevnMilieu, aioScribe :aScribe, aioReq :Req
   aioScribe.log_it(&"Stamped Headers: {resHeaders}\n")
   aioScribe.spam_it(&"Responding to request: {aioReq.url}\n=============")
 
-  await aioReq.respond(resCode, resContent, resHeaders)
+  return (responseCode: resCode, responseContent: resContent, responseHeaders: resHeaders)
 
 
 proc wake_up* (wakeupMilieu: webdevnMilieu, wakeupScribe: aScribe, napTime: int) :Future[void] {.async.} =
@@ -85,8 +85,9 @@ proc wake_up* (wakeupMilieu: webdevnMilieu, wakeupScribe: aScribe, napTime: int)
   wakeupScribe.spam_it("Press 'Ctrl+C' to exit\n\n")
   while true:
     if innerDaemon.shouldAcceptRequest():
-      await innerDaemon.acceptRequest(
-        (r: Request) => aio_respond_for(aioMilieu = wakeupMilieu, aioScribe = wakeupScribe, aioReq = r)
-      )
+      await innerDaemon.acceptRequest() do (aRequest: Request) {.async.}:
+        let (aioCode, aioContent, aioHeaders) = await aio_for(wakeupMilieu, wakeupScribe, aRequest)
+
+        await aRequest.respond(aioCode, aioContent, aioHeaders)
     else:
       await sleepAsync(napTime)
