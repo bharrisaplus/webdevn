@@ -23,7 +23,8 @@ requires "zip >= 0.3.1"
 
 
 # Dev dependencies (Used in building application)
-
+dev:
+  requires "coco >= 0.0.3"
 
 
 # Tasks
