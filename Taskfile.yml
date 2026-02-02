@@ -134,3 +134,9 @@ tasks:
     desc: Run spec for scribe suite
     cmds:
       - nim r --hints:off {{.TEST_DIR}}/scribe_spec.nim "Scribe_BS::"
+
+  test-localserver:
+    aliases: [test-loser]
+    desc: Run spec for localserver suite
+    cmds:
+      - nim r --hints:off {{.TEST_DIR}}/localserver_spec.nim "LocalServer_BS::"
