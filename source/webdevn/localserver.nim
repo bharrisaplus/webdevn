@@ -50,7 +50,7 @@ proc aio_respond_for* (s :localServer, aioReq :Request) :owned(Future[void]) {.a
     s.serverMilieu.runScribe.log_issues("File lookup", lookupInfo.issues)
 
   if isOk:
-    let gobbleInfo = await lazy_gobble(s.serverMilieu, lookupInfo.loc)
+    let gobbleInfo = await lazy_gobble(s.serverMilieu.runScribe, lookupInfo.loc)
 
     if gobbleInfo.issues.len == 0:
       s.serverMilieu.runScribe.log_it(&"(200) Found File\n\n")

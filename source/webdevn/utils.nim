@@ -72,7 +72,7 @@ proc lookup_from_url* (virtualFS :lookupParts, urlScribe :aScribe, reqUrl :Uri) 
   return (loc: maybeFilePath.string, ext: maybeFileExt, issues: lookProblems)
 
 
-proc lazy_gobble* (gobbleMilieu :webdevnMilieu, morsel :string) :Future[gobbleResult] {.async.} =
+proc lazy_gobble* (gobbleScribe :aScribe, morsel :string) :Future[gobbleResult] {.async.} =
   var
     nomnom :string
     file_blob :AsyncFile
@@ -83,12 +83,14 @@ proc lazy_gobble* (gobbleMilieu :webdevnMilieu, morsel :string) :Future[gobbleRe
     nomnom = await file_blob.readAll()
   except ValueError as vE:
     gobbleProblems.add(&"Issue with reading file from path:\n    {vE.name}: {vE.msg}\n    Path: {morsel}")
+  except OSError as osE:
+    gobbleProblems.add(&"OS happenings while reading the file:\n    {osE.name}: {osE.msg}\n    Path: {morsel}")
   except Exception as bigE:
     gobbleProblems.add(&"Something occured while reading the file:\n    {bigE.name}: {bigE.msg}\n    Path: {morsel}")
   finally:
     if file_blob != nil:
       file_blob.close()
 
-  gobbleMilieu.runScribe.log_it("Reading file and returning contents")
+  gobbleScribe.log_it("Reading file and returning contents")
 
   return (contents: nomnom, issues: gobbleProblems)
