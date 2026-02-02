@@ -47,9 +47,7 @@ proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
     if optkind == cmdArgument or optkind == cmdEnd:
       continue
     else: # cmdShortOption and cmdLongOption
-      if optinput.isEmptyOrWhitespace() and
-        optarg != "v" and optarg != "verbose" and optarg != "l" and optarg != "log" and
-        optarg != "V" and optarg != "version" and optarg != "h" and optarg != "help":
+      if optinput.isEmptyOrWhitespace() and not (optarg in flagOpts):
         continue
 
       case optarg: # A valid path is required

@@ -6,6 +6,8 @@ from std/httpcore import HttpHeaders, HttpCode
 
 # Startup config / POST
 
+const flagOpts* :seq[string]= @["v", "verbose", "l", "log", "V", "version", "h", "help"]
+
 type webdevnConfig* = object
   basePath* :Path
   listenPort* :Port
