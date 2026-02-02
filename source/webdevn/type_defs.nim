@@ -1,6 +1,7 @@
 from std/paths import Path, getCurrentDir
 from std/net import Port
 from std/mimetypes import MimeDB, newMimeTypes
+from std/httpcore import HttpHeaders, HttpCode
 
 
 # Startup config / POST
@@ -66,6 +67,11 @@ type headerBits* = seq[
     val :string
   ]
 ]
+
+type aioResponse* = tuple
+  responseCode :HttpCode
+  responseContent :string
+  responseHeaders :HttpHeaders
 
 # Logger
 
