@@ -10,7 +10,7 @@ from std/asynchttpserver import Request
 import type_defs, scribe, utils
 
 
-proc stamp_headers* (stampMilieu :webdevnMilieu, fileExt :string, fileLen: int) :HttpHeaders =
+proc stamp_headers* (fileExt :string, fileLen :int, stampMilieu :webdevnMilieu) :HttpHeaders =
   let mimeType = stampMilieu.mimeLookup.getMimeType(fileExt)
 
   let textLike = mimeType.startsWith("text/") or mimeType == "application/javascript" or
@@ -28,12 +28,10 @@ proc stamp_headers* (stampMilieu :webdevnMilieu, fileExt :string, fileLen: int) 
   })
 
 
-proc aio_for* (aioMilieu :webdevnMilieu, aioScribe :aScribe, aioReq :Request) :Future[aioResponse] {.async.} =
+proc aio_for* (aioReq :Request, aioMilieu :webdevnMilieu, aioScribe :aScribe) :Future[aioResponse] {.async.} =
   let
     errorContent = "<h2>404: Not Found</h2>"
-    lookupInfo = lookup_from_url(
-      webdevnLookupParts(aioMilieu.runConf), aioScribe, aioReq.url
-    )
+    lookupInfo = lookup_from_url(aioReq.url, webdevnLookupParts(aioMilieu.runConf), aioScribe)
 
   var
     resContent :string
@@ -47,13 +45,13 @@ proc aio_for* (aioMilieu :webdevnMilieu, aioScribe :aScribe, aioReq :Request) :F
     aioScribe.log_issues("File lookup", lookupInfo.issues)
 
   if isOk:
-    let gobbleInfo = await lazy_gobble(aioScribe, lookupInfo.loc)
+    let gobbleInfo = await lazy_gobble(lookupInfo.loc, aioScribe)
 
     if gobbleInfo.issues.len == 0:
       aioScribe.log_it(&"(200) Found File\n\n")
       resContent = gobbleInfo.contents
       resCode = Http200
-      resHeaders = stamp_headers(aioMilieu, lookupInfo.ext, resContent.len)
+      resHeaders = stamp_headers(lookupInfo.ext, resContent.len, aioMilieu)
 
     else:
       aioScribe.log_issues("File read", gobbleInfo.issues)
@@ -63,7 +61,7 @@ proc aio_for* (aioMilieu :webdevnMilieu, aioScribe :aScribe, aioReq :Request) :F
     aioScribe.log_it(&"(404) File Not Found\n\n")
     resContent = errorContent
     resCode = Http404
-    resHeaders = stamp_headers(aioMilieu, "html", resContent.len)
+    resHeaders = stamp_headers( "html", resContent.len, aioMilieu)
 
   aioScribe.log_it(&"Stamped Headers: {resHeaders}\n")
   aioScribe.spam_it(&"Responding to request: {aioReq.url}\n=============")

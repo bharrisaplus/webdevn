@@ -29,6 +29,7 @@ proc loserSpecWebDevnConfig (lBasePath :string, lIndexfile :string = "index.html
 
 
 suite "LocalServer_BS":
+
   test "Should make stamped headers":
     let
       swearFileExt_1 = "html"
@@ -41,11 +42,11 @@ suite "LocalServer_BS":
 
     let
         maybeSolution_1 = stamp_headers(
-          stampMilieu = swearMilieu,  fileExt = swearFileExt_1, fileLen = swearFileLen_1
+          fileExt = swearFileExt_1, fileLen = swearFileLen_1, stampMilieu = swearMilieu,
         )
 
-        maybeSolution_2 = swearMilieu.stamp_headers(
-          fileExt = swearFileExt_2, fileLen = swearFileLen_2
+        maybeSolution_2 = stamp_headers(
+          fileExt = swearFileExt_2, fileLen = swearFileLen_2, stampMilieu = swearMilieu,
         )
 
     check:

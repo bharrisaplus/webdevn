@@ -20,7 +20,7 @@ proc dir_contains_file* (maybeParent :Path, maybeChild :string) :bool =
   return fileExists(maybeParent / maybeChildPath)
 
 
-proc lookup_from_url* (virtualFS :lookupParts, urlScribe :aScribe, reqUrl :Uri) :lookupResult =
+proc lookup_from_url* (reqUrl :Uri, virtualFS :lookupParts, urlScribe :aScribe) :lookupResult =
   let urlPath = reqUrl.path.strip(chars ={'/'})
   var
     maybeFilePath :Path
@@ -72,7 +72,7 @@ proc lookup_from_url* (virtualFS :lookupParts, urlScribe :aScribe, reqUrl :Uri) 
   return (loc: maybeFilePath.string, ext: maybeFileExt, issues: lookProblems)
 
 
-proc lazy_gobble* (gobbleScribe :aScribe, morsel :string) :Future[gobbleResult] {.async.} =
+proc lazy_gobble* (morsel :string, gobbleScribe :aScribe) :Future[gobbleResult] {.async.} =
   var
     nomnom :string
     file_blob :AsyncFile

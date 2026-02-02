@@ -10,21 +10,23 @@ from std/asynchttpserver import Request,
 import webdevn/[type_defs, scribe, cli, localServer]
 
 
-proc wake_up* (wakeupMilieu: webdevnMilieu, wakeupScribe: aScribe) :Future[void] {.async.} =
+proc wake_up* (wakeupMilieu :webdevnMilieu, journal :aScribe) {.async.} =
   let
     listenAddress = if wakeupMilieu.runConf.zeroHost: "0.0.0.0" else: "localhost"
     innerDaemon = newAsyncHttpServer()
 
   innerDaemon.listen(wakeupMilieu.runConf.listenPort)
-  wakeupScribe.spam_it("Starting up server")
-  wakeupScribe.spam_it("Listening on " & listenAddress & ":{localserver.innerDaemon.getPort}")
-  wakeupScribe.spam_it("Press 'Ctrl+C' to exit\n\n")
+  journal.spam_it("Starting up server")
+  journal.spam_it("Listening on " & listenAddress & ":{localserver.innerDaemon.getPort}")
+  journal.spam_it("Press 'Ctrl+C' to exit\n\n")
   while true:
     if innerDaemon.shouldAcceptRequest():
-      await innerDaemon.acceptRequest() do (aRequest: Request) {.async.}:
-        let (aioCode, aioContent, aioHeaders) = await localserver.aio_for(wakeupMilieu, wakeupScribe, aRequest)
+      await innerDaemon.acceptRequest() do (okRequest: Request) {.async.}:
+        let (aioCode, aioContent, aioHeaders) = await localserver.aio_for(
+          okRequest, wakeupMilieu, journal
+        )
 
-        await aRequest.respond(aioCode, aioContent, aioHeaders)
+        await okRequest.respond(aioCode, aioContent, aioHeaders)
     else:
       await sleepAsync(wakeupMilieu.napTime)
 

@@ -9,6 +9,7 @@ from std/nativesockets import Port
 
 import type_defs, meta, scribe, utils
 
+
 const helpManual = &"""
 source lang: nim
 package manager: nimble
@@ -33,8 +34,7 @@ OPTION:
     [-h, --help]: This message
 """
 
-
-proc config_from_cli* (osCliParams: seq[string]): (webdevnConfig, seq[string]) =
+proc config_from_cli* (osCliParams :seq[string]) :(webdevnConfig, seq[string]) =
   var
     cliProblems: seq[string]
     maybeConfig = defaultwebdevnConfig()
