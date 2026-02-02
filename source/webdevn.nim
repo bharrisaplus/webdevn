@@ -10,7 +10,7 @@ from std/asynchttpserver import Request,
 import webdevn/[type_defs, scribe, cli, localServer]
 
 
-proc wake_up* (wakeupMilieu: webdevnMilieu, wakeupScribe: aScribe, napTime: int) :Future[void] {.async.} =
+proc wake_up* (wakeupMilieu: webdevnMilieu, wakeupScribe: aScribe) :Future[void] {.async.} =
   let
     listenAddress = if wakeupMilieu.runConf.zeroHost: "0.0.0.0" else: "localhost"
     innerDaemon = newAsyncHttpServer()
@@ -26,7 +26,7 @@ proc wake_up* (wakeupMilieu: webdevnMilieu, wakeupScribe: aScribe, napTime: int)
 
         await aRequest.respond(aioCode, aioContent, aioHeaders)
     else:
-      await sleepAsync(napTime)
+      await sleepAsync(wakeupMilieu.napTime)
 
 
 when isMainModule:
@@ -47,4 +47,4 @@ when isMainModule:
 
     runScribe.spam_milieu("localserver", laMilieu)
     
-    waitFor wake_up(laMilieu, runScribe, 500)
+    waitFor wake_up(laMilieu, runScribe)

@@ -105,6 +105,7 @@ type webdevnMilieu* = object
   runConf* :webdevnConfig
   mimeLookup* :MimeDB
   baseHeaders* :headerBits
+  napTime* = 500 # How many ms to wait when server is busy
 
 proc defaultWebdevnMilieu* (someConfig :webdevnConfig) :webdevnMilieu =
   return webdevnMilieu(
