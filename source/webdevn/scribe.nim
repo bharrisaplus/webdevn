@@ -87,67 +87,43 @@ proc print_it* (printItBeing :string) =
 # Writing to console or file with respect to cli flag 
 
 proc log_config* (scribo :aScribe, logThingy :webdevnConfig) =
-  if scribo of rScribe:
-    if scribo.willYap:
+  if scribo.willYap:
+    if scribo of rScribe:
       print_config(logThingy)
-
-    if scribo.doFile:
-      discard
-  if scribo of fScribe:
-    fScribe(scribo).captured_msgs.add(fmt_print_config(logThingy))
-  else:
-    discard
+    if scribo of fScribe:
+      fScribe(scribo).captured_msgs.add(fmt_print_config(logThingy))
 
 
 proc log_issues* (scribo :aScribe, logStuff :seq[string]) =
-  if scribo of rScribe:
-    if scribo.willYap:
+  if scribo.willYap:
+    if scribo of rScribe:
       print_issues(logStuff)
-
-    if scribo.doFile:
-      discard
-  if scribo of fScribe:
-    fScribe(scribo).captured_msgs.add(fmt_print_issues(logStuff))
-  else:
-    discard
+    if scribo of fScribe:
+      fScribe(scribo).captured_msgs.add(fmt_print_issues(logStuff))
 
 
 proc log_milieu* (scribo :aScribe, logThingy :webdevnMilieu) =
-  if scribo of rScribe:
-    if scribo.willYap:
+  if scribo.willYap:
+    if scribo of rScribe:
       print_milieu(logThingy)
+    if scribo of fScribe:
+      fScribe(scribo).captured_msgs.add(fmt_print_milieu(logThingy))
 
-    if scribo.doFile:
-      discard
-  if scribo of fScribe:
-    fScribe(scribo).captured_msgs.add(fmt_print_milieu(logThingy))
-  else:
-    discard
 
 proc log_lookup* (scribo :aScribe, logReq :Uri, logMPath, logDRoot :Path) =
-  if scribo of rScribe:
-    if scribo.willYap:
+  if scribo.willYap:
+    if scribo of rScribe:
       print_lookup(logReq, logMPath, logDRoot)
-
-    if scribo.doFile:
-      discard
-  if scribo of fScribe:
-    fScribe(scribo).captured_msgs.add(fmt_print_lookup(logReq, logMPath, logDRoot))
-  else:
-    discard
+    if scribo of fScribe:
+      fScribe(scribo).captured_msgs.add(fmt_print_lookup(logReq, logMPath, logDRoot))
 
 
 proc log_it* (scribo :aScribe, logItBeing :string) =
-  if scribo of rScribe:
-    if scribo.willYap:
+  if scribo.willYap:
+    if scribo of rScribe:
       print_it(logItBeing)
-
-    if scribo.doFile:
-      discard
-  if scribo of fScribe:
-    fScribe(scribo).captured_msgs.add(fmt_print_it(logItBeing))
-  else:
-    discard
+    if scribo of fScribe:
+      fScribe(scribo).captured_msgs.add(fmt_print_it(logItBeing))
 
 
 # Important things that get shown regardless of the cli flag
@@ -155,34 +131,19 @@ proc log_it* (scribo :aScribe, logItBeing :string) =
 proc spam_issues* (scribo :aScribe, spamStuff :seq[string]) =
   if scribo of rScribe:
     print_issues(spamStuff)
-
-    if scribo.doFile:
-      discard
   if scribo of fScribe:
     fScribe(scribo).captured_msgs.add(fmt_print_issues(spamStuff))
-  else:
-    discard
 
 
 proc spam_milieu* (scribo :aScribe, spamThingy :webdevnMilieu) =
   if scribo of rScribe:
     print_milieu(spamThingy)
-
-    if scribo.doFile:
-      discard
   if scribo of fScribe:
     fScribe(scribo).captured_msgs.add(fmt_print_milieu(spamThingy))
-  else:
-    discard
 
 
 proc spam_it* (scribo :aScribe, spamItBeing :string) =
   if scribo of rScribe:
     print_it(spamItBeing)
-
-    if scribo.doFile:
-      discard
   if scribo of fScribe:
     fScribe(scribo).captured_msgs.add(fmt_print_it(spamItBeing))
-  else:
-    discard
