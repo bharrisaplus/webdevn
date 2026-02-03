@@ -13,16 +13,15 @@ const
   napTime* :int = 500
   # Single instance for getting the mime type on each request
   mimeLookup* :MimeDB = newMimeTypes()
-  # Headers that aren't generated for every request
-  baseHeaderBits* = @{
+  # Headers that are needed for every request but aren't generated
+  baseHeaderBits* :seq[(string, string)] = @{
     "Server": "webdevn; nim/c",
     "Cache-Control": "no-store, no-cache",
     "Clear-Site-Data": "\"cache\""
   }
 
 
-# Startup config / POST
-
+# Startup config / POST check
 type webdevnConfig* = object
   basePath* :Path
   inputPortNum* :int
@@ -47,6 +46,7 @@ proc defaultWebdevnConfig* :webdevnConfig =
 
 # Misc
 
+# Where requests are looked up from
 type webFS* = ref object
   docRoot* :Path
   docIndex* :string
@@ -59,15 +59,18 @@ proc webdevnFS* (someConfig :webdevnConfig) :webFS =
     docIndexExt: someConfig.indexFileExt
   )
 
+# A found file to serve
 type lookupResult* = tuple
   loc :string
   ext :string
   issues :seq[string]
 
+# The innards of the requested file
 type gobbleResult* = tuple
   contents :string
   issues :seq[string]
 
+# all-in-one response vs a stream
 type aioResponse* = tuple
   responseCode :HttpCode
   responseContent :string
@@ -77,15 +80,18 @@ type aioResponse* = tuple
 # Logger
 
 type
+  # Generic logger that respectst the cli flags
   aScribe* = ref object of RootObj
     willYap* :bool
     doFile* :bool
     logPath* :Path
     logName* :string
 
+  # Real logger used in app
   rScribe* = ref object of aScribe
+  # Fake logger used in tests
   fScribe* = ref object of aScribe
-    captured_msgs* : seq[string]
+    captured_msgs* :seq[string]
 
 proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
   return rScribe(
