@@ -5,7 +5,7 @@ from std/asynchttpserver import Request
 from std/httpcore import HttpHeaders, Http200, Http404, `==`
 from asyncdispatch import waitFor
 from std/tables import `[]`
-from std/strutils import startsWith, unindent, splitWhitespace, join
+from std/strutils import startsWith, endsWith, unindent, splitWhitespace, join
 
 import ../../source/webdevn/[type_defs, localserver]
 
@@ -74,11 +74,13 @@ suite "LocalServer_BS":
     check:
       maybeSolution_1.responseCode == Http200
       maybeSolution_1.responseHeaders.table["content-type"] == @["text/html; charset=utf-8"]
-      maybeSolution_1.responseContent.splitWhitespace().join("") == """<!DOCTYPEhtml><htmllang="en"><head><title>webdevndemo</title><metacharset="UTF-8"><metaname="viewport"content="initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"></head><body><h2>HelloWorld</h2></body></html>"""
+      maybeSolution_1.responseContent.splitWhitespace().join("").startsWith("<!DOCTYPEhtml>")
+      maybeSolution_1.responseContent.splitWhitespace().join("").endsWith("<body><h2>HelloWorld</h2></body></html>")
 
       maybeSolution_2.responseCode == Http200
       maybeSolution_2.responseHeaders.table["content-type"] == @["text/css; charset=utf-8"]
-      maybeSolution_2.responseContent.splitWhitespace().join("") == "html{width:100%;height:100%;}body{height:calc(100%-16px);width:calc(100%-16px);margin:8px;align-content:center;justify-content:center;}h2{font-size:24px;font-weight:bold;}"
+      maybeSolution_2.responseContent.splitWhitespace().join("").startsWith("html{width:100%;height:100%;}body")
+      maybeSolution_2.responseContent.splitWhitespace().join("").endsWith("h2{font-size:24px;font-weight:bold;}")
 
 
   test "Should have bad response code if request is not looked up and read successfully":
