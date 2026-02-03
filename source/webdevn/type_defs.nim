@@ -7,8 +7,6 @@ from std/httpcore import HttpHeaders, HttpCode
 const
   # Cli options that don't need input
   flagOpts* :seq[string] = @["v", "verbose", "l", "log", "V", "version", "h", "help"]
-  # Number of log files to keep
-  maxRotate* :int = 3
   # How many ms to wait when server is busy
   napTime* :int = 500
   # Single instance for getting the mime type on each request
