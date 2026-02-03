@@ -56,13 +56,11 @@ suite "LocalServer_BS":
     let
       swearUrl_1 = parseUri("http://localhost:54321/")
       swearUrl_2 = parseUri("http://localhost:54321/main.css")
-      swearMilieu = defaultWebdevnMilieu(
-        loserSpecWebDevnConfig(lBasePath = "./spec/appa/has_index")
-      )
+      swearFS = webdevnFS(loserSpecWebDevnConfig(lBasePath = "./spec/appa/has_index"))
 
     let
-      maybeSolution_1 = waitFor localserver.aio_for(loserRequest(swearUrl_1), swearMilieu, quietLoserSpecScribe)
-      maybeSolution_2 = waitFor localserver.aio_for(loserRequest(swearUrl_2), swearMilieu, quietLoserSpecScribe)
+      maybeSolution_1 = waitFor localserver.aio_for(loserRequest(swearUrl_1), swearFS, quietLoserSpecScribe)
+      maybeSolution_2 = waitFor localserver.aio_for(loserRequest(swearUrl_2), swearFS, quietLoserSpecScribe)
 
     check:
       maybeSolution_1.responseCode == Http200
@@ -79,17 +77,13 @@ suite "LocalServer_BS":
   test "Should have bad response code if request is not looked up and read successfully":
     let
       swearUrl_1 = parseUri("http://localhost:54321/")
-      swearMilieu_1 = defaultWebdevnMilieu(
-        loserSpecWebDevnConfig(lBasePath = "./spec/appa/has_no_index")
-      )
+      swearFS_1 = webdevnFS(loserSpecWebDevnConfig(lBasePath = "./spec/appa/has_no_index"))
       swearUrl_2 = parseUri("http://localhost:54321/index.html")
-      swearMilieu_2 = defaultWebdevnMilieu(
-        loserSpecWebDevnConfig(lBasePath = "./spec/appa/has_index_custom")
-      )
+      swearFS_2 = webdevnFS(loserSpecWebDevnConfig(lBasePath = "./spec/appa/has_index_custom"))
 
     let
-      maybeSolution_1 = waitFor localserver.aio_for(loserRequest(swearUrl_1), swearMilieu_1, quietLoserSpecScribe)
-      maybeSolution_2 = waitFor localserver.aio_for(loserRequest(swearUrl_2), swearMilieu_2, quietLoserSpecScribe)
+      maybeSolution_1 = waitFor localserver.aio_for(loserRequest(swearUrl_1), swearFS_1, quietLoserSpecScribe)
+      maybeSolution_2 = waitFor localserver.aio_for(loserRequest(swearUrl_2), swearFS_2, quietLoserSpecScribe)
 
     check:
       maybeSolution_1.responseCode == Http404
