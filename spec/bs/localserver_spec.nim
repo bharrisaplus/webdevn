@@ -5,7 +5,7 @@ from std/asynchttpserver import Request
 from std/httpcore import HttpHeaders, Http200, Http404, `==`
 from asyncdispatch import waitFor
 from std/tables import `[]`
-from std/strutils import startsWith, endsWith, unindent, splitWhitespace, join
+from std/strutils import startsWith, endsWith, splitWhitespace, join
 
 import ../../source/webdevn/[type_defs, localserver]
 
