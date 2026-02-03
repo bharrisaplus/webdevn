@@ -23,7 +23,7 @@ proc wake_up* (wakeupMilieu :webdevnMilieu, journal :aScribe) {.async.} =
     if innerDaemon.shouldAcceptRequest():
       await innerDaemon.acceptRequest() do (okRequest: Request) {.async.}:
         let (aioCode, aioContent, aioHeaders) = await localserver.aio_for(
-          okRequest, wakeupMilieu, journal
+          okRequest, wakeupMilieu.virtualFS, journal
         )
 
         await okRequest.respond(aioCode, aioContent, aioHeaders)

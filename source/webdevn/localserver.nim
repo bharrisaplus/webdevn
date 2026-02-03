@@ -28,10 +28,10 @@ proc stamp_headers* (fileExt :string, fileLen :int) :HttpHeaders =
   })
 
 
-proc aio_for* (aioReq :Request, aioMilieu :webdevnMilieu, aioScribe :aScribe) :Future[aioResponse] {.async.} =
+proc aio_for* (aioReq :Request, aioFS :webFS, aioScribe :aScribe) :Future[aioResponse] {.async.} =
   let
     errorContent = "<h2>404: Not Found</h2>"
-    lookupInfo = lookup_from_url(aioReq.url, aioMilieu.virtualFS, aioScribe)
+    lookupInfo = lookup_from_url(aioReq.url, aioFS, aioScribe)
 
   var
     resContent :string
