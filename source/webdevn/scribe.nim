@@ -1,5 +1,6 @@
 from std/paths import Path, getCurrentDir, parentDir, `$`
-from std/strformat import `&`
+from std/strformat import fmt, `&`
+from std/strutils import join
 from std/nativesockets import `$`
 from std/uri import Uri, `$`
 
@@ -9,55 +10,51 @@ import type_defs
 # Getting the text together
 
 proc fmt_print_config* (thingy :webdevnConfig) :string =
-  var outputStr = "webdevn Config:\n"
-
-  outputStr.add(&"  - basePath => '{thingy.basePath}'\n")
-  outputStr.add(&"  - inputPortNum => {thingy.inputPortNum}\n")
-  outputStr.add(&"  - indexFile => '{thingy.indexFile}'\n")
-  outputStr.add(&"  - inSilence => {thingy.inSilence}\n")
-  outputStr.add(&"  - writeLog => {thingy.writeLog}\n")
-
-  return outputStr
+  return fmt"""
+  webdevn config:
+    - basePath => {thingy.basePath}
+    - inputPortNum => {thingy.inputPortNum}
+    - indexFile => {thingy.indexFile}
+    - inSilence => {thingy.inSilence}
+    - writeLog => {thingy.writeLog}
+  """
 
 
 proc fmt_print_issues* (stuff :seq[string]) :string =
-  var outputStr = &"webdevn  Issue(s) - [{stuff.len}]:\n"
+  var issueStr :string =
+    if stuff.len == 0: "* No issues!"
+    else: stuff.join("\n    * ")
 
-  if stuff.len == 0:
-    outputStr.add("  * No issues!\n")
-  else:
-    for issue in stuff:
-      outputStr.add(&"  * {issue}\n")
-
-  return outputStr
+  return fmt"""
+  webdevn issue(s) - [{stuff.len}]:
+    * {issueStr}
+  """
 
 
 proc fmt_print_milieu* (thingy :webdevnMilieu) :string =
-  var outputStr = "webdevn Milieu/Runtime_Env:\n"
-
-  outputStr.add(&"  - docRoot => '{thingy.virtualFS.docRoot}'\n")
-  outputStr.add(&"  - docIndex => '{thingy.virtualFS.docIndex}'\n")
-  outputStr.add(&"  - docIndexExt => '{thingy.virtualFS.docIndexExt}'\n")
-  outputStr.add(&"  - listenPort => {thingy.listenPort}\n")
-
-  return outputStr
+  return fmt"""
+  webdevn milieu/runtime env:
+    - docRoot => {thingy.virtualFS.docRoot}
+    - docIndex => {thingy.virtualFS.docIndex}
+    - docIndexExt => {thingy.virtualFS.docIndexExt}
+    - listenPort => {thingy.listenPort}
+  """
 
 
 proc fmt_print_lookup* (req :Uri, mPath, dRoot :Path) :string =
-  var outputStr = "\n webdevn - Looking up request\n"
-
-  outputStr.add(&"  - Request URL: {req}\n")
-  outputStr.add(&"  - Request URL Path: {req.path}\n")
-  outputStr.add(&"  - Request Absolute Path: {mPath}\n")
-  outputStr.add(&"  - basePath: {dRoot}\n")
-  outputStr.add(&"  - basePath-Parent: {parentDir(dRoot)}\n")
-  outputStr.add(&"  - basePath-Parent-Parent: {parentDir(parentDir(dRoot))}\n")
-
-  return outputStr
+  return fmt"""
+    webdevn - request lookup:
+      - Request URL: {req}
+      - Request URL Path: {req.path}
+      - Request Absolute Path: {mPath}
+      - basePath: {dRoot}
+      - basePath-Parent: {parentDir(dRoot)}
+      - basePath-Parent-Parent: {parentDir(parentDir(dRoot))}
+  """
 
 
 proc fmt_print_it* (itBeing :string) :string =
-  return "\nwebdevn - " & itBeing
+  return fmt"webdevn - {itBeing}"
 
 
 # General print to screen
