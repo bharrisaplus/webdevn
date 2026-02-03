@@ -39,7 +39,7 @@ when isMainModule:
 
   if not cliConfig.oneOff:
     if cliIssues.len > 0:
-      runScribe.spam_issues("Cli", cliIssues)
+      runScribe.spam_issues("cli", cliIssues)
       quit("\nwebdevn - shutting down...\n", 0)
 
     setControlCHook(proc() {.noconv.} =
