@@ -7,7 +7,7 @@ from asyncdispatch import waitFor
 from std/tables import `[]`
 from std/strutils import startsWith, unindent, splitWhitespace, join
 
-import ../source/webdevn/[type_defs, localserver]
+import ../../source/webdevn/[type_defs, localserver]
 
 let quietLoserSpecScribe = fScribe(
   willYap: false,

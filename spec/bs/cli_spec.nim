@@ -1,6 +1,6 @@
 import std/[unittest, paths, net]
 
-import ../source/webdevn/[cli]
+import ../../source/webdevn/[cli]
 
 suite "Cli_BS":
   let specIndex = "index.html"
@@ -17,7 +17,7 @@ suite "Cli_BS":
 
 
   #[test "Should have no issues if no arguments provided and index.html present":
-    # Run test command from within ./appa/has_index and skip all others
+    # Run test command from within ./spec/appa/has_index and skip all others
     # cd spec/appa/has_index && nim r ../../cli_spec.nim "CLI_BS::"
     var specCmdLine:seq[string]
     let specShortCmdLine = @["-d"]

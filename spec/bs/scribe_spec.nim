@@ -1,6 +1,6 @@
 import std/unittest
 
-import ../source/webdevn/[type_defs, scribe]
+import ../../source/webdevn/[type_defs, scribe]
 
 suite "Scribe_BS":
 
