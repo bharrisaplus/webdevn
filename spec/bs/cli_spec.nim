@@ -2,6 +2,7 @@ import std/[unittest, paths, net]
 
 import ../../source/webdevn/[cli]
 
+
 suite "Cli_BS":
   let specIndex = "index.html"
 

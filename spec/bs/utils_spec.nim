@@ -52,7 +52,7 @@ suite "Utils_BS":
       maybeSolution_1 = lookup_from_url(
         lookupFs = swearFS, urlScribe = quietUtilSpecScribe, reqUrl = swearUrl_1
       )
-      
+
       maybeSolution_2 = lookup_from_url(
         lookupFs = swearFS, urlScribe = quietUtilSpecScribe, reqUrl = swearUrl_2
       )
@@ -77,7 +77,7 @@ suite "Utils_BS":
       maybeSolution_1 = lookup_from_url(
         lookupFs = swearFS, urlScribe = quietUtilSpecScribe, reqUrl = swearUrl_1
       )
-      
+
       maybeSolution_2 = lookup_from_url(
         lookupFs = swearFS, urlScribe = quietUtilSpecScribe, reqUrl = swearUrl_2
       )
@@ -102,15 +102,15 @@ suite "Utils_BS":
       maybeSolution_1a = lookup_from_url(
         lookupFs = swearFS_1, urlScribe = quietUtilSpecScribe, reqUrl = swearUrl_1a
       )
-      
+
       maybeSolution_1b = lookup_from_url(
         lookupFs = swearFS_1, urlScribe = quietUtilSpecScribe, reqUrl = swearUrl_1b
       )
-      
+
       maybeSolution_2a = lookup_from_url(
         lookupFs = swearFS_2, urlScribe = quietUtilSpecScribe, reqUrl = swearUrl_2a
       )
-      
+
       maybeSolution_2b = lookup_from_url(
         lookupFs = swearFS_2, urlScribe = quietUtilSpecScribe, reqUrl = swearUrl_2b
       )
