@@ -8,8 +8,8 @@ import type_defs
 
 # Getting the text together
 
-proc fmt_print_config* (title :string = "webdevn", thingy :webdevnConfig) :string =
-  var outputStr = title & " Config:\n"
+proc fmt_print_config* (thingy :webdevnConfig) :string =
+  var outputStr = "webdevn Config:\n"
 
   outputStr.add(&"  - basePath => '{thingy.basePath}'\n")
   outputStr.add(&"  - inputPortNum => {thingy.inputPortNum}\n")
@@ -20,8 +20,8 @@ proc fmt_print_config* (title :string = "webdevn", thingy :webdevnConfig) :strin
   return outputStr
 
 
-proc fmt_print_issues* (title :string = "webdevn", stuff :seq[string]) :string =
-  var outputStr = &"{title}  Issue(s) - [{stuff.len}]:\n"
+proc fmt_print_issues* (stuff :seq[string]) :string =
+  var outputStr = &"webdevn  Issue(s) - [{stuff.len}]:\n"
 
   if stuff.len == 0:
     outputStr.add("  * No issues!\n")
@@ -32,8 +32,8 @@ proc fmt_print_issues* (title :string = "webdevn", stuff :seq[string]) :string =
   return outputStr
 
 
-proc fmt_print_milieu* (title :string = "webdevn", thingy :webdevnMilieu) :string =
-  var outputStr = title & " Milieu/Runtime_Env:\n"
+proc fmt_print_milieu* (thingy :webdevnMilieu) :string =
+  var outputStr = "webdevn Milieu/Runtime_Env:\n"
 
   outputStr.add(&"  - docRoot => '{thingy.virtualFS.docRoot}'\n")
   outputStr.add(&"  - docIndex => '{thingy.virtualFS.docIndex}'\n")
@@ -43,8 +43,8 @@ proc fmt_print_milieu* (title :string = "webdevn", thingy :webdevnMilieu) :strin
   return outputStr
 
 
-proc fmt_print_lookup* (title :string = "webdevn", req :Uri, mPath, dRoot :Path) :string =
-  var outputStr = "\n" & title & "Looking up request\n"
+proc fmt_print_lookup* (req :Uri, mPath, dRoot :Path) :string =
+  var outputStr = "\n webdevn - Looking up request\n"
 
   outputStr.add(&"  - Request URL: {req}\n")
   outputStr.add(&"  - Request URL Path: {req.path}\n")
@@ -62,20 +62,20 @@ proc fmt_print_it* (itBeing :string) :string =
 
 # General print to screen
 
-proc print_config* (printTitle :string, printThingy :webdevnConfig) =
-  echo fmt_print_config(printTitle, printThingy)
+proc print_config* (printThingy :webdevnConfig) =
+  echo fmt_print_config(printThingy)
 
 
-proc print_issues* (printTitle :string, printStuff :seq[string]) =
-  echo fmt_print_issues(printTitle, printStuff)
+proc print_issues* (printStuff :seq[string]) =
+  echo fmt_print_issues(printStuff)
 
 
-proc print_milieu* (printTitle :string, printThingy :webdevnMilieu) =
-  echo fmt_print_milieu(printTitle, printThingy)
+proc print_milieu* (printThingy :webdevnMilieu) =
+  echo fmt_print_milieu(printThingy)
 
 
-proc print_lookup* (printTitle :string, printReq :Uri, printMPath, printDRoot :Path) =
-  echo fmt_print_lookup(printTitle, printReq, printMPath, printDRoot)
+proc print_lookup* (printReq :Uri, printMPath, printDRoot :Path) =
+  echo fmt_print_lookup(printReq, printMPath, printDRoot)
 
 
 proc print_it* (printItBeing :string) =
@@ -86,53 +86,53 @@ proc print_it* (printItBeing :string) =
 
 # Writing to console or file with respect to cli flag 
 
-proc log_config* (scribo :aScribe, logTitle :string = "webdevn", logThingy :webdevnConfig) =
+proc log_config* (scribo :aScribe, logThingy :webdevnConfig) =
   if scribo of rScribe:
     if scribo.willYap:
-      print_config(logTitle, logThingy)
+      print_config(logThingy)
 
     if scribo.doFile:
       discard
   if scribo of fScribe:
-    fScribe(scribo).captured_msgs.add(fmt_print_config(logTitle, logThingy))
+    fScribe(scribo).captured_msgs.add(fmt_print_config(logThingy))
   else:
     discard
 
 
-proc log_issues* (scribo :aScribe, logTitle :string = "webdevn", logStuff :seq[string]) =
+proc log_issues* (scribo :aScribe, logStuff :seq[string]) =
   if scribo of rScribe:
     if scribo.willYap:
-      print_issues(logTitle, logStuff)
+      print_issues(logStuff)
 
     if scribo.doFile:
       discard
   if scribo of fScribe:
-    fScribe(scribo).captured_msgs.add(fmt_print_issues(logTitle, logStuff))
+    fScribe(scribo).captured_msgs.add(fmt_print_issues(logStuff))
   else:
     discard
 
 
-proc log_milieu* (scribo :aScribe, logTitle :string = "webdevn", logThingy :webdevnMilieu) =
+proc log_milieu* (scribo :aScribe, logThingy :webdevnMilieu) =
   if scribo of rScribe:
     if scribo.willYap:
-      print_milieu(logTitle, logThingy)
+      print_milieu(logThingy)
 
     if scribo.doFile:
       discard
   if scribo of fScribe:
-    fScribe(scribo).captured_msgs.add(fmt_print_milieu(logTitle, logThingy))
+    fScribe(scribo).captured_msgs.add(fmt_print_milieu(logThingy))
   else:
     discard
 
-proc log_lookup* (scribo :aScribe, logTitle :string = "webdevn", logReq :Uri, logMPath, logDRoot :Path) =
+proc log_lookup* (scribo :aScribe, logReq :Uri, logMPath, logDRoot :Path) =
   if scribo of rScribe:
     if scribo.willYap:
-      print_lookup(logTitle, logReq, logMPath, logDRoot)
+      print_lookup(logReq, logMPath, logDRoot)
 
     if scribo.doFile:
       discard
   if scribo of fScribe:
-    fScribe(scribo).captured_msgs.add(fmt_print_lookup(logTitle, logReq, logMPath, logDRoot))
+    fScribe(scribo).captured_msgs.add(fmt_print_lookup(logReq, logMPath, logDRoot))
   else:
     discard
 
@@ -152,26 +152,26 @@ proc log_it* (scribo :aScribe, logItBeing :string) =
 
 # Important things that get shown regardless of the cli flag
 
-proc spam_issues* (scribo :aScribe, spamTitle :string = "webdevn", spamStuff :seq[string]) =
+proc spam_issues* (scribo :aScribe, spamStuff :seq[string]) =
   if scribo of rScribe:
-    print_issues(spamTitle, spamStuff)
+    print_issues(spamStuff)
 
     if scribo.doFile:
       discard
   if scribo of fScribe:
-    fScribe(scribo).captured_msgs.add(fmt_print_issues(spamTitle, spamStuff))
+    fScribe(scribo).captured_msgs.add(fmt_print_issues(spamStuff))
   else:
     discard
 
 
-proc spam_milieu* (scribo :aScribe, spamTitle :string = "webdevn", spamThingy :webdevnMilieu) =
+proc spam_milieu* (scribo :aScribe, spamThingy :webdevnMilieu) =
   if scribo of rScribe:
-    print_milieu(spamTitle, spamThingy)
+    print_milieu(spamThingy)
 
     if scribo.doFile:
       discard
   if scribo of fScribe:
-    fScribe(scribo).captured_msgs.add(fmt_print_milieu(spamTitle, spamThingy))
+    fScribe(scribo).captured_msgs.add(fmt_print_milieu(spamThingy))
   else:
     discard
 

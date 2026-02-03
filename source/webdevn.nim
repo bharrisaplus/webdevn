@@ -39,14 +39,14 @@ when isMainModule:
 
   if not cliConfig.oneOff:
     if cliIssues.len > 0:
-      runScribe.spam_issues("cli", cliIssues)
+      runScribe.spam_issues(cliIssues)
       quit("\nwebdevn - shutting down...\n", 0)
 
     setControlCHook(proc() {.noconv.} =
-      runScribe.log_milieu("\nlocalserver", laMilieu)
+      runScribe.log_milieu(laMilieu)
       quit("\nwebdevn - shutting down...\n", 0)
     )
 
-    runScribe.spam_milieu("localserver", laMilieu)
+    runScribe.spam_milieu(laMilieu)
     
     waitFor wake_up(laMilieu, runScribe)

@@ -42,7 +42,7 @@ proc aio_for* (aioReq :Request, aioMilieu :webdevnMilieu, aioScribe :aScribe) :F
   if lookupInfo.issues.len == 0:
     isOk = true
   else:
-    aioScribe.log_issues("File lookup", lookupInfo.issues)
+    aioScribe.log_issues(lookupInfo.issues)
 
   if isOk:
     let gobbleInfo = await lazy_gobble(lookupInfo.loc, aioScribe)
@@ -54,7 +54,7 @@ proc aio_for* (aioReq :Request, aioMilieu :webdevnMilieu, aioScribe :aScribe) :F
       resHeaders = stamp_headers(lookupInfo.ext, resContent.len, aioMilieu)
 
     else:
-      aioScribe.log_issues("File read", gobbleInfo.issues)
+      aioScribe.log_issues(gobbleInfo.issues)
       isOk = false
 
   if not isOk:
