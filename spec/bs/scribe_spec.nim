@@ -1,6 +1,7 @@
 import std/unittest
 from std/paths import Path
 from std/uri import parseUri
+from std/strutils import startsWith, endsWith, contains
 
 import ../../source/webdevn/[type_defs, scribe]
 
@@ -14,15 +15,56 @@ let
 suite "Scribe_BS":
 
   test "Should print config as expected":
-    skip()
+    let maybeSolution = scribe.fmt_print_config(scribeWebdevnConfig)
+
+    check:
+      maybeSolution.startsWith("  webdevn config")
+      maybeSolution.contains("    - basePath =>")
+      maybeSolution.endsWith("    - writeLog => false\n  ")
+
+
   test "Should print issues as expected":
-    skip()
+    let
+      maybeSolution_1 = scribe.fmt_print_issues(@[])
+      maybeSolution_2 = scribe.fmt_print_issues(@["Black Jack", "Here we go again"])
+
+    check:
+      maybeSolution_1.startsWith("  webdevn issue(s) - [0]:\n")
+      maybeSolution_1.endsWith("    * No issues!\n  ")
+
+      maybeSolution_2.startsWith("  webdevn issue(s) - [2]:\n")
+      maybeSolution_2.contains("    * Black Jack\n")
+      maybeSolution_2.endsWith("    * Here we go again\n  ")
+
+
   test "Should print milieu as expected":
-    skip()
+    let maybeSolution = scribe.fmt_print_milieu(scribeWebdevnMilieu)
+
+    check:
+      1==1
+      maybeSolution.startsWith("  webdevn milieu/runtime env:\n")
+      maybeSolution.contains("    - docIndex => index.html\n")
+      maybeSolution.endsWith("  - listenPort => 0\n  ")
+
+
   test "Should print lookup as expected":
-    skip()
+    let maybeSolution = fmt_print_lookup(scribeUri, mPath = scribePath, dRoot = scribePath)
+
+    check:
+      maybeSolution.startsWith("  webdevn - request lookup:\n")
+      maybeSolution.contains("    - Request URL Path: /\n")
+      maybeSolution.endsWith("  - basePath-Parent-Parent: spec\n  ")
+
+
   test "Should print it as expected":
-    skip()
+    let maybeSolution = scribe.fmt_print_it("A log for log's sake")
+
+    check:
+      1==1
+      maybeSolution.startsWith("webdevn - ")
+      maybeSolution.endsWith("sake")
+
+
   test "Should log when yap is true":
     let yapScribe = fScribe(willYap: true)
 
@@ -35,6 +77,7 @@ suite "Scribe_BS":
     check:
       yapScribe.captured_msgs.len == 5
 
+
   test "Should not log when yap is false":
     let yapScribe = fScribe(willYap: false)
 
@@ -46,6 +89,8 @@ suite "Scribe_BS":
 
     check:
       yapScribe.captured_msgs.len == 0
+
+
   test "Should spam regardless":
     let yapScribe = fScribe(willYap: true)
 
@@ -55,4 +100,3 @@ suite "Scribe_BS":
 
     check:
       yapScribe.captured_msgs.len == 3
-
