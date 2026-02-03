@@ -10,7 +10,9 @@ const
   # Number of log files to keep
   maxRotate* :int = 3
   # How many ms to wait when server is busy
-  napTime* = 500
+  napTime* :int = 500
+  # Single instance for getting the mime type on each request
+  mimeLookup* :MimeDB = newMimeTypes()
   # Headers that aren't generated for every request
   baseHeaderBits* = @{
     "Server": "webdevn; nim/c",
@@ -100,12 +102,10 @@ type webdevnMilieu* = object
   virtualFS* :webFS
   listenPort* :Port
   anyAddr* :bool
-  mimeLookup* :MimeDB
 
 proc defaultWebdevnMilieu* (someConfig :webdevnConfig) :webdevnMilieu =
   return webdevnMilieu(
     virtualFS: webdevnFS(someConfig),
     listenPort: Port(someConfig.inputPortNum),
-    anyAddr: someConfig.zeroHost,
-    mimeLookup: newMimeTypes()
+    anyAddr: someConfig.zeroHost
   )

@@ -11,7 +11,7 @@ import type_defs, scribe, utils
 
 
 proc stamp_headers* (fileExt :string, fileLen :int, stampMilieu :webdevnMilieu) :HttpHeaders =
-  let mimeType = stampMilieu.mimeLookup.getMimeType(fileExt)
+  let mimeType = mimeLookup.getMimeType(fileExt)
 
   let textLike = mimeType.startsWith("text/") or mimeType == "application/javascript" or
     mimeType == "application/json" or mimeType.endsWith("+xml")
