@@ -20,7 +20,7 @@ suite "Scribe_BS":
     check:
       maybeSolution.startsWith("  webdevn config")
       maybeSolution.contains("    - basePath =>")
-      maybeSolution.endsWith("    - writeLog => false\n  ")
+      maybeSolution.endsWith("    - inSilence => true\n  ")
 
 
   test "Should print issues as expected":

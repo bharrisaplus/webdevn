@@ -26,7 +26,6 @@ type webdevnConfig* = object
   indexFile* :string
   indexFileExt* :string
   inSilence* :bool
-  writeLog* :bool
   zeroHost* :bool
   oneOff* :bool = false
 
@@ -63,9 +62,6 @@ type
   # Generic logger that respectst the cli flags
   aScribe* = ref object of RootObj
     willYap* :bool
-    doFile* :bool
-    logPath* :Path
-    logName* :string
 
   # Real logger used in app
   rScribe* = ref object of aScribe
@@ -91,7 +87,6 @@ proc defaultWebdevnConfig* :webdevnConfig =
     indexFile: "index.html",
     indexFileExt: "html",
     inSilence: true,
-    writeLog: false,
     zeroHost: false
   )
 
@@ -104,15 +99,8 @@ proc webdevnFS* (someConfig :webdevnConfig) :webFS =
   )
 
 
-
 proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
-  return rScribe(
-    willYap: not someConfig.inSilence,
-    doFile: someConfig.writeLog,
-    logPath: getCurrentDir(),
-    logName: "webdevn.log.txt"
-  )
-
+  return rScribe(willYap: not someConfig.inSilence)
 
 
 proc defaultWebdevnMilieu* (someConfig :webdevnConfig) :webdevnMilieu =

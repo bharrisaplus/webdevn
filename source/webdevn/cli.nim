@@ -27,8 +27,6 @@ OPTION:
     [-p:54321, --port 54321]: Number for which port to listen for requests on
   How to yap:
     [-v, --verbose]: Extra information about the server as it runs will be display
-    [-l, --logfile]: Write information to a log file located where command is run from
-                      named 'webdevn.log.txt'; can be used with verbose option.
   One-off Prints:
     [-V, --version]: Current build version, platform and dependency versions
     [-h, --help]: This message
@@ -87,9 +85,6 @@ proc config_from_cli* (osCliParams :seq[string]) :(webdevnConfig, seq[string]) =
 
         of "v", "verbose":
           maybeConfig.inSilence = false
-
-        of "l", "log":
-          maybeConfig.writeLog = true
 
         of "V", "version":
           scribe.print_it("webdevn verion: " & webdevnVersion)

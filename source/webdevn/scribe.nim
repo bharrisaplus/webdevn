@@ -16,7 +16,6 @@ proc fmt_print_config* (thingy :webdevnConfig) :string =
     - inputPortNum => {thingy.inputPortNum}
     - indexFile => {thingy.indexFile}
     - inSilence => {thingy.inSilence}
-    - writeLog => {thingy.writeLog}
   """
 
 

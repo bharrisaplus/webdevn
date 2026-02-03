@@ -34,21 +34,18 @@ suite "Cli_BS":
       outputCliConfig.inputPortNum == 0
       outputCliConfig.indexFile == specIndex
       outputCliConfig.inSilence
-      not outputCliConfig.writeLog
 
       shortCliIssues.len() == 0
       paths.isAbsolute(shortCliConfig.basePath)
       shortCliConfig.inputPortNum == 0
       shortCliConfig.indexFile == specIndex
       shortCliConfig.inSilence
-      not shortCliConfig.writeLog
 
       longCliIssues.len() == 0
       paths.isAbsolute(longCliConfig.basePath)
       longCliConfig.inputPortNum == 0
       longCliConfig.indexFile == specIndex
       longCliConfig.inSilence
-      not longCliConfig.writeLog
     ]#
 
 
@@ -67,7 +64,6 @@ suite "Cli_BS":
       shortCliConfig.inputPortNum == 0
       shortCliConfig.indexFile == specIndex
       shortCliConfig.inSilence
-      not shortCliConfig.writeLog
 
 
       longCliIssues.len() == 0
@@ -75,7 +71,6 @@ suite "Cli_BS":
       longCliConfig.inputPortNum == 0
       longCliConfig.indexFile == specIndex
       longCliConfig.inSilence
-      not longCliConfig.writeLog
 
 
   test "Should have no issue with absolute path":
@@ -94,7 +89,6 @@ suite "Cli_BS":
       shortCliConfig.inputPortNum == 0
       shortCliConfig.indexFile == specIndex
       shortCliConfig.inSilence
-      not shortCliConfig.writeLog
 
 
       longCliIssues.len() == 0
@@ -102,7 +96,6 @@ suite "Cli_BS":
       longCliConfig.inputPortNum == 0
       longCliConfig.indexFile == specIndex
       longCliConfig.inSilence
-      not longCliConfig.writeLog
 
 
   test "Should have no issue with tilde path":
@@ -121,7 +114,6 @@ suite "Cli_BS":
       shortCliConfig.inputPortNum == 0
       shortCliConfig.indexFile == specIndex
       shortCliConfig.inSilence
-      not shortCliConfig.writeLog
 
 
       longCliIssues.len() == 0
@@ -129,7 +121,6 @@ suite "Cli_BS":
       longCliConfig.inputPortNum == 0
       longCliConfig.indexFile == specIndex
       longCliConfig.inSilence
-      not longCliConfig.writeLog
 
 
   test "Should have an issue with non number value used in port":
@@ -215,25 +206,3 @@ suite "Cli_BS":
 
       mixedCliIssues.len() == 0
       not mixedCliConfig.inSilence
-
-
-  test "Should write logfile with flag present":
-    let
-      specShortCmdLine = @["-d:./spec/appa/has_index", "-l"]
-      specLongCmdLine = @["--dir", "./spec/appa/has_index", "--log"]
-      specMixedCmdLine = @["--dir", "./spec/appa/has_index", "-l"]
-
-    var
-      (shortCliConfig, shortCliIssues) = config_from_cli(specShortCmdLine)
-      (longCliConfig, longCliIssues) = config_from_cli(specLongCmdLine)
-      (mixedCliConfig, mixedCliIssues) = config_from_cli(specMixedCmdLine)
-
-    check:
-      shortCliIssues.len() == 0
-      shortCliConfig.writeLog
-
-      longCliIssues.len() == 0
-      longCliConfig.writeLog
-
-      mixedCliIssues.len() == 0
-      mixedCliConfig.writeLog
