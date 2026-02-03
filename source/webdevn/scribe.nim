@@ -5,7 +5,10 @@ from std/uri import Uri, `$`
 
 import type_defs
 
-proc print_config* (title :string = "webdevn", thingy :webdevnConfig) =
+
+# Getting the text together
+
+proc fmt_print_config* (title :string = "webdevn", thingy :webdevnConfig) :string =
   var outputStr = title & " Config:\n"
 
   outputStr.add(&"  - basePath => '{thingy.basePath}'\n")
@@ -14,11 +17,11 @@ proc print_config* (title :string = "webdevn", thingy :webdevnConfig) =
   outputStr.add(&"  - inSilence => {thingy.inSilence}\n")
   outputStr.add(&"  - writeLog => {thingy.writeLog}\n")
 
-  echo outputStr
+  return outputStr
 
 
-proc print_issues* (title :string = "webdevn", stuff :seq[string]) =
-  var outputStr = title & " Issue(s) - [{stuff.len}]:\n"
+proc fmt_print_issues* (title :string = "webdevn", stuff :seq[string]) :string =
+  var outputStr = &"{title}  Issue(s) - [{stuff.len}]:\n"
 
   if stuff.len == 0:
     outputStr.add("  * No issues!\n")
@@ -26,10 +29,10 @@ proc print_issues* (title :string = "webdevn", stuff :seq[string]) =
     for issue in stuff:
       outputStr.add(&"  * {issue}\n")
 
-  echo outputStr
+  return outputStr
 
 
-proc print_milieu* (title :string = "webdevn", thingy :webdevnMilieu) =
+proc fmt_print_milieu* (title :string = "webdevn", thingy :webdevnMilieu) :string =
   var outputStr = title & " Milieu/Runtime_Env:\n"
 
   outputStr.add(&"  - docRoot => '{thingy.virtualFS.docRoot}'\n")
@@ -37,9 +40,9 @@ proc print_milieu* (title :string = "webdevn", thingy :webdevnMilieu) =
   outputStr.add(&"  - docIndexExt => '{thingy.virtualFS.docIndexExt}'\n")
   outputStr.add(&"  - listenPort => {thingy.listenPort}\n")
 
-  echo outputStr
+  return outputStr
 
-proc print_lookup* (title :string = "webdevn", req :Uri, mPath, dRoot :Path) =
+proc fmt_print_lookup* (title :string = "webdevn", req :Uri, mPath, dRoot :Path) :string =
   var outputStr = "\n" & title & "Looking up request\n"
 
   outputStr.add(&"  - Request URL: {req}\n")
@@ -49,20 +52,48 @@ proc print_lookup* (title :string = "webdevn", req :Uri, mPath, dRoot :Path) =
   outputStr.add(&"  - basePath-Parent: {parentDir(dRoot)}\n")
   outputStr.add(&"  - basePath-Parent-Parent: {parentDir(parentDir(dRoot))}\n")
 
-  echo outputStr
+  return outputStr
 
 
-proc print_it* (itBeing :string) =
-  echo "\nwebdevn - " & itBeing
+proc fmt_print_it* (itBeing :string) :string =
+  return "\nwebdevn - " & itBeing
 
+
+# General print to screen
+
+proc print_config* (printTitle :string, printThingy :webdevnConfig) =
+  echo fmt_print_config(printTitle, printThingy)
+
+
+proc print_issues* (printTitle :string, printStuff :seq[string]) =
+  echo fmt_print_issues(printTitle, printStuff)
+
+
+proc print_milieu* (printTitle :string, printThingy :webdevnMilieu) =
+  echo fmt_print_milieu(printTitle, printThingy)
+
+
+proc print_lookup* (printTitle :string, printReq :Uri, printMPath, printDRoot :Path) =
+  echo fmt_print_lookup(printTitle, printReq, printMPath, printDRoot)
+
+
+proc print_it* (printItBeing :string) =
+  echo fmt_print_it(printItBeing)
+
+
+# Called with aScribe or children
+
+# Writing to console or file with respect to cli flag 
 
 proc log_config* (s :aScribe, logTitle :string = "webdevn", logThingy :webdevnConfig) =
   if s of rScribe:
     if s.willYap:
-      print_config(title = logTitle, thingy = logThingy)
+      print_config(logTitle, logThingy)
 
     if s.doFile:
       discard
+  if s of fScribe:
+    fScribe(s).captured_msgs.add(fmt_print_config(logTitle, logThingy))
   else:
     discard
 
@@ -70,10 +101,12 @@ proc log_config* (s :aScribe, logTitle :string = "webdevn", logThingy :webdevnCo
 proc log_issues* (s :aScribe, logTitle :string = "webdevn", logStuff :seq[string]) =
   if s of rScribe:
     if s.willYap:
-      print_issues(title = logTitle, stuff = logStuff)
+      print_issues(logTitle, logStuff)
 
     if s.doFile:
       discard
+  if s of fScribe:
+    fScribe(s).captured_msgs.add(fmt_print_issues(logTitle, logStuff))
   else:
     discard
 
@@ -81,20 +114,24 @@ proc log_issues* (s :aScribe, logTitle :string = "webdevn", logStuff :seq[string
 proc log_milieu* (s :aScribe, logTitle :string = "webdevn", logThingy :webdevnMilieu) =
   if s of rScribe:
     if s.willYap:
-      print_milieu(title = logTitle, thingy = logThingy)
+      print_milieu(logTitle, logThingy)
 
     if s.doFile:
       discard
+  if s of fScribe:
+    fScribe(s).captured_msgs.add(fmt_print_milieu(logTitle, logThingy))
   else:
     discard
 
 proc log_lookup* (s :aScribe, logTitle :string = "webdevn", logReq :Uri, logMPath, logDRoot :Path) =
   if s of rScribe:
     if s.willYap:
-      print_lookup(title = logTitle, req = logReq, mPath = logMPath, dRoot = logDRoot)
+      print_lookup(logTitle, logReq, logMPath, logDRoot)
 
     if s.doFile:
       discard
+  if s of fScribe:
+    fScribe(s).captured_msgs.add(fmt_print_lookup(logTitle, logReq, logMPath, logDRoot))
   else:
     discard
 
@@ -102,30 +139,49 @@ proc log_lookup* (s :aScribe, logTitle :string = "webdevn", logReq :Uri, logMPat
 proc log_it* (s :aScribe, logItBeing :string) =
   if s of rScribe:
     if s.willYap:
-      print_it(itBeing = logItBeing)
+      print_it(logItBeing)
 
     if s.doFile:
       discard
+  if s of fScribe:
+    fScribe(s).captured_msgs.add(fmt_print_it(logItBeing))
   else:
     discard
 
 
+# Important things that get shown regardless of the cli flag
+
 proc spam_issues* (s :aScribe, spamTitle :string = "webdevn", spamStuff :seq[string]) =
   if s of rScribe:
-    print_issues(title = spamTitle, stuff = spamStuff)
+    print_issues(spamTitle, spamStuff)
+
+    if s.doFile:
+      discard
+  if s of fScribe:
+    fScribe(s).captured_msgs.add(fmt_print_issues(spamTitle, spamStuff))
   else:
     discard
 
 
 proc spam_milieu* (s :aScribe, spamTitle :string = "webdevn", spamThingy :webdevnMilieu) =
   if s of rScribe:
-    print_milieu(title = spamTitle, thingy = spamThingy)
+    print_milieu(spamTitle, spamThingy)
+
+    if s.doFile:
+      discard
+  if s of fScribe:
+    fScribe(s).captured_msgs.add(fmt_print_milieu(spamTitle, spamThingy))
   else:
     discard
 
 
 proc spam_it* (s :aScribe, spamItBeing :string) =
   if s of rScribe:
-    print_it(itBeing = spamItBeing)
+    print_it(spamItBeing)
+
+    if s.doFile:
+      discard
+  if s of fScribe:
+    fScribe(s).captured_msgs.add(fmt_print_it(spamItBeing))
   else:
     discard
