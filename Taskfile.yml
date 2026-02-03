@@ -50,7 +50,7 @@ tasks:
 
   # Top level aliases for convenience
 
-  rear-winbuid:
+  rear-winbuild:
     aliases: [rear-win]
     cmds:
       - task: winbuild:rear-x64
@@ -66,21 +66,31 @@ tasks:
       - task: winbuild:sweep-x64
 
 
-  rear-macbuid:
+  rear-macbuild:
     aliases: [rear-mac]
     cmds:
       - task: macbuild:rear-intel
 
-  rear-macasbuid:
+  rear-macasbuild:
     aliases: [rear-macas]
     cmds:
       - task: macbuild:rear-apple
 
 
-  rear-gnubuid:
+  rear-gnubuild:
     aliases: [rear-gnu]
     cmds:
       - task: gnubuild:rear-x64
+
+  wrap-gnubuild:
+    aliases: [wrap-gnu]
+    cmds:
+      - task: gnubuild:wrap-x64
+
+  sweep-gnubuild:
+    aliases: [sweep-gnu]
+    cmds:
+      - task: gnubuild:sweep-x64
 
 
   # Linting
