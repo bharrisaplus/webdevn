@@ -83,6 +83,7 @@ type
 
   rScribe* = ref object of aScribe
   fScribe* = ref object of aScribe
+    captured_msgs* : seq[string]
 
 proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
   return rScribe(
