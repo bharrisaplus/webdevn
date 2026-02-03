@@ -42,6 +42,7 @@ proc fmt_print_milieu* (title :string = "webdevn", thingy :webdevnMilieu) :strin
 
   return outputStr
 
+
 proc fmt_print_lookup* (title :string = "webdevn", req :Uri, mPath, dRoot :Path) :string =
   var outputStr = "\n" & title & "Looking up request\n"
 
