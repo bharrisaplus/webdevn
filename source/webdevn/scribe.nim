@@ -22,7 +22,7 @@ proc fmt_print_config* (thingy :webdevnConfig) :string =
 
 proc fmt_print_issues* (stuff :seq[string]) :string =
   var issueStr :string =
-    if stuff.len == 0: "* No issues!"
+    if stuff.len == 0: "No issues!"
     else: stuff.join("\n    * ")
 
   return fmt"""
@@ -43,13 +43,13 @@ proc fmt_print_milieu* (thingy :webdevnMilieu) :string =
 
 proc fmt_print_lookup* (req :Uri, mPath, dRoot :Path) :string =
   return fmt"""
-    webdevn - request lookup:
-      - Request URL: {req}
-      - Request URL Path: {req.path}
-      - Request Absolute Path: {mPath}
-      - basePath: {dRoot}
-      - basePath-Parent: {parentDir(dRoot)}
-      - basePath-Parent-Parent: {parentDir(parentDir(dRoot))}
+  webdevn - request lookup:
+    - Request URL: {req}
+    - Request URL Path: {req.path}
+    - Request Absolute Path: {mPath}
+    - basePath: {dRoot}
+    - basePath-Parent: {parentDir(dRoot)}
+    - basePath-Parent-Parent: {parentDir(parentDir(dRoot))}
   """
 
 
