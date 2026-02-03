@@ -32,17 +32,6 @@ type webdevnConfig* = object
   zeroHost* :bool
   oneOff* :bool = false
 
-proc defaultWebdevnConfig* :webdevnConfig =
-  return webdevnConfig(
-    basePath: getCurrentDir(),
-    inputPortNum: 0,
-    indexFile: "index.html",
-    indexFileExt: "html",
-    inSilence: true,
-    writeLog: false,
-    zeroHost: false
-  )
-
 
 # Misc
 
@@ -51,13 +40,6 @@ type webFS* = ref object
   docRoot* :Path
   docIndex* :string
   docIndexExt* :string
-
-proc webdevnFS* (someConfig :webdevnConfig) :webFS =
-  return webFs(
-    docRoot: someConfig.basePath,
-    docIndex: someConfig.indexFile,
-    docIndexExt: someConfig.indexFileExt
-  )
 
 # A found file to serve
 type lookupResult* = tuple
@@ -93,6 +75,38 @@ type
   fScribe* = ref object of aScribe
     captured_msgs* :seq[string]
 
+
+# Runtime environment
+
+type webdevnMilieu* = object
+  virtualFS* :webFS
+  listenPort* :Port
+  anyAddr* :bool
+
+
+# Helpers
+
+proc defaultWebdevnConfig* :webdevnConfig =
+  return webdevnConfig(
+    basePath: getCurrentDir(),
+    inputPortNum: 0,
+    indexFile: "index.html",
+    indexFileExt: "html",
+    inSilence: true,
+    writeLog: false,
+    zeroHost: false
+  )
+
+
+proc webdevnFS* (someConfig :webdevnConfig) :webFS =
+  return webFs(
+    docRoot: someConfig.basePath,
+    docIndex: someConfig.indexFile,
+    docIndexExt: someConfig.indexFileExt
+  )
+
+
+
 proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
   return rScribe(
     willYap: not someConfig.inSilence,
@@ -102,12 +116,6 @@ proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
   )
 
 
-# Runtime environment
-
-type webdevnMilieu* = object
-  virtualFS* :webFS
-  listenPort* :Port
-  anyAddr* :bool
 
 proc defaultWebdevnMilieu* (someConfig :webdevnConfig) :webdevnMilieu =
   return webdevnMilieu(
