@@ -120,6 +120,13 @@ tasks:
 
   # Testing
 
+  # Can also run separate test tasks in parallel with -p flag
+  test-behavior-shape:
+    aliases: [all-bs]
+    desc: Run all behavior and shape suites
+    cmds:
+      - nim r --hints:off {{.TEST_DIR}}/bs/all_bs_spec.nim
+
   test-cli:
     desc: Run spec for cli suite
     cmds:
