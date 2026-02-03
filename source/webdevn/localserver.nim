@@ -10,7 +10,7 @@ from std/asynchttpserver import Request
 import type_defs, scribe, utils
 
 
-proc stamp_headers* (fileExt :string, fileLen :int, stampMilieu :webdevnMilieu) :HttpHeaders =
+proc stamp_headers* (fileExt :string, fileLen :int) :HttpHeaders =
   let mimeType = mimeLookup.getMimeType(fileExt)
 
   let textLike = mimeType.startsWith("text/") or mimeType == "application/javascript" or
@@ -51,7 +51,7 @@ proc aio_for* (aioReq :Request, aioMilieu :webdevnMilieu, aioScribe :aScribe) :F
       aioScribe.log_it(&"(200) Found File\n\n")
       resContent = gobbleInfo.contents
       resCode = Http200
-      resHeaders = stamp_headers(lookupInfo.ext, resContent.len, aioMilieu)
+      resHeaders = stamp_headers(lookupInfo.ext, resContent.len)
 
     else:
       aioScribe.log_issues(gobbleInfo.issues)
@@ -61,7 +61,7 @@ proc aio_for* (aioReq :Request, aioMilieu :webdevnMilieu, aioScribe :aScribe) :F
     aioScribe.log_it(&"(404) File Not Found\n\n")
     resContent = errorContent
     resCode = Http404
-    resHeaders = stamp_headers( "html", resContent.len, aioMilieu)
+    resHeaders = stamp_headers( "html", resContent.len)
 
   aioScribe.log_it(&"Stamped Headers: {resHeaders}\n")
   aioScribe.spam_it(&"Responding to request: {aioReq.url}\n=============")

@@ -41,18 +41,11 @@ suite "LocalServer_BS":
       swearFileLen_1 = 0
       swearFileExt_2 = "jpg"
       swearFileLen_2 = 0
-      swearMilieu = defaultWebdevnMilieu(
-        loserSpecWebDevnConfig(lBasePath = "./spec/appa/has_index")
-      )
 
     let
-        maybeSolution_1 = stamp_headers(
-          fileExt = swearFileExt_1, fileLen = swearFileLen_1, stampMilieu = swearMilieu,
-        )
+        maybeSolution_1 = stamp_headers(fileExt = swearFileExt_1, fileLen = swearFileLen_1)
 
-        maybeSolution_2 = stamp_headers(
-          fileExt = swearFileExt_2, fileLen = swearFileLen_2, stampMilieu = swearMilieu,
-        )
+        maybeSolution_2 = stamp_headers(fileExt = swearFileExt_2, fileLen = swearFileLen_2)
 
     check:
       maybeSolution_1.table["content-type"] == @["text/html; charset=utf-8"]
