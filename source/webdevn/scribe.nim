@@ -59,34 +59,16 @@ proc fmt_print_it* (itBeing :string) :string =
 
 # General print to screen
 
-proc print_config* (printThingy :webdevnConfig) =
-  echo fmt_print_config(printThingy)
-
-
-proc print_issues* (printStuff :seq[string]) =
-  echo fmt_print_issues(printStuff)
-
-
-proc print_milieu* (printThingy :webdevnMilieu) =
-  echo fmt_print_milieu(printThingy)
-
-
-proc print_lookup* (printReq :Uri, printMPath, printDRoot :Path) =
-  echo fmt_print_lookup(printReq, printMPath, printDRoot)
-
-
 proc print_it* (printItBeing :string) =
   echo fmt_print_it(printItBeing)
 
 
-# Called with aScribe or children
-
-# Writing to console or file with respect to cli flag 
+# Called with aScribe or children; writing to console or file with respect to cli flag 
 
 proc log_config* (scribo :aScribe, logThingy :webdevnConfig) =
   if scribo.willYap:
     if scribo of rScribe:
-      print_config(logThingy)
+      echo fmt_print_config(logThingy)
     if scribo of fScribe:
       fScribe(scribo).captured_msgs.add(fmt_print_config(logThingy))
 
@@ -94,7 +76,7 @@ proc log_config* (scribo :aScribe, logThingy :webdevnConfig) =
 proc log_issues* (scribo :aScribe, logStuff :seq[string]) =
   if scribo.willYap:
     if scribo of rScribe:
-      print_issues(logStuff)
+      echo fmt_print_issues(logStuff)
     if scribo of fScribe:
       fScribe(scribo).captured_msgs.add(fmt_print_issues(logStuff))
 
@@ -102,7 +84,7 @@ proc log_issues* (scribo :aScribe, logStuff :seq[string]) =
 proc log_milieu* (scribo :aScribe, logThingy :webdevnMilieu) =
   if scribo.willYap:
     if scribo of rScribe:
-      print_milieu(logThingy)
+      echo fmt_print_milieu(logThingy)
     if scribo of fScribe:
       fScribe(scribo).captured_msgs.add(fmt_print_milieu(logThingy))
 
@@ -110,7 +92,7 @@ proc log_milieu* (scribo :aScribe, logThingy :webdevnMilieu) =
 proc log_lookup* (scribo :aScribe, logReq :Uri, logMPath, logDRoot :Path) =
   if scribo.willYap:
     if scribo of rScribe:
-      print_lookup(logReq, logMPath, logDRoot)
+      echo fmt_print_lookup(logReq, logMPath, logDRoot)
     if scribo of fScribe:
       fScribe(scribo).captured_msgs.add(fmt_print_lookup(logReq, logMPath, logDRoot))
 
@@ -127,14 +109,14 @@ proc log_it* (scribo :aScribe, logItBeing :string) =
 
 proc spam_issues* (scribo :aScribe, spamStuff :seq[string]) =
   if scribo of rScribe:
-    print_issues(spamStuff)
+    echo fmt_print_issues(spamStuff)
   if scribo of fScribe:
     fScribe(scribo).captured_msgs.add(fmt_print_issues(spamStuff))
 
 
 proc spam_milieu* (scribo :aScribe, spamThingy :webdevnMilieu) =
   if scribo of rScribe:
-    print_milieu(spamThingy)
+    echo fmt_print_milieu(spamThingy)
   if scribo of fScribe:
     fScribe(scribo).captured_msgs.add(fmt_print_milieu(spamThingy))
 
