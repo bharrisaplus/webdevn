@@ -7,7 +7,7 @@ from std/nativesockets import `$`
 from std/asynchttpserver import Request,
   newAsyncHttpServer, listen, getPort, shouldAcceptRequest, acceptRequest, respond
 
-import webdevn/[type_defs, scribe, cli, localServer]
+import webdevn/[type_defs, scribe, cli, localserver]
 
 
 proc wake_up* (wakeupMilieu :webdevnMilieu, journal :aScribe) {.async.} =
