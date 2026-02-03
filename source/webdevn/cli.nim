@@ -25,6 +25,7 @@ OPTION:
     [-i:PATTERN, --index PATTERN]: Filename (with ext) of the file served when a directory is requested
   How to serve:
     [-p:54321, --port 54321]: Number for which port to listen for requests on
+    [-z, --zero]: Use the any address 0.0.0.0 (instead of explicit localhost)
   How to yap:
     [-v, --verbose]: Extra information about the server as it runs will be display
   One-off Prints:
@@ -82,6 +83,9 @@ proc config_from_cli* (osCliParams :seq[string]) :(webdevnConfig, seq[string]) =
 
         of "i", "index":
           maybeIndexFile = optinput
+
+        of "z", "zero":
+          maybeConfig.zeroHost = true
 
         of "v", "verbose":
           maybeConfig.inSilence = false
