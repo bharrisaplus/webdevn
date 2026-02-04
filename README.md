@@ -22,7 +22,7 @@ OPTION:
     [-p:54321, --port 54321]: Number for which port to listen for requests on
     [-z, --zero]: Use the any address 0.0.0.0 (instead of explicit localhost)
   How to yap:
-    [-v, --verbose]: Extra information about the server as it runs will be display
+    [-v, --verbose]: Extra information about the server as it runs will be displayed
   One-off Prints:
     [-V, --version]: Current build version, platform and dependency versions
     [-h, --help]: This message
