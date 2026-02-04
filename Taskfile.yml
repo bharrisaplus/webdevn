@@ -157,3 +157,16 @@ tasks:
     desc: Run spec for localserver suite
     cmds:
       - nim r --hints:off {{.TEST_DIR}}/bs/localserver_spec.nim "LocalServer_BS::"
+
+  # Misc
+
+  behavior-shape-coverage:
+    aliases: [coco-bs]
+    cmds:
+      - coco --target "specs/bs/all_bs_spec.nim" --cov '!specs' --compiler="--hints:off" --report_source="lcov.info" --report_path="coverage"
+
+  qlty-coverage-upload:
+    aliases: [qlty-cp]
+    desc: Publish coverage to qlty
+    cmds:
+      - qlty coverage publish coverage/lcov.info

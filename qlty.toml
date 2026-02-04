@@ -1,0 +1,21 @@
+# Nim isn't supported for quality checks or smells but coverage lcov can be uploaded
+
+config_version = "0"
+
+exclude_patterns = [
+  "nimble.develop",
+  "nimble.paths",
+  "config.nims",
+  "nimble.lock",
+  "*.nimble",
+  "Taskfile.yml",
+  "README.md",
+  ".envrc",
+
+  "nimbledeps/**",
+  "nimcache/**",
+  "distribution/**",
+  "build/**"
+]
+
+test_patterns = ["spec/**", "*_spec.nim"]

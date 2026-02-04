@@ -7,3 +7,6 @@ distribution/**/*.exe
 distribution/**/*.exe.sha256
 distribution/**/*.zip
 distribution/**/*.zip.sha256
+
+coverage
+lcov.info
