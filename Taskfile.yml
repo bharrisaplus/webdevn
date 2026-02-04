@@ -163,7 +163,7 @@ tasks:
   behavior-shape-coverage:
     aliases: [coco-bs]
     cmds:
-      - coco --target "specs/bs/all_bs_spec.nim" --cov '!specs' --compiler="--hints:off" --report_source="lcov.info" --report_path="coverage"
+      - coco --target "spec/bs/all_bs_spec.nim" --cov '!spec' --report_source="lcov.info" --report_path="coverage"
 
   qlty-coverage-upload:
     aliases: [qlty-cp]
