@@ -3,14 +3,36 @@
 version: '3'
 
 tasks:
+  rear-intel-debug:
+    env:
+      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/intel'
+    cmds:
+      - nim c --outDir:$BUILD_OUTPUT_DIR $SOURCE_DIR/webdevn.nim
   rear-intel:
     env:
       BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/intel'
     cmds:
-      - echo "Hey, it's macos running intel here"
+      - nim c -d:release --outDir:$BUILD_OUTPUT_DIR $SOURCE_DIR/webdevn.nim
 
   rear-apple:
     env:
       BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/apple'
     cmds:
       - echo "Hey, it's macos running apple-silicone here"
+
+  wrap-intel:
+    deps: [rear-intel]
+    env:
+      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/intel'
+    cmds:
+      - shasum -a 256 $BUILD_OUTPUT_DIR/webdevn | cut -d ' ' -f 1 > $BUILD_OUTPUT_DIR/webdevn.sha256
+      - zip -j $BUILD_OUTPUT_DIR/webdevn_macintel-$VERSION_NUM.zip $BUILD_OUTPUT_DIR/webdevn $BUILD_OUTPUT_DIR/webdevn.sha256
+      - shasum -a 256 $BUILD_OUTPUT_DIR/webdevn_macintel-$VERSION_NUM.zip | cut -d ' ' -f 1 > $BUILD_OUTPUT_DIR/webdevn_macintel-$VERSION_NUM.zip.sha256
+
+  sweep-intel:
+    env:
+      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/intel'
+    cmds:
+      - rm -rf $BUILD_OUTPUT_DIR/webdevn
+      - rm -rf $BUILD_OUTPUT_DIR/*.zip
+      - rm -rf $BUILD_OUTPUT_DIR/*.sha256

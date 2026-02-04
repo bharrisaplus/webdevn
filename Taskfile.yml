@@ -71,6 +71,16 @@ tasks:
     cmds:
       - task: macbuild:rear-intel
 
+  wrap-macbuild:
+    aliases: [wrap-mac]
+    cmds:
+      - task: macbuild:wrap-intel
+
+  sweep-macbuild:
+    aliases: [sweep-mac]
+    cmds:
+      - task: macbuild:sweep-intel
+
   rear-macasbuild:
     aliases: [rear-macas]
     cmds:
