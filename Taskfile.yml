@@ -66,25 +66,25 @@ tasks:
       - task: winbuild:sweep-x64
 
 
-  rear-macbuild:
+  rear-macdabuild:
     aliases: [rear-mac]
     cmds:
-      - task: macbuild:rear-intel
+      - task: macbuild:rear-darwinx64
 
-  wrap-macbuild:
+  wrap-macdabuild:
     aliases: [wrap-mac]
     cmds:
-      - task: macbuild:wrap-intel
+      - task: macbuild:wrap-darwinx64
 
-  sweep-macbuild:
+  sweep-macdabuild:
     aliases: [sweep-mac]
     cmds:
-      - task: macbuild:sweep-intel
+      - task: macbuild:sweep-darwin
 
   rear-macasbuild:
     aliases: [rear-macas]
     cmds:
-      - task: macbuild:rear-apple
+      - task: macbuild:rear-darwinarm64
 
 
   rear-gnubuild:

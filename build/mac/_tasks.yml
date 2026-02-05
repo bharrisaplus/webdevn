@@ -3,35 +3,35 @@
 version: '3'
 
 tasks:
-  rear-intel-debug:
+  rear-darwinx64-debug:
     env:
-      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/intel'
+      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/darwin'
     cmds:
       - nim c --outDir:$BUILD_OUTPUT_DIR $SOURCE_DIR/webdevn.nim
-  rear-intel:
+  rear-darwinx64:
     env:
-      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/intel'
+      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/darwin'
     cmds:
       - nim c -d:release --outDir:$BUILD_OUTPUT_DIR $SOURCE_DIR/webdevn.nim
 
-  rear-apple:
+  rear-darwinarm64:
     env:
-      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/apple'
+      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/darwin'
     cmds:
-      - echo "Hey, it's macos running apple-silicone here"
+      - echo "Hey, it's macos running darwin arm64 here"
 
-  wrap-intel:
-    deps: [rear-intel]
+  wrap-darwinx64:
     env:
-      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/intel'
+      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/darwin'
     cmds:
+      - task: rear-darwinx64
       - shasum -a 256 $BUILD_OUTPUT_DIR/webdevn | cut -d ' ' -f 1 > $BUILD_OUTPUT_DIR/webdevn.sha256
-      - zip -j $BUILD_OUTPUT_DIR/webdevn_macintel-$VERSION_NUM.zip $BUILD_OUTPUT_DIR/webdevn $BUILD_OUTPUT_DIR/webdevn.sha256
-      - shasum -a 256 $BUILD_OUTPUT_DIR/webdevn_macintel-$VERSION_NUM.zip | cut -d ' ' -f 1 > $BUILD_OUTPUT_DIR/webdevn_macintel-$VERSION_NUM.zip.sha256
+      - zip -j $BUILD_OUTPUT_DIR/webdevn_darwinx64-$VERSION_NUM.zip $BUILD_OUTPUT_DIR/webdevn $BUILD_OUTPUT_DIR/webdevn.sha256
+      - shasum -a 256 $BUILD_OUTPUT_DIR/webdevn_darwinx64-$VERSION_NUM.zip | cut -d ' ' -f 1 > $BUILD_OUTPUT_DIR/webdevn_darwinx64-$VERSION_NUM.zip.sha256
 
-  sweep-intel:
+  sweep-darwin:
     env:
-      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/intel'
+      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/darwin'
     cmds:
       - rm -rf $BUILD_OUTPUT_DIR/webdevn
       - rm -rf $BUILD_OUTPUT_DIR/*.zip
