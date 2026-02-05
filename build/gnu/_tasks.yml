@@ -16,10 +16,10 @@ tasks:
       - nim c -d:release --outDir:$BUILD_OUTPUT_DIR $SOURCE_DIR/webdevn.nim
 
   wrap-x64:
-    deps: [rear-x64]
     env:
       BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/gnu/x64'
     cmds:
+      - task: rear-x64
       - shasum -a 256 $BUILD_OUTPUT_DIR/webdevn | cut -d ' ' -f 1 > $BUILD_OUTPUT_DIR/webdevn.sha256
       - zip -j $BUILD_OUTPUT_DIR/webdevn_gnux64-$VERSION_NUM.zip $BUILD_OUTPUT_DIR/webdevn $BUILD_OUTPUT_DIR/webdevn.sha256
       - shasum -a 256 $BUILD_OUTPUT_DIR/webdevn_gnux64-$VERSION_NUM.zip | cut -d ' ' -f 1 > $BUILD_OUTPUT_DIR/webdevn_gnux64-$VERSION_NUM.zip.sha256
