@@ -17,7 +17,7 @@ proc wake_up* (wakeupMilieu :webdevnMilieu, journal :aScribe) {.async.} =
 
   innerDaemon.listen(wakeupMilieu.listenPort)
   journal.spam_it("Starting up server")
-  journal.spam_it("Listening on " & listenAddress & ":{localserver.innerDaemon.getPort}")
+  journal.spam_it("Listening on " & listenAddress & ":" & $innerDaemon.getPort)
   journal.spam_it("Press 'Ctrl+C' to exit\n\n")
   while true:
     if innerDaemon.shouldAcceptRequest():
