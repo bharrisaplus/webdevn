@@ -23,6 +23,7 @@ requires "zip >= 0.3.1"
 
 
 # Dev dependencies (Used in building application)
+## coco - For test coverage and generting lcov info
 dev:
   requires "coco >= 0.0.3"
 
