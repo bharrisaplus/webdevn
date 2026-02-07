@@ -3,6 +3,10 @@ nimble.develop
 nimble.paths
 nimbledeps
 
+source/webdevn/assets/img/raster/*.ico
+source/webdevn/assets/img/raster/*.png
+source/webdevn/assets/img/raster/*.jpg
+
 distribution/**/*.exe
 distribution/**/*.exe.sha256
 distribution/**/*.zip
