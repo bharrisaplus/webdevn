@@ -24,7 +24,7 @@ tasks:
     silent: true
     cmds:
       - 'echo version: $VERSION_NUM'
-      - 'echo version for nimble $VERSION_FOR_NIMBLE'
+      - 'echo version for nimble $SEMANTIC_VERSION'
       - 'echo project in: $PROJECT_DIR'
       - 'echo source files: $SOURCE_DIR'
       - 'echo nimble package deps: {{.NIMBLEPKGDEPSVER}}'
@@ -37,7 +37,7 @@ tasks:
     aliases: [update-saniv]
     desc: Sync version number in .nimble file with environment variable as nimble requires variable to be string literal
     cmds:
-      - sed -i 's/^version *= *".*"/version = "{{.VERSION_FOR_NIMBLE}}"/' webdevn.nimble
+      - sed -i 's/^version *= *".*"/version = "{{.SEMANTIC_VERSION}}"/' webdevn.nimble
 
 
   # Running
