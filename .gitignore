@@ -11,6 +11,9 @@ distribution/**/*.exe
 distribution/**/*.exe.sha256
 distribution/**/*.zip
 distribution/**/*.zip.sha256
+distribution/win/**/*.rc
+distribution/win/**/*.ico
+distribution/win/**/*.res
 
 coverage
 lcov.info
