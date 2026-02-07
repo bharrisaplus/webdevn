@@ -15,7 +15,8 @@ const
   baseHeaderBits* :seq[(string, string)] = @{
     "Server": "webdevn; nim/c",
     "Cache-Control": "no-store, no-cache",
-    "Clear-Site-Data": "\"cache\""
+    "Clear-Site-Data": "\"cache\"",
+    "X-Content-Type-Options": "nosniff"
   }
 
 
