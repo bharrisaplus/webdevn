@@ -1,0 +1,37 @@
+// This file won't compile
+// Fill in for each release and make the filename "RELEASEVERSION.rc" like "2026_02-00.rc"
+//  FILEVERSION, PRODUCTVERSION
+//  VALUE "FileVersion"
+//  VALUE "ProductVersion"
+//  
+
+1 ICON "icon.ico"
+
+1 VERSIONINFO
+FILEVERSION     0,0,0,0 // 0.0.0
+PRODUCTVERSION  0,0,0,0 // 0.0.0
+FILEFLAGSMASK   0x3fL // Regular OS file flags
+FILEFLAGS       0x2L // Pre-release
+FILEOS          0x40004L // Windows NT 64bit
+FILETYPE        0x1L // App (not library)
+FILESUBTYPE     0x0L // App
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0" // Language: US English (0409), Character Set: Unicode (04b0)
+        BEGIN
+            VALUE "CompanyName",      "Barry Tools"
+            VALUE "FileDescription",  "Webdevn: Local server for local development"
+            VALUE "FileVersion",      "0.0.0"
+            VALUE "InternalName",     "webdevn"
+            VALUE "LegalCopyright",   "© 2026 BarryHarris"
+            VALUE "OriginalFilename", "webdevn.exe"
+            VALUE "ProductName",      "Webdevn"
+            VALUE "ProductVersion",   "0.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END

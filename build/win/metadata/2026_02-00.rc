@@ -1,0 +1,30 @@
+1 ICON "icon.ico"
+
+1 VERSIONINFO
+FILEVERSION     2026,2,0,0 // 2026_02-00
+PRODUCTVERSION  2026,2,0,0 // 2026_02-00
+FILEFLAGSMASK   0x3fL // Regular OS file flags
+FILEFLAGS       0x2L // Pre-release
+FILEOS          0x40004L // Windows NT 32/64bit
+FILETYPE        0x1L // App
+FILESUBTYPE     0x0L // App
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0" // Language: US English (0409), Character Set: Unicode (04b0)
+        BEGIN
+            VALUE "CompanyName",      "Barry Tools"
+            VALUE "FileDescription",  "Webdevn: Local server for local development"
+            VALUE "FileVersion",      "2026_02-01"
+            VALUE "InternalName",     "webdevn"
+            VALUE "LegalCopyright",   "© 2026 BarryHarris"
+            VALUE "OriginalFilename", "webdevn.exe"
+            VALUE "ProductName",      "Webdevn"
+            VALUE "ProductVersion",   "2026_02-01"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
