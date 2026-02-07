@@ -1,6 +1,6 @@
 from std/paths import Path, getCurrentDir
 from std/net import Port
-from std/mimetypes import MimeDB, newMimeTypes
+from std/mimetypes import MimeDB, newMimeTypes, getMimeType
 from std/httpcore import HttpHeaders, HttpCode
 
 
@@ -17,6 +17,13 @@ const
     "Cache-Control": "no-store, no-cache",
     "Clear-Site-Data": "\"cache\"",
     "X-Content-Type-Options": "nosniff"
+  }
+  # Headers to cache default favicon used if one is not present (always the same)
+  faviconHeaderBits* :seq[(string, string)] = @{
+    "Server": "webdevn; nim/c",
+    "Cache-Control": "public, max-age=300",
+    "X-Content-Type-Options": "nosniff",
+    "Content-Type": mimeLookup.getMimeType("ico")
   }
 
 
