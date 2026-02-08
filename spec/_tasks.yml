@@ -11,17 +11,23 @@ tasks:
     cmds:
       - nim r --hints:off {{.TEST_DIR}}/bs/all_bs_spec.nim
 
+
   # Individual suites
 
-  test-cli:
+  # Behavior & Shape
+
+  test-cli-bs:
+    aliases: [test-cli]
     cmds:
       - nim r --hints:off {{.TEST_DIR}}/bs/cli_spec.nim "Cli_BS::"
 
-  test-utils:
+  test-utils-bs:
+    aliases: [test-utils]
     cmds:
       - nim r --hints:off {{.TEST_DIR}}/bs/utils_spec.nim "Utils_BS::"
 
-  test-scribe:
+  test-scribe-bs:
+    aliases: [test-scribe]
     cmds:
       - nim r --hints:off {{.TEST_DIR}}/bs/scribe_spec.nim "Scribe_BS::"
 
