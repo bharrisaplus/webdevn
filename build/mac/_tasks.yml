@@ -2,10 +2,6 @@
 
 version: '3'
 
-vars:
-  MAC_DARWIN_BUILD_OUTPUT_DIR:
-    "{{.BUILD_ROOT}}/mac/darwin"
-
 
 tasks:
   rear-darwinx64-debug:

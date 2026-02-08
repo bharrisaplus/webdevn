@@ -2,9 +2,6 @@
 
 version: '3'
 
-vars:
-  WIN_X64_BUILD_OUTPUT_DIR:
-    "{{.BUILD_ROOT}}/win/x64"
 
 tasks:
   rear-x64-debug:

@@ -14,6 +14,17 @@ includes:
   gnubuild: ./gnu/_tasks.yml
 
 
+vars:
+  GNU_X64_BUILD_OUTPUT_DIR:
+    "{{.BUILD_ROOT}}/gnu/x64"
+
+  MAC_DARWIN_BUILD_OUTPUT_DIR:
+    "{{.BUILD_ROOT}}/mac/darwin"
+
+  WIN_X64_BUILD_OUTPUT_DIR:
+    "{{.BUILD_ROOT}}/win/x64"
+
+
 tasks:
 
   # build aliases for default (x64) convenience
