@@ -6,6 +6,7 @@ tasks:
   # Suite groupes
   #   Can also run separate test tasks in parallel with 'task -p'
   test-behavior-shape:
+    aliases: [all-bs]
     desc: Run all behavior and shape suites
     cmds:
       - nim r --hints:off {{.TEST_DIR}}/bs/all_bs_spec.nim
@@ -25,5 +26,6 @@ tasks:
       - nim r --hints:off {{.TEST_DIR}}/bs/scribe_spec.nim "Scribe_BS::"
 
   test-localserver:
+    aliases: [test-loser]
     cmds:
       - nim r --hints:off {{.TEST_DIR}}/bs/localserver_spec.nim "LocalServer_BS::"

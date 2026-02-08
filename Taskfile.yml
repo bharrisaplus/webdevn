@@ -152,14 +152,4 @@ tasks:
 
 
   # Testing
-
-  test-all-behavior-shape:
-    aliases: [all-bs]
-    desc: Run all behavior and shape suites
-    cmds:
-      - task specs:test-behavior-shape
-
-  test-localserver:
-    aliases: [test-loser]
-    cmds:
-      - task specs:test-localserver
+  #   task specs:test-cli
