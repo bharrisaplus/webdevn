@@ -29,7 +29,7 @@ OPTION:
   How to yap:
     [-v, --verbose]: Extra information about the server as it runs will be display
   One-off Prints:
-    [-V, --version]: Current build version, platform and dependency versions
+    [-V, --version]: Current build version
     [-h, --help]: This message
 """
 
