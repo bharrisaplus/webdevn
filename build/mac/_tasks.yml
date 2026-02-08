@@ -2,37 +2,42 @@
 
 version: '3'
 
+vars:
+  MAC_DARWIN_BUILD_OUTPUT_DIR:
+    "{{.BUILD_ROOT}}/mac/darwin"
+
+
 tasks:
   rear-darwinx64-debug:
-    env:
-      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/darwin'
+    vars:
+      BUILD_OUTPUT_DIR: '--outDir:{{.MAC_DARWIN_BUILD_OUTPUT_DIR}}'
     cmds:
-      - nim c --outDir:$BUILD_OUTPUT_DIR $SOURCE_DIR/webdevn.nim
+      - nim c {{.BUILD_OUTPUT_DIR}} $SOURCE_DIR/webdevn.nim
+
   rear-darwinx64:
-    env:
-      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/darwin'
+    vars:
+      BUILD_OUTPUT_DIR: '--outDir:{{.MAC_DARWIN_BUILD_OUTPUT_DIR}}'
     cmds:
-      - nim c -d:release --outDir:$BUILD_OUTPUT_DIR $SOURCE_DIR/webdevn.nim
+      - nim c -d:release {{.BUILD_OUTPUT_DIR}} $SOURCE_DIR/webdevn.nim
 
   rear-darwinarm64:
-    env:
-      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/darwin'
     cmds:
       - echo "Hey, it's macos running darwin arm64 here"
 
   wrap-darwinx64:
-    env:
-      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/darwin'
+    vars:
+      BUILD_OUTPUT_FILE: '{{.MAC_DARWIN_BUILD_OUTPUT_DIR}}/webdevn'
+      BUILD_OUTPUT_FILE_CHKSUM: '{{.BUILD_OUTPUT_FILE}}.sha256'
+      BUILD_OUTPUT_ZIP: '{{.MAC_DARWIN_BUILD_OUTPUT_DIR}}/webdevn_winx64-$VERSION_NUM.zip'
+      BUILD_OUTPUT_ZIP_CHKSUM: '{{.BUILD_OUTPUT_ZIP}}.sha256'
     cmds:
       - task: rear-darwinx64
-      - shasum -a 256 $BUILD_OUTPUT_DIR/webdevn | cut -d ' ' -f 1 > $BUILD_OUTPUT_DIR/webdevn.sha256
-      - zip -j $BUILD_OUTPUT_DIR/webdevn_darwinx64-$VERSION_NUM.zip $BUILD_OUTPUT_DIR/webdevn $BUILD_OUTPUT_DIR/webdevn.sha256
-      - shasum -a 256 $BUILD_OUTPUT_DIR/webdevn_darwinx64-$VERSION_NUM.zip | cut -d ' ' -f 1 > $BUILD_OUTPUT_DIR/webdevn_darwinx64-$VERSION_NUM.zip.sha256
+      - shasum -a 256 {{.BUILD_OUTPUT_FILE}} | cut -d ' ' -f 1 > {{.BUILD_OUTPUT_FILE_CHKSUM}}
+      - zip -j {{.BUILD_OUTPUT_ZIP}} {{.BUILD_OUTPUT_FILE}} {{.BUILD_OUTPUT_FILE_CHKSUM}}
+      - shasum -a 256 {{.BUILD_OUTPUT_ZIP}} | cut -d ' ' -f 1 > {{.BUILD_OUTPUT_ZIP_CHKSUM}}
 
   sweep-darwin:
-    env:
-      BUILD_OUTPUT_DIR: '{{.BUILD_ROOT}}/mac/darwin'
     cmds:
-      - rm -rf $BUILD_OUTPUT_DIR/webdevn
-      - rm -rf $BUILD_OUTPUT_DIR/*.zip
-      - rm -rf $BUILD_OUTPUT_DIR/*.sha256
+      - rm -rf {{.MAC_DARWIN_BUILD_OUTPUT_DIR}}/webdevn
+      - rm -rf {{.MAC_DARWIN_BUILD_OUTPUT_DIR}}/*.zip
+      - rm -rf {{.MAC_DARWIN_BUILD_OUTPUT_DIR}}/*.sha256
