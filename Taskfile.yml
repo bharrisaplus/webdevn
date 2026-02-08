@@ -73,22 +73,22 @@ tasks:
 
   lint-cli:
     cmds:
-      - nim check {{.SOURCE_DIR}}/webdevn/cli.nim
+      - nim check {{.SUBMODULE_DIR}}/cli.nim
 
   lint-localserver:
     aliases: [lint-loser]
     cmds:
-      - nim check {{.SOURCE_DIR}}/webdevn/localserver.nim
+      - nim check {{.SUBMODULE_DIR}}/localserver.nim
 
   lint-scribe:
     cmds:
-      - nim check {{.SOURCE_DIR}}/webdevn/scribe.nim
+      - nim check {{.SUBMODULE_DIR}}/scribe.nim
 
   lint-typedefs:
     aliases: [lint-typeds]
     cmds:
-      - nim check {{.SOURCE_DIR}}/webdevn/type_defs.nim
+      - nim check {{.SUBMODULE_DIR}}/type_defs.nim
 
   lint-utils:
     cmds:
-      - nim check {{.SOURCE_DIR}}/webdevn/utils.nim
+      - nim check {{.SUBMODULE_DIR}}/utils.nim
