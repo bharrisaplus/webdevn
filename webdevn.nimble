@@ -8,6 +8,9 @@ author = "bharrisaplus"
 description = "Webdevn: Local server for local development"
 license = "GPLv3"
 
+if version != getEnv("SEMANTIC_VERSION"):
+  quit("The version needs to be updated run 'task update-saniv'", 0)
+
 
 # In/ex cludes
 srcDir = "source"
