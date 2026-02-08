@@ -2,8 +2,21 @@
 
 version: '3'
 
+vars:
+  BUILD_RESBIN: "{{.WIN_X64_BUILD_OUTPUT_DIR}}/{{.VERSION_NUM}}.res"
+
 
 tasks:
+  assemble-resources:
+    aliases: [asre]
+    vars:
+      SRC_RC: "{{.BUILD_CONFIG_DIR}}/win/metadata/{{.VERSION_NUM}}.rc"
+      BUILD_RC: "{{.WIN_X64_BUILD_OUTPUT_DIR}}/{{.VERSION_NUM}}.rc"
+    cmds:
+      - cp {{.SRC_RC}} {{.BUILD_RC}}
+      - cp {{.ASSET_DIR}}/img/raster/icon.ico {{.WIN_X64_BUILD_OUTPUT_DIR}}
+      - windres {{.BUILD_RC}} -O coff -o {{.BUILD_RESBIN}}
+
   rear-x64-debug:
     vars:
       BUILD_OUTPUT_DIR: "--outDir:{{.WIN_X64_BUILD_OUTPUT_DIR}}"
@@ -13,8 +26,10 @@ tasks:
   rear-x64:
     vars:
       BUILD_OUTPUT_DIR: '--outDir:{{.WIN_X64_BUILD_OUTPUT_DIR}}'
+      WIN_BUILD_NIMDEFINE_FLAGS: "{{.BUILD_NIMDEFINEFLAGS}} --passL:{{.BUILD_RESBIN}}"
     cmds:
-      - nim c {{.BUILD_NIMDEFINEFLAGS}} {{.BUILD_OUTPUT_DIR}} $SOURCE_DIR/webdevn.nim
+      - task: assemble-resources
+      - nim c {{.WIN_BUILD_NIMDEFINE_FLAGS}} {{.BUILD_OUTPUT_DIR}} $SOURCE_DIR/webdevn.nim
 
   wrap-x64:
     vars:
@@ -33,3 +48,6 @@ tasks:
       - rm -rf {{.WIN_X64_BUILD_OUTPUT_DIR}}/*.exe
       - rm -rf {{.WIN_X64_BUILD_OUTPUT_DIR}}/*.zip
       - rm -rf {{.WIN_X64_BUILD_OUTPUT_DIR}}/*.sha256
+      - rm -rf {{.WIN_X64_BUILD_OUTPUT_DIR}}/*.rc
+      - rm -rf {{.WIN_X64_BUILD_OUTPUT_DIR}}/*.ico
+      - rm -rf {{.WIN_X64_BUILD_OUTPUT_DIR}}/*.res
