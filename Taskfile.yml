@@ -11,9 +11,6 @@ includes:
   specs: ./spec/_tasks.yml
 
 vars:
-  NIMBLEPKGDEPSVER:
-    # Ensure the dev only dependencies are excluded here
-    sh: jq -r '[.packages | to_entries[] | select(.key | IN("zip") | not) | "\(.key)@\(.value.version)"] | join(", ")' nimble.lock
   NIMDEFINE_VER:
     "-d:appVersion={{.VERSION_NUM}}"
   NIMDEFINE_DEPVERS:

@@ -32,22 +32,9 @@ dev:
 
 # Helpers
 
-# Things that aren't imported/used in the code yet
-let noUsage :seq[string] = @["zip"]
-
-# Grab list of deps
-
-const nimblelockJSON :string = staticRead(getEnv("PROJECT_DIR") & "/nimble.lock")
-let
-  nimblelockJObj :JsonNode = parseJSON(nimblelockJSON)
-  nimbleDeps :seq[string] = collect:
-    for nmblpkg in nimblelockJObj["packages"].keys:
-      if not (nmblpkg in noUsage):
-        nmblpkg & "@" & nimblelockJObj["packages"][nmblpkg]["version"].getStr()
-
 let
   versionDefFlag = "--define:appVersion=" & version
-  depVersionsDefFlag = "--define:appDepVersions=" & nimbleDeps.join(", ")
+  depVersionsDefFlag = "--define:appDepVersions=" & getEnv("NIMBLEPKGDEPSVER")
 
 
 # Tasks
