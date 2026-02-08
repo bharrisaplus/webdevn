@@ -5,7 +5,7 @@ from std/strutils import splitLines, split, splitWhitespace, strip, startsWith, 
 # Meta
 version = "0.0.0"
 author = "bharrisaplus"
-description = "Web server for local development"
+description = "Webdevn: Local server for local development"
 license = "GPLv3"
 
 
