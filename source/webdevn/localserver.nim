@@ -7,7 +7,7 @@ from std/strformat import `&`
 from std/httpcore import HttpHeaders, HttpCode, Http200, Http404, newHttpHeaders, `$`
 from std/asynchttpserver import Request
 
-import type_defs, scribe, utils
+import meta, type_defs, scribe, utils
 
 
 proc stamp_headers* (fileExt :string, fileLen :int) :HttpHeaders =
@@ -58,10 +58,16 @@ proc aio_for* (aioReq :Request, aioFS :webFS, aioScribe :aScribe) :Future[aioRes
       isOk = false
 
   if not isOk:
-    aioScribe.log_it(&"(404) File Not Found\n\n")
-    resContent = errorContent
-    resCode = Http404
-    resHeaders = stamp_headers( "html", resContent.len)
+    if aioReq.url.path == "/favicon.ico": # Use fallback favicon
+      aioScribe.log_it("Using fallback for missing favicon.ico")
+      resContent = webdevnFavicon
+      resCode = Http200
+      resHeaders = newHttpHeaders(faviconHeaderBits)
+    else:
+      aioScribe.log_it(&"(404) File Not Found\n\n")
+      resContent = errorContent
+      resCode = Http404
+      resHeaders = stamp_headers( "html", resContent.len)
 
   aioScribe.log_it(&"Stamped Headers: {resHeaders}\n")
   aioScribe.spam_it(&"Responding to request: {aioReq.url}\n=============")
