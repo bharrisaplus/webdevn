@@ -16,7 +16,7 @@ let
 # Meta
 version = "0.0.0"
 author = "bharrisaplus"
-description = "Webdevn: Local server for local development"
+description = "Local server for local development"
 license = "GPLv3"
 
 if version != getEnv("SEMANTIC_VERSION"):
