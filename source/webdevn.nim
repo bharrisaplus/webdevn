@@ -1,5 +1,4 @@
 from std/os import commandLineParams
-from system import setControlCHook, quit
 from std/asyncfutures import Future, newFuture, complete
 from std/asyncmacro import `async`, `await`
 from asyncdispatch import waitFor, sleepAsync

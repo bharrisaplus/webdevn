@@ -1,5 +1,4 @@
 from std/distros import Distribution, detectOs
-from system import gorgeEx
 from std/strformat import `&`
 from std/strutils import splitLines, split, splitWhitespace, strip, startsWith, isEmptyOrWhitespace, join
 
