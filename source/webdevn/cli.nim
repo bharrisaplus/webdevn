@@ -27,6 +27,8 @@ OPTION:
     [-z, --zero]: Use the any address 0.0.0.0 (instead of explicit localhost)
   How to yap:
     [-v, --verbose]: Extra information about the server as it runs will be logged
+    [-l, --logfile]: Write logs to 'webdevn.log' within -d/--dir
+    [-f, --forbidlogserve]: Returns 404 for requests of log file
   One-off Prints:
     [-V, --version]: Current build version
     [-h, --help]: This message
@@ -88,6 +90,12 @@ proc config_from_cli* (osCliParams :seq[string]) :(webdevnConfig, seq[string]) =
 
         of "v", "verbose":
           maybeConfig.inSilence = false
+        
+        of "l", "logfile":
+          maybeConfig.logFile = true
+
+        of "f", "forbidlogserve":
+          maybeConfig.logForbidServe = true
 
         of "V", "version":
           scribe.print_it("webdevn verion: " & appVersion)

@@ -6,7 +6,9 @@ from std/httpcore import HttpHeaders, HttpCode
 
 const
   # Cli options that don't need input
-  flagOpts* :seq[string] = @["v", "verbose", "l", "log", "z", "zero", "V", "version", "h", "help"]
+  flagOpts* :seq[string] = @[
+    "v", "verbose", "l", "logfile", "f", "forbidlogserve", "z", "zero", "V", "version", "h", "help"
+  ]
   # How many ms to wait when server is busy
   napTime* :int = 500
   # Single instance for getting the mime type on each request

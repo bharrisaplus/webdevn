@@ -186,7 +186,7 @@ suite "Cli_BS":
       mixedCliIssues[0] == "Issue with '-i/--index' ~> IOError: Index file 'index.html' not found within directory"
 
 
-  test "Should be verbose based on flag":
+  test "Should be verbose based on '-v/--verbose' flag":
     let
       specShortCmdLine = @["-d:./spec/appa/has_index", "-v"]
       specLongCmdLine = @["--dir", "./spec/appa/has_index", "--verbose"]
@@ -211,4 +211,57 @@ suite "Cli_BS":
 
       missingCliIssues.len() == 0
       missingCliConfig.inSilence
-  
+
+
+  test "Should write log to file based on '-l/--logfile' flag":
+    let
+      specShortCmdLine = @["-d:./spec/appa/has_index", "-l"]
+      specLongCmdLine = @["--dir", "./spec/appa/has_index", "--logfile"]
+      specMixedCmdLine = @["-d:./spec/appa/has_index", "--logfile"]
+      specMissingCmdLine = @["-d:./spec/appa/has_index"]
+
+    var
+      (shortCliConfig, shortCliIssues) = config_from_cli(specShortCmdLine)
+      (longCliConfig, longCliIssues) = config_from_cli(specLongCmdLine)
+      (mixedCliConfig, mixedCliIssues) = config_from_cli(specMixedCmdLine)
+      (missingCliConfig, missingCliIssues) = config_from_cli(specMissingCmdLine)
+
+    check:
+      shortCliIssues.len() == 0
+      shortCliConfig.logFile
+
+      longCliIssues.len() == 0
+      longCliConfig.logFile
+
+      mixedCliIssues.len() == 0
+      mixedCliConfig.logFile
+
+      missingCliIssues.len() == 0
+      not missingCliConfig.logFile
+
+
+  test "Should prevent serving log based on '-f/--forbidlogserve' flag":
+    let
+      specShortCmdLine = @["-d:./spec/appa/has_index", "-f"]
+      specLongCmdLine = @["--dir", "./spec/appa/has_index", "--forbidlogserve"]
+      specMixedCmdLine = @["-d:./spec/appa/has_index", "--forbidlogserve"]
+      specMissingCmdLine = @["-d:./spec/appa/has_index"]
+
+    var
+      (shortCliConfig, shortCliIssues) = config_from_cli(specShortCmdLine)
+      (longCliConfig, longCliIssues) = config_from_cli(specLongCmdLine)
+      (mixedCliConfig, mixedCliIssues) = config_from_cli(specMixedCmdLine)
+      (missingCliConfig, missingCliIssues) = config_from_cli(specMissingCmdLine)
+
+    check:
+      shortCliIssues.len() == 0
+      shortCliConfig.logForbidServe
+
+      longCliIssues.len() == 0
+      longCliConfig.logForbidServe
+
+      mixedCliIssues.len() == 0
+      mixedCliConfig.logForbidServe
+
+      missingCliIssues.len() == 0
+      not missingCliConfig.logForbidServe
