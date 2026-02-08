@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+tasks:
+  # Suite groupes
+  #   Can also run separate test tasks in parallel with 'task -p'
+  test-behavior-shape:
+    desc: Run all behavior and shape suites
+    cmds:
+      - nim r --hints:off {{.TEST_DIR}}/bs/all_bs_spec.nim
+
+  # Individual suites
+
+  test-cli:
+    cmds:
+      - nim r --hints:off {{.TEST_DIR}}/bs/cli_spec.nim "Cli_BS::"
+
+  test-utils:
+    cmds:
+      - nim r --hints:off {{.TEST_DIR}}/bs/utils_spec.nim "Utils_BS::"
+
+  test-scribe:
+    cmds:
+      - nim r --hints:off {{.TEST_DIR}}/bs/scribe_spec.nim "Scribe_BS::"
+
+  test-localserver:
+    cmds:
+      - nim r --hints:off {{.TEST_DIR}}/bs/localserver_spec.nim "LocalServer_BS::"

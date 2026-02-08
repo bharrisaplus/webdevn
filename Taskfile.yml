@@ -10,6 +10,7 @@ includes:
   winbuild: ./build/win/_tasks.yml
   macbuild: ./build/mac/_tasks.yml
   gnubuild: ./build/gnu/_tasks.yml
+  specs: ./spec/_tasks.yml
 
 vars:
   NIMBLEPKGDEPSVER:
@@ -152,26 +153,13 @@ tasks:
 
   # Testing
 
-  # Can also run separate test tasks in parallel with -p flag
-  test-behavior-shape:
+  test-all-behavior-shape:
     aliases: [all-bs]
     desc: Run all behavior and shape suites
     cmds:
-      - nim r --hints:off {{.TEST_DIR}}/bs/all_bs_spec.nim
-
-  test-cli:
-    cmds:
-      - nim r --hints:off {{.TEST_DIR}}/bs/cli_spec.nim "Cli_BS::"
-
-  test-utils:
-    cmds:
-      - nim r --hints:off {{.TEST_DIR}}/bs/utils_spec.nim "Utils_BS::"
-
-  test-scribe:
-    cmds:
-      - nim r --hints:off {{.TEST_DIR}}/bs/scribe_spec.nim "Scribe_BS::"
+      - task specs:test-behavior-shape
 
   test-localserver:
     aliases: [test-loser]
     cmds:
-      - nim r --hints:off {{.TEST_DIR}}/bs/localserver_spec.nim "LocalServer_BS::"
+      - task specs:test-localserver
