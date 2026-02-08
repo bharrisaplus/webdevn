@@ -48,7 +48,7 @@ proc aio_for* (aioReq :Request, aioFS :webFS, aioScribe :aScribe) :Future[aioRes
     let gobbleInfo = await lazy_gobble(lookupInfo.loc, aioScribe)
 
     if gobbleInfo.issues.len == 0:
-      aioScribe.log_it(&"(200) Found File\n\n")
+      aioScribe.log_it(&"(200) Found File")
       resContent = gobbleInfo.contents
       resCode = Http200
       resHeaders = stamp_headers(lookupInfo.ext, resContent.len)
@@ -64,7 +64,7 @@ proc aio_for* (aioReq :Request, aioFS :webFS, aioScribe :aScribe) :Future[aioRes
       resCode = Http200
       resHeaders = newHttpHeaders(faviconHeaderBits)
     else:
-      aioScribe.log_it(&"(404) File Not Found\n\n")
+      aioScribe.log_it(&"(404) File Not Found")
       resContent = errorContent
       resCode = Http404
       resHeaders = stamp_headers( "html", resContent.len)
