@@ -85,3 +85,31 @@ suite "LocalServer_BS":
 
       maybeSolution_2.responseCode == Http404
       maybeSolution_2.responseHeaders.table["content-type"] == @["text/html; charset=utf-8"]
+  
+  test "Should have good response code if request is for log and logs are included":
+    let
+      swearUrl = parseUri("http://localhost:54321/" & logName)
+      swearFS = webdevnFS(loserSpecWebDevnConfig(lBasePath = "./spec/appa/has_log"))
+    
+    swearFS.excludeLog = false
+
+    let maybeSolution = waitFor localserver.aio_for(loserRequest(swearUrl), swearFS, quietLoserSpecScribe)
+
+    check:
+      maybeSolution.responseCode == Http200
+      maybeSolution.responseHeaders.table["content-type"] == @["text/plain; charset=utf-8"]
+      maybeSolution.responseContent == "webdevn - Starting up server"
+
+
+  test "Should have bad response code if request is for log and logs are excluded":
+    let
+      swearUrl = parseUri("http://localhost:54321/" & logName)
+      swearFS = webdevnFS(loserSpecWebDevnConfig(lBasePath = "./spec/appa/has_log"))
+    
+    swearFS.excludeLog = true
+
+    let maybeSolution = waitFor localserver.aio_for(loserRequest(swearUrl), swearFS, quietLoserSpecScribe)
+
+    check:
+      maybeSolution.responseCode == Http404
+      maybeSolution.responseHeaders.table["content-type"] == @["text/html; charset=utf-8"]
