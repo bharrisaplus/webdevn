@@ -14,6 +14,7 @@ const
   # Single instance for getting the mime type on each request
   mimeLookup* :MimeDB = newMimeTypes()
   notFoundContent* :string = "<h2>404: Not Found</h2>"
+  logName* :string = "webdevn.log"
   # Headers that are needed for every request but aren't generated
   baseHeaderBits* :seq[(string, string)] = @{
     "Server": "webdevn; nim/c",

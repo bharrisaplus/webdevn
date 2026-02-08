@@ -63,6 +63,9 @@ proc lookup_from_url* (reqUrl :Uri, lookupFS :webFS, urlScribe :aScribe) :lookup
     logReq = reqUrl, logMPath = maybeFilePath, logDRoot = lookupFS.docRoot
   )
 
+  if lookupFS.excludeLog and (urlPath == logName):
+    foundIt = false
+
   if not foundIt:
     lookProblems.add(
       &"Issue with finding file from requested url:\n    Url:{reqUrl}\n    FilePath:{maybeFilePath}"

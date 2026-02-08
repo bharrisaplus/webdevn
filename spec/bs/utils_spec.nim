@@ -82,6 +82,41 @@ suite "Utils_BS":
       maybeSolution_2.issues.len == 1
 
 
+  test "Should have no issues if requested file is webdevn.log and logs are included":
+    let
+      swearUrl_1 = parseUri("http://localhost:54321/" & logName)
+      swearFS = utilSpecFS("./spec/appa/has_log")
+    
+    swearFS.excludeLog = false
+
+    let
+      maybeSolution_1 = lookup_from_url(
+        lookupFs = swearFS, urlScribe = quietUtilSpecScribe, reqUrl = swearUrl_1
+      )
+
+    check:
+      maybeSolution_1.issues.len == 0
+      maybeSolution_1.loc == (swearFS.docRoot / Path(logName)).string
+      maybeSolution_1.ext == "log"
+
+
+  test "Should have 1 issue if requested file is webdevn.log and logs are excluded":
+    let
+      swearUrl_1 = parseUri("http://localhost:54321/" & logName)
+      swearFS = utilSpecFS("./spec/appa/has_log")
+    
+    swearFS.excludeLog = true
+
+    let
+      maybeSolution_1 = lookup_from_url(
+        lookupFs = swearFS, urlScribe = quietUtilSpecScribe, reqUrl = swearUrl_1
+      )
+
+    check:
+      maybeSolution_1.issues.len == 1
+      maybeSolution_1.ext == "log"
+
+
   test "Should have no issues if requested file is within safeSearch scope":
     let
       swearUrl_1a = parseUri("http://localhost:54321/scripts/main.js")
