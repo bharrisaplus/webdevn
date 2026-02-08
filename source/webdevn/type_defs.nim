@@ -34,8 +34,8 @@ type webdevnConfig* = object
   inputPortNum* :int
   indexFile* :string
   indexFileExt* :string
-  inSilence* :bool
-  zeroHost* :bool
+  inSilence* :bool = true
+  zeroHost* :bool = false
   oneOff* :bool = false
 
 
@@ -94,9 +94,7 @@ proc defaultWebdevnConfig* :webdevnConfig =
     basePath: getCurrentDir(),
     inputPortNum: 0,
     indexFile: "index.html",
-    indexFileExt: "html",
-    inSilence: true,
-    zeroHost: false
+    indexFileExt: "html"
   )
 
 
