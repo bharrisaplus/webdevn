@@ -88,7 +88,6 @@ suite "Utils_BS":
       swearUrl_1b = parseUri("http://localhost:54321/../src/js/source.js")
       swearFS_1 = utilSpecFS("./spec/appa/example_safesearch/dist")
 
-    let
       swearUrl_2a = parseUri("http://localhost:54321/stylesheets/main.css")
       swearUrl_2b = parseUri("http://localhost:54321/../../node_modules/somepkg/somethingsomething_npm.bundle.css")
       swearFS_2 = utilSpecFS("./spec/appa/example_safesearchnode/dist/asite")
@@ -133,7 +132,6 @@ suite "Utils_BS":
       swearUrl_1b = parseUri("http://localhost:54321/../src/css/source.cs")
       swearFS_1 = utilSpecFS("./spec/appa/example_safesearch/dist")
 
-    let
       swearUrl_2a = parseUri("http://localhost:54321/scripts/main.js")
       swearUrl_2b = parseUri("http://localhost:54321/../../node_modules/somepkg/somethingsomething_npm.bundle.js")
       swearFS_2 = utilSpecFS("./spec/appa/example_safesearchnode/dist/asite")
@@ -169,6 +167,7 @@ suite "Utils_BS":
       maybeSolution.issues.len == 0
       maybeSolution.contents.splitWhitespace().join("").startsWith("<!DOCTYPEhtml>")
       maybeSolution.contents.splitWhitespace().join("").endsWith("<body><h2>HelloWorld</h2></body></html>")
+
 
   test "Should have 1 issue if file is not found when attempting to read":
     let swearMorsel = absolutePath(Path("./spec/appa/has_index/about.html")).string
