@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+
+# Building example
+#   task build:rear-win
+
+
+version: '3'
+
+
+includes:
+  winbuild: ./win/_tasks.yml
+  macbuild: ./mac/_tasks.yml
+  gnubuild: ./gnu/_tasks.yml
+
+
+tasks:
+
+  # build aliases for default (x64) convenience
+
+  rear-winbuildx64:
+    aliases: [rear-win]
+    cmds:
+      - task: winbuild:rear-x64
+
+  wrap-winbuildx64:
+    aliases: [wrap-win]
+    cmds:
+      - task: winbuild:wrap-x64
+
+  sweep-winbuildx64:
+    aliases: [sweep-win]
+    cmds:
+      - task: winbuild:sweep-x64
+
+
+  rear-macdabuildx64:
+    aliases: [rear-mac]
+    cmds:
+      - task: macbuild:rear-darwinx64
+
+  wrap-macdabuildx64:
+    aliases: [wrap-mac]
+    cmds:
+      - task: macbuild:wrap-darwinx64
+
+  sweep-macdabuildx64:
+    aliases: [sweep-mac]
+    cmds:
+      - task: macbuild:sweep-darwin
+
+
+  rear-gnubuildx64:
+    aliases: [rear-gnu]
+    cmds:
+      - task: gnubuild:rear-x64
+
+  wrap-gnubuildx64:
+    aliases: [wrap-gnu]
+    cmds:
+      - task: gnubuild:wrap-x64
+
+  sweep-gnubuildx64:
+    aliases: [sweep-gnu]
+    cmds:
+      - task: gnubuild:sweep-x64

@@ -7,9 +7,7 @@
 version: '3'
 
 includes:
-  winbuild: ./build/win/_tasks.yml
-  macbuild: ./build/mac/_tasks.yml
-  gnubuild: ./build/gnu/_tasks.yml
+  build: ./build/_tasks.yml
   specs: ./spec/_tasks.yml
 
 vars:
@@ -66,61 +64,6 @@ tasks:
       - nim r $SOURCE_DIR/webdevn.nim {{.CLI_ARGS}}
 
 
-  # Top level aliases for convenience
-
-  rear-winbuild:
-    aliases: [rear-win]
-    cmds:
-      - task: winbuild:rear-x64
-
-  wrap-winbuild:
-    aliases: [wrap-win]
-    cmds:
-      - task: winbuild:wrap-x64
-
-  sweep-winbuild:
-    aliases: [sweep-win]
-    cmds:
-      - task: winbuild:sweep-x64
-
-
-  rear-macdabuild:
-    aliases: [rear-mac]
-    cmds:
-      - task: macbuild:rear-darwinx64
-
-  wrap-macdabuild:
-    aliases: [wrap-mac]
-    cmds:
-      - task: macbuild:wrap-darwinx64
-
-  sweep-macdabuild:
-    aliases: [sweep-mac]
-    cmds:
-      - task: macbuild:sweep-darwin
-
-  rear-macasbuild:
-    aliases: [rear-macas]
-    cmds:
-      - task: macbuild:rear-darwinarm64
-
-
-  rear-gnubuild:
-    aliases: [rear-gnu]
-    cmds:
-      - task: gnubuild:rear-x64
-
-  wrap-gnubuild:
-    aliases: [wrap-gnu]
-    cmds:
-      - task: gnubuild:wrap-x64
-
-  sweep-gnubuild:
-    aliases: [sweep-gnu]
-    cmds:
-      - task: gnubuild:sweep-x64
-
-
   # Linting
 
   lint:
@@ -149,7 +92,3 @@ tasks:
   lint-utils:
     cmds:
       - nim check {{.SOURCE_DIR}}/webdevn/utils.nim
-
-
-  # Testing
-  #   task specs:test-cli
