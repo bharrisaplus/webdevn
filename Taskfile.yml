@@ -3,9 +3,6 @@
 
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 
-# 
-# (see build/README.md)
-# 
 
 version: '3'
 
@@ -48,6 +45,7 @@ tasks:
 
 
   # Running
+
   run_project:
     aliases: [runit]
     desc: Compiles and executes code with cli args (after '--')
