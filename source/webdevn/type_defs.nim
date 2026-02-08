@@ -35,6 +35,8 @@ type webdevnConfig* = object
   indexFile* :string
   indexFileExt* :string
   inSilence* :bool = true
+  logFile* :bool = false
+  logForbidServe* :bool = false
   zeroHost* :bool = false
   oneOff* :bool = false
 
@@ -46,6 +48,7 @@ type webFS* = ref object
   docRoot* :Path
   docIndex* :string
   docIndexExt* :string
+  excludeLog* :bool
 
 # A found file to serve
 type lookupResult* = tuple
@@ -71,6 +74,7 @@ type
   # Generic logger that respectst the cli flags
   aScribe* = ref object of RootObj
     willYap* :bool
+    willWrite* :bool
 
   # Real logger used in app
   rScribe* = ref object of aScribe
@@ -102,12 +106,13 @@ proc webdevnFS* (someConfig :webdevnConfig) :webFS =
   return webFs(
     docRoot: someConfig.basePath,
     docIndex: someConfig.indexFile,
-    docIndexExt: someConfig.indexFileExt
+    docIndexExt: someConfig.indexFileExt,
+    excludeLog: someConfig.logForbidServe
   )
 
 
 proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
-  return rScribe(willYap: not someConfig.inSilence)
+  return rScribe(willYap: not someConfig.inSilence, willWrite: someConfig.logFile)
 
 
 proc defaultWebdevnMilieu* (someConfig :webdevnConfig) :webdevnMilieu =
