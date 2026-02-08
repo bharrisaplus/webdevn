@@ -128,29 +128,24 @@ tasks:
       - nim check {{.SOURCE_DIR}}/webdevn.nim
 
   lint-cli:
-    desc: A task to check the cli module for compile errors
     cmds:
       - nim check {{.SOURCE_DIR}}/webdevn/cli.nim
 
   lint-localserver:
     aliases: [lint-loser]
-    desc: A task to check the localserver module for compile errors
     cmds:
       - nim check {{.SOURCE_DIR}}/webdevn/localserver.nim
 
   lint-scribe:
-    desc: A task to check the loggo module for compile errors
     cmds:
       - nim check {{.SOURCE_DIR}}/webdevn/scribe.nim
 
   lint-typedefs:
     aliases: [lint-typeds]
-    desc: A task to check the type_defs module for compile errors
     cmds:
       - nim check {{.SOURCE_DIR}}/webdevn/type_defs.nim
 
   lint-utils:
-    desc: A task to check the utils module for compile errors
     cmds:
       - nim check {{.SOURCE_DIR}}/webdevn/utils.nim
 
@@ -165,22 +160,18 @@ tasks:
       - nim r --hints:off {{.TEST_DIR}}/bs/all_bs_spec.nim
 
   test-cli:
-    desc: Run spec for cli suite
     cmds:
       - nim r --hints:off {{.TEST_DIR}}/bs/cli_spec.nim "Cli_BS::"
 
   test-utils:
-    desc: Run spec for util suite
     cmds:
       - nim r --hints:off {{.TEST_DIR}}/bs/utils_spec.nim "Utils_BS::"
 
   test-scribe:
-    desc: Run spec for scribe suite
     cmds:
       - nim r --hints:off {{.TEST_DIR}}/bs/scribe_spec.nim "Scribe_BS::"
 
   test-localserver:
     aliases: [test-loser]
-    desc: Run spec for localserver suite
     cmds:
       - nim r --hints:off {{.TEST_DIR}}/bs/localserver_spec.nim "LocalServer_BS::"
