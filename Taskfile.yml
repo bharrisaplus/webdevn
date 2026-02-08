@@ -42,6 +42,18 @@ tasks:
     desc: Sync version number in .nimble file with environment variable as nimble requires variable to be string literal
     cmds:
       - sed -i 's/^version *= *".*"/version = "{{.SEMANTIC_VERSION}}"/' webdevn.nimble
+  
+  verify_app_meta_version:
+    aliases: [metavers]
+    desc: Get a readout of the version as read by the app
+    cmds:
+      - nim r --hints:off {{.NIMDEFINEFLAGS}} $SOURCE_DIR/webdevn.nim -V
+
+  check-app-help:
+    aliases: [chelp]
+    desc: Print the help message
+    cmds:
+      - nim r --hints:off {{.NIMDEFINEFLAGS}} $SOURCE_DIR/webdevn.nim -h
 
 
   # Running
