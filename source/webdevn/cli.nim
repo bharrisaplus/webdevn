@@ -13,8 +13,7 @@ import type_defs, meta, scribe, utils
 const helpManual = &"""
 source lang: nim
 package manager: nimble
-binary version: {webdevnVersion}
-dependency versions: {webdevnDependencyVersions}
+{appVersionBlurb}
 
 Usage:
   webdevn [OPTION]
@@ -91,7 +90,7 @@ proc config_from_cli* (osCliParams :seq[string]) :(webdevnConfig, seq[string]) =
           maybeConfig.inSilence = false
 
         of "V", "version":
-          scribe.print_it("webdevn verion: " & webdevnVersion)
+          scribe.print_it("webdevn verion: " & appVersion)
           maybeConfig.oneOff = true
           break
 
