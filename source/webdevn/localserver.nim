@@ -29,9 +29,7 @@ proc stamp_headers* (fileExt :string, fileLen :int) :HttpHeaders =
 
 
 proc aio_for* (aioReq :Request, aioFS :webFS, aioScribe :aScribe) :Future[aioResponse] {.async.} =
-  let
-    errorContent = "<h2>404: Not Found</h2>"
-    lookupInfo = lookup_from_url(aioReq.url, aioFS, aioScribe)
+  let lookupInfo = lookup_from_url(aioReq.url, aioFS, aioScribe)
 
   var
     resContent :string
@@ -65,7 +63,7 @@ proc aio_for* (aioReq :Request, aioFS :webFS, aioScribe :aScribe) :Future[aioRes
       resHeaders = newHttpHeaders(faviconHeaderBits)
     else:
       aioScribe.log_it(&"(404) File Not Found")
-      resContent = errorContent
+      resContent = notFoundContent
       resCode = Http404
       resHeaders = stamp_headers( "html", resContent.len)
 

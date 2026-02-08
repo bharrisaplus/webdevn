@@ -11,6 +11,7 @@ const
   napTime* :int = 500
   # Single instance for getting the mime type on each request
   mimeLookup* :MimeDB = newMimeTypes()
+  notFoundContent* :string = "<h2>404: Not Found</h2>"
   # Headers that are needed for every request but aren't generated
   baseHeaderBits* :seq[(string, string)] = @{
     "Server": "webdevn; nim/c",
@@ -18,7 +19,7 @@ const
     "Clear-Site-Data": "\"cache\"",
     "X-Content-Type-Options": "nosniff"
   }
-  # Headers to cache default favicon used if one is not present (always the same)
+  # Headers to cache default favicon if one is not present
   faviconHeaderBits* :seq[(string, string)] = @{
     "Server": "webdevn; nim/c",
     "Cache-Control": "public, max-age=300",
