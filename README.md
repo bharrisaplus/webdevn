@@ -33,4 +33,4 @@ OPTION:
 ### Building
 This project is built using [nim](https://nim-lang.org/) + [nimble](https://nim-lang.github.io/nimble/) and [Task](https://taskfile.dev/). To compile the code yourself refer to the Task file for your platform.
 
-For example to build for windows-64bit look at `build/win/_tasks.yml` and there (should) be a section/task called `rear-x64`; the contents of the `cmds` section will contain the steps for building.
+For example to build for windows-64bit look at [`build/win/_tasks.yml`](build/win/_tasks.yml) and there (should) be a section/task called `rear-x64`; the contents of the `cmds` section will contain the steps for building. Variables common to all builds are defined in the toplevel [`Taskfile.yml`](Taskfile.yml) and also [`build/_tasks.yml`](build/_tasks.yml)
