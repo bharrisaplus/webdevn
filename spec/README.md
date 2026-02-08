@@ -2,11 +2,13 @@
 
 ## Overview
 
-_Behavior_ and _Shape_ are the simplest type of checks
-  * __Shape__ is where you want to make sure it 'looks' right
-  * __Behaviors__ make sure the code 'responds' correctly to both good and bad input
+_Behavior_ and _Shape_ are checks that encompass unit and integration test methodologies.
+  * __Shape__ is where you want to make sure output looks right
+  * __Behavior__ make sure the code responds correctly to both good and bad input
 
+(documentation on the fuzz and/or stress testing and any security audits go below)
 
+Directory structure:
 ```
 spec/
 ├── appa <-- Apparatus; Files to use for testing/debugging
@@ -22,3 +24,6 @@ spec/
 │
 └── bs <-- Behavior and Shape tests/suites
 ```
+
+## Auditing
+Since nim compiles to C the contents of the nimcache folder could possible be scanned for vulnerabilities to make use of popular audit tools like snyk/qube/vera/etc that support C.
