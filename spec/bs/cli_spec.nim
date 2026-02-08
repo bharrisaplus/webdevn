@@ -186,16 +186,18 @@ suite "Cli_BS":
       mixedCliIssues[0] == "Issue with '-i/--index' ~> IOError: Index file 'index.html' not found within directory"
 
 
-  test "Should be verbose with flag present":
+  test "Should be verbose based on flag":
     let
       specShortCmdLine = @["-d:./spec/appa/has_index", "-v"]
       specLongCmdLine = @["--dir", "./spec/appa/has_index", "--verbose"]
       specMixedCmdLine = @["-d:./spec/appa/has_index", "--verbose"]
+      specMissingCmdLine = @["-d:./spec/appa/has_index"]
 
     var
       (shortCliConfig, shortCliIssues) = config_from_cli(specShortCmdLine)
       (longCliConfig, longCliIssues) = config_from_cli(specLongCmdLine)
       (mixedCliConfig, mixedCliIssues) = config_from_cli(specMixedCmdLine)
+      (missingCliConfig, missingCliIssues) = config_from_cli(specMissingCmdLine)
 
     check:
       shortCliIssues.len() == 0
@@ -206,3 +208,7 @@ suite "Cli_BS":
 
       mixedCliIssues.len() == 0
       not mixedCliConfig.inSilence
+
+      missingCliIssues.len() == 0
+      missingCliConfig.inSilence
+  
