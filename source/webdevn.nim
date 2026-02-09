@@ -10,7 +10,7 @@ from std/asynchttpserver import Request,
 import webdevn/[type_defs, scribe, cli, localserver]
 
 
-proc wake_up* (wakeupMilieu :webdevnMilieu, journal :aScribe) {.async.} =
+proc wake_up (wakeupMilieu :webdevnMilieu, journal :aScribe) {.async.} =
   let
     listenAddress = if wakeupMilieu.anyAddr: "0.0.0.0" else: "localhost"
     innerDaemon = newAsyncHttpServer()

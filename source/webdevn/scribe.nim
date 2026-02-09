@@ -91,7 +91,7 @@ proc print_it* (printItBeing :string) =
 
 # Called with aScribe or children; writing to console or file with respect to cli flag
 
-proc write_log* (scribo :aScribe, writeMsg :string) =
+proc write_log (scribo :aScribe, writeMsg :string) =
   if scribo.willWrite:
     try:
       scribo.writeHandle.write("[" & now().format("HH:mm:ss") & "]: " & writeMsg & "\n")
