@@ -3,6 +3,8 @@ from std/strformat import fmt, `&`
 from std/strutils import join
 from std/nativesockets import `$`
 from std/uri import Uri, `$`
+from std/syncio import File, fmAppend, close, write, flushFile
+from std/times import now, format
 
 import type_defs
 
@@ -14,6 +16,7 @@ type
   aScribe* = ref object of RootObj
     willYap :bool
     willWrite :bool
+    writeHandle :File
 
   # Real logger used in app
   rScribe* = ref object of aScribe
@@ -21,11 +24,17 @@ type
   fScribe* = ref object of aScribe
     captured_msgs* :seq[string]
 
-proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
-  return rScribe(
-    willYap: not someConfig.inSilence,
-    willWrite: someConfig.logFile
+proc webdevnScribe* (appConfig :webdevnConfig) :rScribe =
+  let appScribe = rScribe(
+    willYap: not appConfig.inSilence,
+    willWrite: appConfig.logFile
   )
+
+  if not open(appScribe.writeHandle, &"{appConfig.basePath}/{logName}", fmAppend):
+    appScribe.willWrite = false
+    echo "webdevn - Could not open log file"
+
+  return appScribe
 
 
 proc mockScribe* (verbose :bool = false, toFile :bool = false) :fScribe =
@@ -92,6 +101,14 @@ proc print_it* (printItBeing :string) =
 
 # Called with aScribe or children; writing to console or file with respect to cli flag 
 
+proc write_log* (scribo :aScribe, writeMsg :string) =
+  try:
+    scribo.writeHandle.write("[ " & now().format("HH:mm:ss") & "]: " & writeMsg)
+    scribo.writeHandle.flushFile()
+  except IOError as ioE:
+    echo &"Issue writing to log file:\n    {ioE.name}: {ioE.msg}"
+
+
 proc log_config* (scribo :aScribe, logThingy :webdevnConfig) =
   if scribo.willYap:
     if scribo of rScribe:
@@ -153,3 +170,7 @@ proc spam_it* (scribo :aScribe, spamItBeing :string) =
     print_it(spamItBeing)
   if scribo of fScribe:
     fScribe(scribo).captured_msgs.add(fmt_print_it(spamItBeing))
+
+proc closeUp* (scribo :aScribe) =
+  if scribo.willWrite:
+    scribo.writeHandle.close()

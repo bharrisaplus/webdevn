@@ -15,5 +15,7 @@ distribution/win/**/*.rc
 distribution/win/**/*.ico
 distribution/win/**/*.res
 
+spec/**/webdevn.log
+
 coverage
 lcov.info
