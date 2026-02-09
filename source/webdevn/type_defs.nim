@@ -46,25 +46,21 @@ type webdevnConfig* = object
 
 # Misc
 
-# Where requests are looked up from
 type webFS* = ref object
   docRoot* :Path
   docIndex* :string
   docIndexExt* :string
   excludeLog* :bool
 
-# A found file to serve
 type lookupResult* = tuple
   loc :string
   ext :string
   issues :seq[string]
 
-# The innards of the requested file
 type gobbleResult* = tuple
   contents :string
   issues :seq[string]
 
-# all-in-one response vs a stream
 type aioResponse* = tuple
   responseCode :HttpCode
   responseContent :string
@@ -91,7 +87,7 @@ proc defaultWebdevnConfig* :webdevnConfig =
 
 
 proc webdevnFS* (someConfig :webdevnConfig) :webFS =
-  return webFs(
+  return webFS(
     docRoot: someConfig.basePath,
     docIndex: someConfig.indexFile,
     docIndexExt: someConfig.indexFileExt,
