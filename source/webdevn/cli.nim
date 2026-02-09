@@ -26,8 +26,8 @@ proc config_from_cli* (osCliParams :seq[string]) :(webdevnConfig, seq[string]) =
       if optinput.isEmptyOrWhitespace() and not (optarg in flagOpts):
         continue
 
-      case optarg: # A valid path is required
-        of "d", "dir":
+      case optarg:
+        of "d", "dir": # A valid path is required
           var maybeBasePath = Path(optinput)
 
           normalizePath(maybeBasePath)
@@ -64,7 +64,7 @@ proc config_from_cli* (osCliParams :seq[string]) :(webdevnConfig, seq[string]) =
 
         of "v", "verbose":
           maybeConfig.inSilence = false
-        
+
         of "l", "logfile":
           maybeConfig.logFile = true
 

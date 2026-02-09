@@ -59,17 +59,13 @@ proc lookup_from_url* (reqUrl :Uri, lookupFS :webFS, urlScribe :aScribe) :lookup
           maybeFileExt = maybeFileParts.ext.toLowerAscii().strip(chars = {'.'})
           foundIt = true
 
-  urlScribe.log_lookup(
-    logReq = reqUrl, logMPath = maybeFilePath, logDRoot = lookupFS.docRoot
-  )
+  urlScribe.log_lookup(logReq = reqUrl, logMPath = maybeFilePath, logDRoot = lookupFS.docRoot)
 
   if lookupFS.excludeLog and (urlPath == logName):
     foundIt = false
 
   if not foundIt:
-    lookProblems.add(
-      &"Issue with finding file from requested url:\n    Url: {reqUrl}\n    FilePath: {maybeFilePath}"
-    )
+    lookProblems.add(&"Issue with finding file from requested url:\n    Url: {reqUrl}\n    FilePath: {maybeFilePath}")
     maybeFilePath = Path("")
 
   return (loc: maybeFilePath.string, ext: maybeFileExt, issues: lookProblems)

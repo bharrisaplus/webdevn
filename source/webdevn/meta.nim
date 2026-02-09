@@ -6,7 +6,6 @@ const
   appDepVersions* {.strdefine.} :string = "unknown"
   # Since read at compile time the path is relative to this file not where run from
   webdevnFavicon* :string = staticRead("assets/img/raster/icon.ico")
-  # Shorthand for cli help message
   appVersionBlurb* = if (appDepVersions == "unknown" or appDepVersions.isEmptyOrWhitespace()):
     "version: " & appVersion
   else:
