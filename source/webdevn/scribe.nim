@@ -99,14 +99,14 @@ proc write_log (scribo :aScribe, writeMsg :string) =
     except IOError as ioE:
       echo &"Issue writing to log file:\n    {ioE.name}: {ioE.msg}"
 
+proc scribe_inner (scribo :aScribe, scribeMsg :string) =
+  echo scribeMsg
+  scribo.write_log(scribeMsg)
 
 proc log_issues* (scribo :aScribe, logStuff :seq[string]) =
   if scribo.willYap:
     if scribo of rScribe:
-      let logMsg = fmt_print_issues(logStuff)
-
-      echo logMsg
-      scribo.write_log(logMsg)
+      scribo.scribe_inner(fmt_print_issues(logStuff))
     if scribo of fScribe:
       fScribe(scribo).captured_msgs.add(fmt_print_issues(logStuff))
 
@@ -114,10 +114,7 @@ proc log_issues* (scribo :aScribe, logStuff :seq[string]) =
 proc log_milieu* (scribo :aScribe, logThingy :webdevnMilieu) =
   if scribo.willYap:
     if scribo of rScribe:
-      let logMsg = fmt_print_milieu(logThingy)
-
-      echo logMsg
-      scribo.write_log(logMsg)
+      scribo.scribe_inner(fmt_print_milieu(logThingy))
     if scribo of fScribe:
       fScribe(scribo).captured_msgs.add(fmt_print_milieu(logThingy))
 
@@ -125,10 +122,7 @@ proc log_milieu* (scribo :aScribe, logThingy :webdevnMilieu) =
 proc log_lookup* (scribo :aScribe, logReq :Uri, logMPath, logDRoot :Path) =
   if scribo.willYap:
     if scribo of rScribe:
-      let logMsg = fmt_print_lookup(logReq, logMPath, logDRoot)
-
-      echo logMsg
-      scribo.write_log(logMsg)
+      scribo.scribe_inner(fmt_print_lookup(logReq, logMPath, logDRoot))
     if scribo of fScribe:
       fScribe(scribo).captured_msgs.add(fmt_print_lookup(logReq, logMPath, logDRoot))
 
@@ -136,10 +130,7 @@ proc log_lookup* (scribo :aScribe, logReq :Uri, logMPath, logDRoot :Path) =
 proc log_it* (scribo :aScribe, logItBeing :string) =
   if scribo.willYap:
     if scribo of rScribe:
-      let logMsg = fmt_print_it(logItBeing)
-
-      echo logMsg
-      scribo.write_log(logMsg)
+      scribo.scribe_inner(fmt_print_it(logItBeing))
     if scribo of fScribe:
       fScribe(scribo).captured_msgs.add(fmt_print_it(logItBeing))
 
@@ -148,30 +139,21 @@ proc log_it* (scribo :aScribe, logItBeing :string) =
 
 proc spam_issues* (scribo :aScribe, spamStuff :seq[string]) =
   if scribo of rScribe:
-    let spamMsg = fmt_print_issues(spamStuff)
-
-    echo spamMsg
-    scribo.write_log(spamMsg)
+    scribo.scribe_inner(fmt_print_issues(spamStuff))
   if scribo of fScribe:
     fScribe(scribo).captured_msgs.add(fmt_print_issues(spamStuff))
 
 
 proc spam_milieu* (scribo :aScribe, spamThingy :webdevnMilieu) =
   if scribo of rScribe:
-    let spamMsg = fmt_print_milieu(spamThingy)
-
-    echo spamMsg
-    scribo.write_log(spamMsg)
+    scribo.scribe_inner(fmt_print_milieu(spamThingy))
   if scribo of fScribe:
     fScribe(scribo).captured_msgs.add(fmt_print_milieu(spamThingy))
 
 
 proc spam_it* (scribo :aScribe, spamItBeing :string) =
   if scribo of rScribe:
-    let spamMsg = fmt_print_it(spamItBeing)
-
-    echo spamMsg
-    scribo.write_log(spamMsg)
+    scribo.scribe_inner(fmt_print_it(spamItBeing))
   if scribo of fScribe:
     fScribe(scribo).captured_msgs.add(fmt_print_it(spamItBeing))
 
