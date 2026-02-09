@@ -144,7 +144,7 @@ proc log_lookup* (scribo :aScribe, logReq :Uri, logMPath, logDRoot :Path) =
 proc log_it* (scribo :aScribe, logItBeing :string) =
   if scribo.willYap:
     if scribo of rScribe:
-      print_it(logItBeing)
+      echo fmt_print_it(logItBeing)
     if scribo of fScribe:
       fScribe(scribo).captured_msgs.add(fmt_print_it(logItBeing))
 
@@ -167,7 +167,7 @@ proc spam_milieu* (scribo :aScribe, spamThingy :webdevnMilieu) =
 
 proc spam_it* (scribo :aScribe, spamItBeing :string) =
   if scribo of rScribe:
-    print_it(spamItBeing)
+    echo fmt_print_it(spamItBeing)
   if scribo of fScribe:
     fScribe(scribo).captured_msgs.add(fmt_print_it(spamItBeing))
 
