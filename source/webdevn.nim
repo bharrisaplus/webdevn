@@ -2,22 +2,22 @@ from std/os import commandLineParams
 from std/asyncfutures import Future, newFuture, complete
 from std/asyncmacro import `async`, `await`
 from asyncdispatch import waitFor, sleepAsync
-from std/nativesockets import `$`
 from std/strutils import join
-from std/asynchttpserver import Request,
-  newAsyncHttpServer, listen, getPort, shouldAcceptRequest, acceptRequest, respond
+from std/asynchttpserver import Request, newAsyncHttpServer, shouldAcceptRequest, acceptRequest, respond
 
 import webdevn/[type_defs, scribe, cli, localserver]
 
 
 proc wake_up (wakeupMilieu :webdevnMilieu, journal :aScribe) {.async.} =
-  let
-    listenAddress = if wakeupMilieu.anyAddr: "0.0.0.0" else: "localhost"
-    innerDaemon = newAsyncHttpServer()
+  let innerDaemon = newAsyncHttpServer(reuseAddr = false, reusePort = false)
+  var wakeupIssues :seq[string] = @[]
 
-  innerDaemon.listen(wakeupMilieu.listenPort)
-  journal.spam_it("Starting up server")
-  journal.spam_it("Listening on " & listenAddress & ":" & $innerDaemon.getPort)
+  wakeupIssues = localserver.spawn_daemon(wakeupMilieu, innerDaemon, journal)
+
+  if wakeupIssues.len > 0:
+    journal.spam_issues(wakeupIssues)
+    quit(0)
+
   journal.spam_it("Press 'Ctrl+C' to exit\n\n")
   while true:
     if innerDaemon.shouldAcceptRequest():

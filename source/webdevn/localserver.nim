@@ -4,8 +4,9 @@ from std/asyncmacro import `async`, `await`
 from std/strutils import startsWith, endsWith
 from std/times import now, utc, format
 from std/strformat import `&`
+from std/nativesockets import `$`
 from std/httpcore import HttpHeaders, HttpCode, Http200, Http404, newHttpHeaders, `$`
-from std/asynchttpserver import Request
+from std/asynchttpserver import AsyncHttpServer, Request, listen, getPort
 
 import meta, type_defs, scribe, utils
 
@@ -26,6 +27,22 @@ proc stamp_headers* (fileExt :string, fileLen :int) :HttpHeaders =
     "Date": currentTime.format("ddd, dd MMM yyyy HH:mm:ss") & " GMT",
     "ETag": "W/\"" & currentTime.format("ddMMyyHHmmss") & "-" & $fileLen
   })
+
+
+proc spawn_daemon* (envv :webdevnMilieu, netHandle :AsyncHttpServer, spawnScribe :aScribe) :seq[string] =
+  let listenAddress = if envv.anyAddr: "0.0.0.0" else: "localhost"
+  var spawnIssues :seq[string] = @[]
+
+  try:
+    netHandle.listen(address = listenAddress, port = envv.listenPort)
+    spawnScribe.spam_it("Starting up server")
+    spawnScribe.spam_it("Listening on " & listenAddress & ":" & $netHandle.getPort)
+  except OSError as osE:
+    spawnIssues.add(&"OS happenings while starting the server:\n    {osE.name}: {osE.msg}")
+  except Exception as bigE:
+    spawnIssues.add(&"Something occured while starting the server:\n    {bigE.name}: {bigE.msg}")
+
+  return spawnIssues
 
 
 proc aio_for* (aioReq :Request, aioFS :webFS, aioScribe :aScribe) :Future[aioResponse] {.async.} =

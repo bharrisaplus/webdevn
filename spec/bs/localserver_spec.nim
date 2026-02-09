@@ -113,3 +113,10 @@ suite "LocalServer_BS":
     check:
       maybeSolution.responseCode == Http404
       maybeSolution.responseHeaders.table["content-type"] == @["text/html; charset=utf-8"]
+
+  test "Should have no issues spawning daemon":
+    skip()
+
+
+  test "Extra: Should have 1 issue if can not spawn daemon":
+    skip()
