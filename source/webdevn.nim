@@ -42,14 +42,14 @@ when isMainModule:
     if cliIssues.len > 0:
       runScribe.spam_issues(cliIssues)
       runScribe.spam_it("cli options ~> " & userArgs.join(" "))
-      runScribe.closeUp()
-      quit("\nwebdevn - shutting down...\n", 0)
+      runScribe.o66()
+      quit(0)
 
     setControlCHook(proc() {.noconv.} =
       echo "" # To not be interrupted by SIGINT message
       runScribe.log_milieu(laMilieu)
-      runScribe.closeUp()
-      quit("webdevn - shutting down...", 0)
+      runScribe.o66()
+      quit(0)
     )
 
     runScribe.spam_milieu(laMilieu)

@@ -176,6 +176,8 @@ proc spam_it* (scribo :aScribe, spamItBeing :string) =
     fScribe(scribo).captured_msgs.add(fmt_print_it(spamItBeing))
 
 
-proc closeUp* (scribo :aScribe) =
+proc o66* (scribo :aScribe) =
+  scribo.spam_it("webdevn - shutting down...")
+
   if scribo.willWrite:
     scribo.writeHandle.close()
