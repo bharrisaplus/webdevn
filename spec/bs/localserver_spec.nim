@@ -1,13 +1,17 @@
 import std/unittest
 from std/paths import Path, absolutePath
 from std/uri import Uri, parseUri
-from std/asynchttpserver import Request
+from std/asynchttpserver import Request, newAsyncHttpServer, close, listen
 from std/httpcore import HttpHeaders, Http200, Http404, `==`
 from asyncdispatch import waitFor
 from std/tables import `[]`
 from std/strutils import startsWith, endsWith, splitWhitespace, join
+from std/os import sleep
+from std/net import Port, newSocket, connect, close, bindAddr
+from std/strformat import `&`
 
 import ../../source/webdevn/[type_defs, scribe, localserver]
+
 
 let quietLoserSpecScribe = mockScribe()
 
@@ -20,6 +24,7 @@ proc loserSpecWebDevnConfig (lBasePath :string, lIndexfile :string = "index.html
     inSilence: true,
     zeroHost: false
   )
+
 
 proc loserRequest (loserUri :Uri) :Request =
   return Request(
@@ -115,8 +120,60 @@ suite "LocalServer_BS":
       maybeSolution.responseHeaders.table["content-type"] == @["text/html; charset=utf-8"]
 
   test "Should have no issues spawning daemon":
-    skip()
+    let
+      loserSpecServer = newAsyncHttpServer(reuseAddr = false, reusePort = false)
+      swearPort = 54321
+      swearAddr = "localhost"
+      swearMilieu = defaultWebdevnMilieu(webdevnConfig(
+        inputPortNum: 54321,
+        zeroHost: false
+      ))
+
+    let maybeIssues = localserver.spawn_daemon(swearMilieu, loserSpecServer, quietLoserSpecScribe)
+
+    sleep(54)
+
+    let specClient = newSocket()
+    var wasAwakened = false
+
+    try:
+      specClient.connect(address = swearAddr, port = Port(swearPort), timeout = 500)
+      wasAwakened = true
+    except OSError as osE:
+      echo &"{osE.name}: {osE.msg}"
+    except CatchableError as catE:
+      echo &"{catE.name}: {catE.msg}"
+    finally:
+      specClient.close()
+      loserSpecServer.close()
+
+    check:
+      wasAwakened
+      maybeIssues.len == 0
 
 
   test "Extra: Should have 1 issue if can not spawn daemon":
-    skip()
+    let
+      hogSocket = newSocket()
+      loserSpecServer = newAsyncHttpServer(reuseAddr = false, reusePort = false)
+      swearPort = 54321
+      swearAddr = "localhost"
+      swearMilieu = defaultWebdevnMilieu(webdevnConfig(
+        inputPortNum: 54321,
+        zeroHost: false
+      ))
+
+    try:
+      hogSocket.bindAddr(address = swearAddr, port = Port(swearPort))
+    except OSError as osE:
+      echo &"Unable to bind port for test ~> {osE.name}: {osE.msg}"
+
+    let maybeIssues = localserver.spawn_daemon(swearMilieu, loserSpecServer, quietLoserSpecScribe)
+    var wasAwakened = false
+
+    hogSocket.close()
+    loserSpecServer.close()
+
+    check:
+      not wasAwakened
+      maybeIssues.len == 1
