@@ -20,30 +20,30 @@ suite "Scribe_BS":
       maybeSolution_2 = scribe.fmt_print_issues(@["Black Jack", "Here we go again"])
 
     check:
-      maybeSolution_1.startsWith("  webdevn issue(s) - [0]:\n")
-      maybeSolution_1.endsWith("    * No issues!\n  ")
+      maybeSolution_1.startsWith("webdevn - issue(s) [0]:\n")
+      maybeSolution_1.endsWith("  * No issues!\n")
 
-      maybeSolution_2.startsWith("  webdevn issue(s) - [2]:\n")
-      maybeSolution_2.contains("    * Black Jack\n")
-      maybeSolution_2.endsWith("    * Here we go again\n  ")
+      maybeSolution_2.startsWith("webdevn - issue(s) [2]:\n")
+      maybeSolution_2.contains("  * Black Jack\n")
+      maybeSolution_2.endsWith("  * Here we go again\n")
 
 
   test "Should print milieu as expected":
     let maybeSolution = scribe.fmt_print_milieu(scribeWebdevnMilieu)
 
     check:
-      maybeSolution.startsWith("  webdevn milieu/runtime env:\n")
-      maybeSolution.contains("    - docIndex => index.html\n")
-      maybeSolution.endsWith("  - listenPort => 0\n  ")
+      maybeSolution.startsWith("webdevn - milieu:\n")
+      maybeSolution.contains("  - docIndex => index.html\n")
+      maybeSolution.endsWith("  - listenPort => 0\n")
 
 
   test "Should print lookup as expected":
     let maybeSolution = fmt_print_lookup(scribeUri, mPath = scribePath, dRoot = scribePath)
 
     check:
-      maybeSolution.startsWith("  webdevn - request lookup:\n")
-      maybeSolution.contains("    - Request URL Path: /\n")
-      maybeSolution.endsWith("  - basePath-Parent-Parent: spec\n  ")
+      maybeSolution.startsWith("webdevn - request lookup:\n")
+      maybeSolution.contains("  - Request URL Path: /\n")
+      maybeSolution.endsWith("  - basePath-Parent-Parent: spec\n")
 
 
   test "Should print it as expected":

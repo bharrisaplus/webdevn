@@ -52,31 +52,31 @@ proc fmt_print_issues* (stuff :seq[string]) :string =
     else: stuff.join("\n    * ")
 
   return fmt"""
-  webdevn issue(s) - [{stuff.len}]:
-    * {issueStr}
-  """
+webdevn - issue(s) [{stuff.len}]:
+  * {issueStr}
+"""
 
 
 proc fmt_print_milieu* (thingy :webdevnMilieu) :string =
   return fmt"""
-  webdevn milieu/runtime env:
-    - docRoot => {thingy.virtualFS.docRoot}
-    - docIndex => {thingy.virtualFS.docIndex}
-    - docIndexExt => {thingy.virtualFS.docIndexExt}
-    - listenPort => {thingy.listenPort}
-  """
+webdevn - milieu:
+  - docRoot => {thingy.virtualFS.docRoot}
+  - docIndex => {thingy.virtualFS.docIndex}
+  - docIndexExt => {thingy.virtualFS.docIndexExt}
+  - listenPort => {thingy.listenPort}
+"""
 
 
 proc fmt_print_lookup* (req :Uri, mPath, dRoot :Path) :string =
   return fmt"""
-  webdevn - request lookup:
-    - Request URL: {req}
-    - Request URL Path: {req.path}
-    - Request Absolute Path: {mPath}
-    - basePath: {dRoot}
-    - basePath-Parent: {parentDir(dRoot)}
-    - basePath-Parent-Parent: {parentDir(parentDir(dRoot))}
-  """
+webdevn - request lookup:
+  - Request URL: {req}
+  - Request URL Path: {req.path}
+  - Request Absolute Path: {mPath}
+  - basePath: {dRoot}
+  - basePath-Parent: {parentDir(dRoot)}
+  - basePath-Parent-Parent: {parentDir(parentDir(dRoot))}
+"""
 
 
 proc fmt_print_it* (itBeing :string) :string =
