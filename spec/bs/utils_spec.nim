@@ -7,7 +7,7 @@ from std/strutils import startsWith, endsWith, unindent, splitWhitespace, join
 import ../../source/webdevn/[type_defs, utils]
 
 
-let quietUtilSpecScribe = fScribe(willYap: false)
+let quietUtilSpecScribe = mockScribe()
 
 proc utilSpecFS (drStr :string) :webFS =
   return webFS(

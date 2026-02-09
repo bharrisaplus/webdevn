@@ -9,7 +9,7 @@ from std/strutils import startsWith, endsWith, splitWhitespace, join
 
 import ../../source/webdevn/[type_defs, localserver]
 
-let quietLoserSpecScribe = fScribe(willYap: false)
+let quietLoserSpecScribe = mockScribe()
 
 proc loserSpecWebDevnConfig (lBasePath :string, lIndexfile :string = "index.html") :webdevnConfig =
   return webdevnConfig(

@@ -41,7 +41,6 @@ suite "Scribe_BS":
     let maybeSolution = scribe.fmt_print_milieu(scribeWebdevnMilieu)
 
     check:
-      1==1
       maybeSolution.startsWith("  webdevn milieu/runtime env:\n")
       maybeSolution.contains("    - docIndex => index.html\n")
       maybeSolution.endsWith("  - listenPort => 0\n  ")
@@ -60,13 +59,12 @@ suite "Scribe_BS":
     let maybeSolution = scribe.fmt_print_it("A log for log's sake")
 
     check:
-      1==1
       maybeSolution.startsWith("webdevn - ")
       maybeSolution.endsWith("sake")
 
 
   test "Should log when yap is true":
-    let yapScribe = fScribe(willYap: true)
+    let yapScribe = mockScribe(verbose = true)
 
     yapScribe.log_config(scribeWebdevnConfig)
     yapScribe.log_issues(@["Something smells", "There's a snake in my boot"])
@@ -79,7 +77,7 @@ suite "Scribe_BS":
 
 
   test "Should not log when yap is false":
-    let yapScribe = fScribe(willYap: false)
+    let yapScribe = mockScribe()
 
     yapScribe.log_config(scribeWebdevnConfig)
     yapScribe.log_issues(@["Something doesn't smells", "There's not a snake in my boot"])
@@ -92,7 +90,7 @@ suite "Scribe_BS":
 
 
   test "Should spam regardless":
-    let yapScribe = fScribe(willYap: true)
+    let yapScribe = mockScribe(verbose = true)
 
     yapScribe.spam_issues(@["Something smells spammy", "There's a snake in my spam"])
     yapScribe.spam_milieu(scribeWebdevnMilieu)

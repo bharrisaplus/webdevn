@@ -7,6 +7,34 @@ from std/uri import Uri, `$`
 import type_defs
 
 
+# Logger
+
+type
+  # Generic logger that respectst the cli flags
+  aScribe* = ref object of RootObj
+    willYap :bool
+    willWrite :bool
+
+  # Real logger used in app
+  rScribe* = ref object of aScribe
+  # Fake logger used in tests
+  fScribe* = ref object of aScribe
+    captured_msgs* :seq[string]
+
+proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
+  return rScribe(
+    willYap: not someConfig.inSilence,
+    willWrite: someConfig.logFile
+  )
+
+
+proc mockScribe* (verbose :bool = false, toFile :bool = false) :fScribe =
+  return fScribe(
+    willYap: verbose,
+    willWrite: toFile
+  )
+
+
 # Getting the text together
 
 proc fmt_print_config* (thingy :webdevnConfig) :string =

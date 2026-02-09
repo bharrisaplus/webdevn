@@ -71,21 +71,6 @@ type aioResponse* = tuple
   responseHeaders :HttpHeaders
 
 
-# Logger
-
-type
-  # Generic logger that respectst the cli flags
-  aScribe* = ref object of RootObj
-    willYap* :bool
-    willWrite* :bool
-
-  # Real logger used in app
-  rScribe* = ref object of aScribe
-  # Fake logger used in tests
-  fScribe* = ref object of aScribe
-    captured_msgs* :seq[string]
-
-
 # Runtime environment
 
 type webdevnMilieu* = object
@@ -112,10 +97,6 @@ proc webdevnFS* (someConfig :webdevnConfig) :webFS =
     docIndexExt: someConfig.indexFileExt,
     excludeLog: someConfig.logForbidServe
   )
-
-
-proc webdevnScribe* (someConfig :webdevnConfig) :rScribe =
-  return rScribe(willYap: not someConfig.inSilence, willWrite: someConfig.logFile)
 
 
 proc defaultWebdevnMilieu* (someConfig :webdevnConfig) :webdevnMilieu =
