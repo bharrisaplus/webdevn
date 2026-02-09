@@ -1,8 +1,6 @@
 from std/distros import Distribution, detectOs
 from std/json import JsonNode, parseJSON, keys, getStr, `[]`
 from std/strformat import `&`
-from std/strutils import join
-from std/sugar import collect
 
 
 # Meta
