@@ -14,15 +14,6 @@ let
 
 suite "Scribe_BS":
 
-  test "Should print config as expected":
-    let maybeSolution = scribe.fmt_print_config(scribeWebdevnConfig)
-
-    check:
-      maybeSolution.startsWith("  webdevn config")
-      maybeSolution.contains("    - basePath =>")
-      maybeSolution.endsWith("    - inSilence => true\n  ")
-
-
   test "Should print issues as expected":
     let
       maybeSolution_1 = scribe.fmt_print_issues(@[])
@@ -66,20 +57,18 @@ suite "Scribe_BS":
   test "Should log when yap is true":
     let yapScribe = mockScribe(verbose = true)
 
-    yapScribe.log_config(scribeWebdevnConfig)
     yapScribe.log_issues(@["Something smells", "There's a snake in my boot"])
     yapScribe.log_milieu(scribeWebdevnMilieu)
     yapScribe.log_lookup(scribeUri, logMPath = scribePath, logDRoot = scribePath)
     yapScribe.log_it("Just some text")
 
     check:
-      yapScribe.captured_msgs.len == 5
+      yapScribe.captured_msgs.len == 4
 
 
   test "Should not log when yap is false":
     let yapScribe = mockScribe()
 
-    yapScribe.log_config(scribeWebdevnConfig)
     yapScribe.log_issues(@["Something doesn't smells", "There's not a snake in my boot"])
     yapScribe.log_milieu(scribeWebdevnMilieu)
     yapScribe.log_lookup(scribeUri, logMPath = scribePath, logDRoot = scribePath)

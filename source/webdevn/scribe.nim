@@ -46,16 +46,6 @@ proc mockScribe* (verbose :bool = false, toFile :bool = false) :fScribe =
 
 # Getting the text together
 
-proc fmt_print_config* (thingy :webdevnConfig) :string =
-  return fmt"""
-  webdevn config:
-    - basePath => {thingy.basePath}
-    - inputPortNum => {thingy.inputPortNum}
-    - indexFile => {thingy.indexFile}
-    - inSilence => {thingy.inSilence}
-  """
-
-
 proc fmt_print_issues* (stuff :seq[string]) :string =
   var issueStr :string =
     if stuff.len == 0: "No issues!"
@@ -107,14 +97,6 @@ proc write_log* (scribo :aScribe, writeMsg :string) =
     scribo.writeHandle.flushFile()
   except IOError as ioE:
     echo &"Issue writing to log file:\n    {ioE.name}: {ioE.msg}"
-
-
-proc log_config* (scribo :aScribe, logThingy :webdevnConfig) =
-  if scribo.willYap:
-    if scribo of rScribe:
-      echo fmt_print_config(logThingy)
-    if scribo of fScribe:
-      fScribe(scribo).captured_msgs.add(fmt_print_config(logThingy))
 
 
 proc log_issues* (scribo :aScribe, logStuff :seq[string]) =
