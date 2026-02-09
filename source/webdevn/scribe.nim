@@ -103,7 +103,7 @@ proc print_it* (printItBeing :string) =
 
 proc write_log* (scribo :aScribe, writeMsg :string) =
   try:
-    scribo.writeHandle.write("[ " & now().format("HH:mm:ss") & "]: " & writeMsg)
+    scribo.writeHandle.write("[" & now().format("HH:mm:ss") & "]: " & writeMsg & "\n")
     scribo.writeHandle.flushFile()
   except IOError as ioE:
     echo &"Issue writing to log file:\n    {ioE.name}: {ioE.msg}"
@@ -153,23 +153,39 @@ proc log_it* (scribo :aScribe, logItBeing :string) =
 
 proc spam_issues* (scribo :aScribe, spamStuff :seq[string]) =
   if scribo of rScribe:
-    echo fmt_print_issues(spamStuff)
+    let spamMsg = fmt_print_issues(spamStuff)
+    
+    echo spamMsg
+
+    if scribo.willWrite:
+      scribo.write_log(spamMsg)
   if scribo of fScribe:
     fScribe(scribo).captured_msgs.add(fmt_print_issues(spamStuff))
 
 
 proc spam_milieu* (scribo :aScribe, spamThingy :webdevnMilieu) =
   if scribo of rScribe:
-    echo fmt_print_milieu(spamThingy)
+    let spamMsg = fmt_print_milieu(spamThingy)
+
+    echo spamMsg
+
+    if scribo.willWrite:
+      scribo.write_log(spamMsg)
   if scribo of fScribe:
     fScribe(scribo).captured_msgs.add(fmt_print_milieu(spamThingy))
 
 
 proc spam_it* (scribo :aScribe, spamItBeing :string) =
   if scribo of rScribe:
-    echo fmt_print_it(spamItBeing)
+    let spamMsg = fmt_print_it(spamItBeing)
+
+    echo spamMsg
+
+    if scribo.willWrite:
+      scribo.write_log(spamMsg)
   if scribo of fScribe:
     fScribe(scribo).captured_msgs.add(fmt_print_it(spamItBeing))
+
 
 proc closeUp* (scribo :aScribe) =
   if scribo.willWrite:
