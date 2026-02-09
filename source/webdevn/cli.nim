@@ -27,6 +27,16 @@ proc config_from_cli* (osCliParams :seq[string]) :(webdevnConfig, seq[string]) =
         continue
 
       case optarg:
+        of "V", "version":
+          scribe.print_it("webdevn verion: " & appVersion)
+          maybeConfig.oneOff = true
+          break
+
+        of "h", "help":
+          scribe.print_it(helpManual)
+          maybeConfig.oneOff = true
+          break
+
         of "d", "dir": # A valid path is required
           var maybeBasePath = Path(optinput)
 
@@ -70,16 +80,6 @@ proc config_from_cli* (osCliParams :seq[string]) :(webdevnConfig, seq[string]) =
 
         of "f", "forbidlogserve":
           maybeConfig.logForbidServe = true
-
-        of "V", "version":
-          scribe.print_it("webdevn verion: " & appVersion)
-          maybeConfig.oneOff = true
-          break
-
-        of "h", "help":
-          scribe.print_it(helpManual)
-          maybeConfig.oneOff = true
-          break
 
   if not maybeConfig.oneOff:
     if maybeIndexFile == "" or maybeIndexFile == maybeConfig.indexFile:
