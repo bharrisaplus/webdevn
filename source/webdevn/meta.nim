@@ -1,4 +1,5 @@
 from std/strutils import isEmptyOrWhitespace
+from std/strformat import `&`
 
 const
   appVersion* {.strdefine.} :string = "unknown"
@@ -7,6 +8,30 @@ const
   webdevnFavicon* :string = staticRead("assets/img/raster/icon.ico")
   # Shorthand for cli help message
   appVersionBlurb* = if (appDepVersions == "unknown" or appDepVersions.isEmptyOrWhitespace()):
-    "version: " & appVersion  
+    "version: " & appVersion
   else:
     "version: " & appVersion & "\npackage dependencies: " & appDepVersions
+
+  helpManual* = &"""
+source lang: nim
+package manager: nimble
+{appVersionBlurb}
+
+Usage:
+  webdevn [OPTION]
+
+OPTION:
+  What to serve:
+    [-d:PATH, --dir PATH]: Location of the base folder from which to find requested files
+    [-i:PATTERN, --index PATTERN]: Filename (with ext) of the file served when a directory is requested
+  How to serve:
+    [-p:54321, --port 54321]: Number for which port to listen for requests on
+    [-z, --zero]: Use the any address 0.0.0.0 (instead of explicit localhost)
+  How to yap:
+    [-v, --verbose]: Extra information about the server as it runs will be logged
+    [-l, --logfile]: Write logs to 'webdevn.log' within -d/--dir
+    [-f, --forbidlogserve]: Returns 404 for requests of log file
+  One-off Prints:
+    [-V, --version]: Current build version
+    [-h, --help]: This message
+"""
