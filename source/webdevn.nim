@@ -53,5 +53,5 @@ when isMainModule:
     )
 
     runScribe.spam_milieu(laMilieu)
-    
+
     waitFor wake_up(laMilieu, runScribe)

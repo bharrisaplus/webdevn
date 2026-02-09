@@ -68,7 +68,7 @@ proc lookup_from_url* (reqUrl :Uri, lookupFS :webFS, urlScribe :aScribe) :lookup
 
   if not foundIt:
     lookProblems.add(
-      &"Issue with finding file from requested url:\n      Url: {reqUrl}\n      FilePath: {maybeFilePath}"
+      &"Issue with finding file from requested url:\n    Url: {reqUrl}\n    FilePath: {maybeFilePath}"
     )
     maybeFilePath = Path("")
 
