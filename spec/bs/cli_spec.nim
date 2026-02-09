@@ -14,7 +14,7 @@ suite "Cli_BS":
 
     check:
       outputCliIssues.len() == 1
-      outputCliIssues[0] == "Issue with '-i/--index' ~> IOError: Index file 'index.html' not found within directory"
+      outputCliIssues[0] == "Issue with '-i/--index' ~> File 'index.html' not found within directory"
 
 
   #[test "Should have no issues if no arguments provided and index.html present":
@@ -136,13 +136,13 @@ suite "Cli_BS":
 
     check:
       shortCliIssues.len() == 1
-      shortCliIssues[0] == "Issue with '-p/--port' ~> ValueError: Should be an integer"
+      shortCliIssues[0] == "Issue with '-p/--port' ~> Should be an integer"
 
       shortCliIssues_2.len() == 1
-      shortCliIssues_2[0] == "Issue with '-p/--port' ~> ValueError: Should be an integer"
+      shortCliIssues_2[0] == "Issue with '-p/--port' ~> Should be an integer"
 
       longCliIssues.len() == 1
-      longCliIssues[0] == "Issue with '-p/--port' ~> ValueError: Should be an integer"
+      longCliIssues[0] == "Issue with '-p/--port' ~> Should be an integer"
 
 
   test "Should have an issue with non-compatible integer for port":
@@ -161,7 +161,7 @@ suite "Cli_BS":
       shortCliIssues[0] == "Issue with '-p/--port' ~> ValueError: Parsed integer outside of valid range"
 
       shortCliIssues_2.len() == 1
-      shortCliIssues_2[0] == "Issue with '-p/--port' ~> ValueError: Should be 0 .. 65535"
+      shortCliIssues_2[0] == "Issue with '-p/--port' ~> Should be 0 .. 65535"
 
 
   test "Should have 1 issue with non present index file":
@@ -177,13 +177,13 @@ suite "Cli_BS":
 
     check:
       shortCliIssues.len() == 1
-      shortCliIssues[0] == "Issue with '-i/--index' ~> IOError: Index file 'index.html' not found within directory"
+      shortCliIssues[0] == "Issue with '-i/--index' ~> File 'index.html' not found within directory"
 
       longCliIssues.len() == 1
-      longCliIssues[0] == "Issue with '-i/--index' ~> IOError: Index file 'ustom.html' not found within directory"
+      longCliIssues[0] == "Issue with '-i/--index' ~> File 'ustom.html' not found within directory"
 
       mixedCliIssues.len() == 1
-      mixedCliIssues[0] == "Issue with '-i/--index' ~> IOError: Index file 'index.html' not found within directory"
+      mixedCliIssues[0] == "Issue with '-i/--index' ~> File 'index.html' not found within directory"
 
 
   test "Should be verbose based on '-v/--verbose' flag":

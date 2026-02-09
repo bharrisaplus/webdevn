@@ -40,9 +40,7 @@ proc config_from_cli* (osCliParams :seq[string]) :(webdevnConfig, seq[string]) =
           if maybeBasePath.dirExists():
             maybeConfig.basePath = maybeBasePath
           else:
-            cliProblems.add(
-              &"Issue with '-d/--dir' ~> IOError: Could not find path '{maybeBasePath}'"
-            )
+            cliProblems.add(&"Issue with '-d/--dir' ~> Could not find path '{maybeBasePath}'")
 
         of "p", "port": # Convert input to an int and verify within general port range
           if optinput.allIt(it.isDigit()):
@@ -52,11 +50,11 @@ proc config_from_cli* (osCliParams :seq[string]) :(webdevnConfig, seq[string]) =
               if maybeListenPort > 0 and maybeListenPort <= 65535:
                 maybeConfig.inputPortNum = maybeListenPort
               else:
-                cliProblems.add("Issue with '-p/--port' ~> ValueError: Should be 0 .. 65535")
+                cliProblems.add("Issue with '-p/--port' ~> Should be 0 .. 65535")
             except ValueError as valE:
               cliProblems.add(&"Issue with '-p/--port' ~> {valE.name}: {valE.msg}")
           else:
-            cliProblems.add("Issue with '-p/--port' ~> ValueError: Should be an integer")
+            cliProblems.add("Issue with '-p/--port' ~> Should be an integer")
 
         of "i", "index":
           maybeIndexFile = optinput
@@ -86,22 +84,15 @@ proc config_from_cli* (osCliParams :seq[string]) :(webdevnConfig, seq[string]) =
   if not maybeConfig.oneOff:
     if maybeIndexFile == "" or maybeIndexFile == maybeConfig.indexFile:
       if not dir_contains_file(maybeConfig.basePath, maybeConfig.indexFile):
-        cliProblems.add(
-          &"Issue with '-i/--index' ~> IOError: Index file '{maybeConfig.indexFile}' not found within directory"
-        )
+        cliProblems.add(&"Issue with '-i/--index' ~> File '{maybeConfig.indexFile}' not found within directory")
     else:
       if dir_contains_file(maybeConfig.basePath, maybeIndexFile):
         maybeConfig.indexFile = maybeIndexFile
-        maybeConfig.indexFileExt = splitFile(
-          Path(maybeIndexFile)
-        ).ext.toLowerAscii().strip(chars = {'.'})
+        maybeConfig.indexFileExt = splitFile(Path(maybeIndexFile)).ext.toLowerAscii().strip(chars = {'.'})
       else:
-        cliProblems.add(
-          &"Issue with '-i/--index' ~> IOError: Index file '{maybeindexFile}' not found within directory"
-        )
+        cliProblems.add(&"Issue with '-i/--index' ~> File '{maybeindexFile}' not found within directory")
 
     # Check that port can be bound
-    #
     try:
       checkSocket = newSocket()
       checkSocket.bindAddr(Port(maybeConfig.inputPortNum))
