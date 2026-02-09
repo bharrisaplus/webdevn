@@ -3,6 +3,7 @@ from std/asyncfutures import Future, newFuture, complete
 from std/asyncmacro import `async`, `await`
 from asyncdispatch import waitFor, sleepAsync
 from std/nativesockets import `$`
+from std/strutils import join
 from std/asynchttpserver import Request,
   newAsyncHttpServer, listen, getPort, shouldAcceptRequest, acceptRequest, respond
 
@@ -32,13 +33,15 @@ proc wake_up* (wakeupMilieu :webdevnMilieu, journal :aScribe) {.async.} =
 
 when isMainModule:
   let
-    (cliConfig, cliIssues) = configFromCLi(commandLineParams())
+    userArgs = commandLineParams()
+    (cliConfig, cliIssues) = configFromCLi(userArgs)
     runScribe = webdevnScribe(cliConfig)
     laMilieu = defaultWebdevnMilieu(cliConfig)
 
   if not cliConfig.oneOff:
     if cliIssues.len > 0:
       runScribe.spam_issues(cliIssues)
+      runScribe.spam_it("cli options ~> " & userArgs.join(" "))
       runScribe.closeUp()
       quit("\nwebdevn - shutting down...\n", 0)
 
