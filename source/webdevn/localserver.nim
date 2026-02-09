@@ -67,7 +67,7 @@ proc aio_for* (aioReq :Request, aioFS :webFS, aioScribe :aScribe) :Future[aioRes
       resCode = Http404
       resHeaders = stamp_headers( "html", resContent.len)
 
-  aioScribe.log_it(&"Stamped Headers: {resHeaders}\n")
+  aioScribe.log_it(&"Stamped Headers: {resHeaders}")
   aioScribe.spam_it(&"Responding to request: {aioReq.url}\n=============")
 
   return (responseCode: resCode, responseContent: resContent, responseHeaders: resHeaders)
