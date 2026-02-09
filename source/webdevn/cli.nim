@@ -43,7 +43,7 @@ proc config_from_cli* (osCliParams :seq[string]) :(webdevnConfig, seq[string]) =
     maybeIndexFile: string
     checkSocket: Socket
 
-  for optkind, optarg, optinput in getopt(cmdline = osCliParams, shortNoVal = {'v', 'l', 'V', 'h'}, longNoVal = @["verbose", "log", "help", "version"]):
+  for optkind, optarg, optinput in getopt(cmdline = osCliParams, shortNoVal = {'v', 'l', 'f', 'z', 'V', 'h'}, longNoVal = @["verbose", "logfile", "forbidlogserve", "zero", "help", "version"]):
     if optkind == cmdArgument or optkind == cmdEnd:
       continue
     else: # cmdShortOption and cmdLongOption
