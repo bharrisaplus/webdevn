@@ -7,7 +7,7 @@ from asyncdispatch import waitFor
 from std/tables import `[]`
 from std/strutils import startsWith, endsWith, splitWhitespace, join
 
-import ../../source/webdevn/[type_defs, localserver]
+import ../../source/webdevn/[type_defs, scribe, localserver]
 
 let quietLoserSpecScribe = mockScribe()
 

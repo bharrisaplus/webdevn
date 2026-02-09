@@ -4,7 +4,7 @@ from std/uri import parseUri
 from asyncdispatch import waitFor
 from std/strutils import startsWith, endsWith, unindent, splitWhitespace, join
 
-import ../../source/webdevn/[type_defs, utils]
+import ../../source/webdevn/[type_defs, scribe, utils]
 
 
 let quietUtilSpecScribe = mockScribe()
