@@ -7,7 +7,7 @@ import ../../source/webdevn/[type_defs, scribe, localserver]
 
 
 let
-  scribeWebdevnConfig = defaultWebdevnConfig()
+  scribeWebdevnConfig = defaultBluePrint()
   scribeWebdevnMilieu = webdevnMilieu(scribeWebdevnConfig)
   scribeUri = parseUri("http://localhost:54321/")
   scribePath = Path("./spec/appa/has_index")

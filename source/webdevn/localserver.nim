@@ -19,7 +19,7 @@ type Milieu* = object
   listenPort :Port
   anyAddr :bool
 
-proc webdevnMilieu* (someConfig :webdevnConfig) :Milieu =
+proc webdevnMilieu* (someConfig :BluePrint) :Milieu =
   return Milieu(
     virtualFS: webdevnFS(someConfig),
     listenPort: Port(someConfig.inputPortNum),

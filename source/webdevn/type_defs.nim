@@ -31,7 +31,7 @@ const
 
 
 # Startup config / POST check
-type webdevnConfig* = object
+type BluePrint* = object
   basePath* :Path
   inputPortNum* :int
   indexFile* :string
@@ -68,8 +68,8 @@ type AIOResponse* = tuple
 
 # Helpers
 
-proc defaultWebdevnConfig* :webdevnConfig =
-  return webdevnConfig(
+proc defaultBluePrint* :BluePrint =
+  return BluePrint(
     basePath: getCurrentDir(),
     inputPortNum: 0,
     indexFile: "index.html",
@@ -77,7 +77,7 @@ proc defaultWebdevnConfig* :webdevnConfig =
   )
 
 
-proc webdevnFS* (someConfig :webdevnConfig) :WebFS =
+proc webdevnFS* (someConfig :BluePrint) :WebFS =
   return WebFS(
     docRoot: someConfig.basePath,
     docIndex: someConfig.indexFile,

@@ -10,10 +10,10 @@ from std/nativesockets import Port
 import type_defs, meta, scribe, utils
 
 
-proc config_from_cli* (osCliParams :seq[string]) :(webdevnConfig, seq[string]) =
+proc config_from_cli* (osCliParams :seq[string]) :(BluePrint, seq[string]) =
   var
     cliProblems: seq[string]
-    maybeConfig = defaultWebdevnConfig()
+    maybeConfig = defaultBluePrint()
 
   var
     maybeIndexFile: string

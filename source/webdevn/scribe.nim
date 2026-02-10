@@ -23,7 +23,7 @@ type
   fScribe* = ref object of aScribe
     captured_msgs* :seq[string]
 
-proc webdevnScribe* (appConfig :webdevnConfig) :rScribe =
+proc webdevnScribe* (appConfig :BluePrint) :rScribe =
   let appScribe = rScribe(
     willYap: not appConfig.inSilence,
     willWrite: appConfig.logFile
