@@ -15,21 +15,15 @@ import ../../source/webdevn/[type_defs, scribe, localserver]
 
 let quietLoserSpecScribe = mockScribe()
 
-proc loserSpecWebDevnConfig (lBasePath :string, lIndexfile :string = "index.html") :webdevnConfig =
-  return webdevnConfig(
+proc loserSpecMilieu (lBasePath = "./spec/appa/has_index", lIndexfile = "index.html", lNoServLog = false, lPort = 0, lZero = false) :webdevnMilieu =
+  return defaultWebdevnMilieu(webdevnConfig(
     basePath: absolutePath(Path(lBasePath)),
-    inputPortNum: 0,
     indexFile: lIndexfile,
     indexFileExt: "html",
-    inSilence: true,
-    zeroHost: false
-  )
-
-
-proc loserRequest (loserUri :Uri) :Request =
-  return Request(
-    url: loserUri
-  )
+    logForbidServe: lNoServLog,
+    inputPortNum: lPort,
+    zeroHost: lZero
+  ))
 
 
 suite "LocalServer_BS":
@@ -55,11 +49,11 @@ suite "LocalServer_BS":
     let
       swearUrl_1 = parseUri("http://localhost:54321/")
       swearUrl_2 = parseUri("http://localhost:54321/main.css")
-      swearFS = webdevnFS(loserSpecWebDevnConfig(lBasePath = "./spec/appa/has_index"))
+      swearMilieu = loserSpecMilieu()
 
     let
-      maybeSolution_1 = waitFor localserver.aio_for(loserRequest(swearUrl_1), swearFS, quietLoserSpecScribe)
-      maybeSolution_2 = waitFor localserver.aio_for(loserRequest(swearUrl_2), swearFS, quietLoserSpecScribe)
+      maybeSolution_1 = waitFor localserver.aio_for(Request(url: swearUrl_1), swearMilieu, quietLoserSpecScribe)
+      maybeSolution_2 = waitFor localserver.aio_for(Request(url: swearUrl_2), swearMilieu, quietLoserSpecScribe)
 
     check:
       maybeSolution_1.responseCode == Http200
@@ -76,13 +70,13 @@ suite "LocalServer_BS":
   test "Should have bad response code if request is not looked up and read successfully":
     let
       swearUrl_1 = parseUri("http://localhost:54321/")
-      swearFS_1 = webdevnFS(loserSpecWebDevnConfig(lBasePath = "./spec/appa/has_no_index"))
+      swearMilieu_1 = loserSpecMilieu(lbasePath = "./spec/appa/has_no_index")
       swearUrl_2 = parseUri("http://localhost:54321/index.html")
-      swearFS_2 = webdevnFS(loserSpecWebDevnConfig(lBasePath = "./spec/appa/has_index_custom"))
+      swearMilieu_2 = loserSpecMilieu(lbasePath = "./spec/appa/has_index_custom")
 
     let
-      maybeSolution_1 = waitFor localserver.aio_for(loserRequest(swearUrl_1), swearFS_1, quietLoserSpecScribe)
-      maybeSolution_2 = waitFor localserver.aio_for(loserRequest(swearUrl_2), swearFS_2, quietLoserSpecScribe)
+      maybeSolution_1 = waitFor localserver.aio_for(Request(url: swearUrl_1), swearMilieu_1, quietLoserSpecScribe)
+      maybeSolution_2 = waitFor localserver.aio_for(Request(url: swearUrl_2), swearMilieu_2, quietLoserSpecScribe)
 
     check:
       maybeSolution_1.responseCode == Http404
@@ -90,15 +84,14 @@ suite "LocalServer_BS":
 
       maybeSolution_2.responseCode == Http404
       maybeSolution_2.responseHeaders.table["content-type"] == @["text/html; charset=utf-8"]
-  
+
+
   test "Should have good response code if request is for log and logs are included":
     let
       swearUrl = parseUri("http://localhost:54321/" & logName)
-      swearFS = webdevnFS(loserSpecWebDevnConfig(lBasePath = "./spec/appa/has_log"))
-    
-    swearFS.excludeLog = false
+      swearMilieu = loserSpecMilieu(lBasePath = "./spec/appa/has_log")
 
-    let maybeSolution = waitFor localserver.aio_for(loserRequest(swearUrl), swearFS, quietLoserSpecScribe)
+    let maybeSolution = waitFor localserver.aio_for(Request(url: swearUrl), swearMilieu, quietLoserSpecScribe)
 
     check:
       maybeSolution.responseCode == Http200
@@ -109,11 +102,9 @@ suite "LocalServer_BS":
   test "Should have bad response code if request is for log and logs are excluded":
     let
       swearUrl = parseUri("http://localhost:54321/" & logName)
-      swearFS = webdevnFS(loserSpecWebDevnConfig(lBasePath = "./spec/appa/has_log"))
-    
-    swearFS.excludeLog = true
+      swearMilieu = loserSpecMilieu(lBasePath = "./spec/appa/has_log", lNoServLog = true)
 
-    let maybeSolution = waitFor localserver.aio_for(loserRequest(swearUrl), swearFS, quietLoserSpecScribe)
+    let maybeSolution = waitFor localserver.aio_for(Request(url: swearUrl), swearMilieu, quietLoserSpecScribe)
 
     check:
       maybeSolution.responseCode == Http404
@@ -124,10 +115,7 @@ suite "LocalServer_BS":
       loserSpecServer = newAsyncHttpServer(reuseAddr = false, reusePort = false)
       swearPort = 54321
       swearAddr = "localhost"
-      swearMilieu = defaultWebdevnMilieu(webdevnConfig(
-        inputPortNum: 54321,
-        zeroHost: false
-      ))
+      swearMilieu = loserSpecMilieu(lPort = swearPort)
 
     let maybeIssues = localserver.spawn_daemon(swearMilieu, loserSpecServer, quietLoserSpecScribe)
 
@@ -158,10 +146,7 @@ suite "LocalServer_BS":
       loserSpecServer = newAsyncHttpServer(reuseAddr = false, reusePort = false)
       swearPort = 54321
       swearAddr = "localhost"
-      swearMilieu = defaultWebdevnMilieu(webdevnConfig(
-        inputPortNum: 54321,
-        zeroHost: false
-      ))
+      swearMilieu = loserSpecMilieu(lPort = swearPort)
 
     try:
       hogSocket.bindAddr(address = swearAddr, port = Port(swearPort))

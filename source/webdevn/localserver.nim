@@ -45,8 +45,8 @@ proc spawn_daemon* (envv :webdevnMilieu, netHandle :AsyncHttpServer, spawnScribe
   return spawnIssues
 
 
-proc aio_for* (aioReq :Request, aioFS :webFS, aioScribe :aScribe) :Future[aioResponse] {.async.} =
-  let lookupInfo = lookup_from_url(aioReq.url, aioFS, aioScribe)
+proc aio_for* (aioReq :Request, envv :webdevnMilieu, aioScribe :aScribe) :Future[aioResponse] {.async.} =
+  let lookupInfo = lookup_from_url(aioReq.url, envv.virtualFS, aioScribe)
 
   var
     resContent :string
