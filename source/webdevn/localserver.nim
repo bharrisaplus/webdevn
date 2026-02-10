@@ -79,14 +79,14 @@ proc aio_for* (aioReq :Request, envv :Milieu, aioScribe :aScribe) :Future[AIORes
     resContent :string
     resCode :HttpCode
     resHeaders :HttpHeaders
-    isOk :bool
+    lookupOk :bool
 
   if lookupInfo.issues.len == 0:
-    isOk = true
+    lookupOk = true
   else:
     aioScribe.log_issues(lookupInfo.issues)
 
-  if isOk:
+  if lookupOk:
     let gobbleInfo = await lazy_gobble(lookupInfo.loc, aioScribe)
 
     if gobbleInfo.issues.len == 0:
@@ -97,9 +97,9 @@ proc aio_for* (aioReq :Request, envv :Milieu, aioScribe :aScribe) :Future[AIORes
 
     else:
       aioScribe.log_issues(gobbleInfo.issues)
-      isOk = false
+      lookupOk = false
 
-  if not isOk:
+  if not lookupOk:
     if aioReq.url.path == "/favicon.ico": # Use fallback favicon
       aioScribe.log_it("Using fallback for missing favicon.ico")
       resContent = webdevnFavicon
