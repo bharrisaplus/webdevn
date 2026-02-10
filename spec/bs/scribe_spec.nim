@@ -29,7 +29,7 @@ suite "Scribe_BS":
 
 
   test "Should print milieu as expected":
-    let maybeSolution = scribe.fmt_print_milieu(scribeWebdevnMilieu)
+    let maybeSolution = $scribeWebdevnMilieu
 
     check:
       maybeSolution.startsWith("webdevn - milieu:\n")

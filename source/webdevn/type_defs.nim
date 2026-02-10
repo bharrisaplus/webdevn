@@ -1,7 +1,8 @@
-from std/paths import Path, getCurrentDir
-from std/net import Port
+from std/paths import Path, getCurrentDir, `$`
+from std/net import Port, `$`
 from std/mimetypes import MimeDB, newMimeTypes, getMimeType
 from std/httpcore import HttpHeaders, HttpCode
+from std/strformat import fmt
 
 
 const
@@ -101,3 +102,12 @@ proc defaultWebdevnMilieu* (someConfig :webdevnConfig) :webdevnMilieu =
     listenPort: Port(someConfig.inputPortNum),
     anyAddr: someConfig.zeroHost
   )
+
+proc `$`* (someMilieu :webdevnMilieu) :string =
+  return fmt"""
+webdevn - milieu:
+  - docRoot => {someMilieu.virtualFS.docRoot}
+  - docIndex => {someMilieu.virtualFS.docIndex}
+  - docIndexExt => {someMilieu.virtualFS.docIndexExt}
+  - listenPort => {someMilieu.listenPort}
+"""

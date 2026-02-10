@@ -1,7 +1,6 @@
 from std/paths import Path, getCurrentDir, parentDir, `$`
 from std/strformat import fmt, `&`
 from std/strutils import join
-from std/nativesockets import `$`
 from std/uri import Uri, `$`
 from std/syncio import File, fmAppend, close, write, flushFile
 from std/times import now, format
@@ -57,16 +56,6 @@ webdevn - issue(s) [{stuff.len}]:
 """
 
 
-proc fmt_print_milieu* (thingy :webdevnMilieu) :string =
-  return fmt"""
-webdevn - milieu:
-  - docRoot => {thingy.virtualFS.docRoot}
-  - docIndex => {thingy.virtualFS.docIndex}
-  - docIndexExt => {thingy.virtualFS.docIndexExt}
-  - listenPort => {thingy.listenPort}
-"""
-
-
 proc fmt_print_lookup* (req :Uri, mPath, dRoot :Path) :string =
   return fmt"""
 webdevn - request lookup:
@@ -114,9 +103,9 @@ proc log_issues* (scribo :aScribe, logStuff :seq[string]) =
 proc log_milieu* (scribo :aScribe, logThingy :webdevnMilieu) =
   if scribo.willYap:
     if scribo of rScribe:
-      scribo.scribe_inner(fmt_print_milieu(logThingy))
+      scribo.scribe_inner($logThingy)
     if scribo of fScribe:
-      fScribe(scribo).captured_msgs.add(fmt_print_milieu(logThingy))
+      fScribe(scribo).captured_msgs.add($logThingy)
 
 
 proc log_lookup* (scribo :aScribe, logReq :Uri, logMPath, logDRoot :Path) =
@@ -146,9 +135,9 @@ proc spam_issues* (scribo :aScribe, spamStuff :seq[string]) =
 
 proc spam_milieu* (scribo :aScribe, spamThingy :webdevnMilieu) =
   if scribo of rScribe:
-    scribo.scribe_inner(fmt_print_milieu(spamThingy))
+    scribo.scribe_inner($spamThingy)
   if scribo of fScribe:
-    fScribe(scribo).captured_msgs.add(fmt_print_milieu(spamThingy))
+    fScribe(scribo).captured_msgs.add($spamThingy)
 
 
 proc spam_it* (scribo :aScribe, spamItBeing :string) =
