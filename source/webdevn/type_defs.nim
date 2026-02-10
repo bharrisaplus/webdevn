@@ -60,7 +60,7 @@ type gobbleResult* = tuple
   contents :string
   issues :seq[string]
 
-type aioResponse* = tuple
+type AIOResponse* = tuple
   responseCode :HttpCode
   responseContent :string
   responseHeaders :HttpHeaders
