@@ -4,6 +4,7 @@ from std/strutils import join
 from std/uri import Uri, `$`
 from std/syncio import File, fmAppend, close, write, flushFile
 from std/times import now, format
+from std/deques import Deque, initDeque, len, popFirst, addLast, items, clear
 
 import type_defs
 
@@ -16,6 +17,8 @@ type
     willYap :bool
     willWrite :bool
     writeHandle :File
+    willExpose :bool
+    recentWrites :Deque[string]
 
   # Real logger used in app
   rScribe* = ref object of aScribe
@@ -24,22 +27,28 @@ type
     captured_msgs* :seq[string]
 
 proc webdevnScribe* (appConfig :BluePrint) :rScribe =
-  let appScribe = rScribe(
+  let scribo = rScribe(
     willYap: not appConfig.inSilence,
     willWrite: appConfig.logFile
   )
 
-  if not open(appScribe.writeHandle, &"{appConfig.basePath}/{logName}", fmAppend):
-    appScribe.willWrite = false
-    echo "webdevn - Could not open log file"
+  if scribo.willWrite:
+    if not appConfig.logForbidServe:
+      scribo.willExpose = true
+      scribo.recentWrites = initDeque[string](logLinesToKeep)
 
-  return appScribe
+    if not open(scribo.writeHandle, &"{appConfig.basePath}/{logName}", fmAppend):
+      scribo.willWrite = false
+      echo "webdevn - Could not open log file"
+
+  return scribo
 
 
-proc mockScribe* (verbose :bool = false, toFile :bool = false) :fScribe =
+proc mockScribe* (verbose :bool = false, toFile :bool = false, doRecent :bool = false) :fScribe =
   return fScribe(
     willYap: verbose,
-    willWrite: toFile
+    willWrite: toFile,
+    willExpose: doRecent
   )
 
 
@@ -73,24 +82,42 @@ proc fmt_print_it* (itBeing :string) :string =
 
 
 # General print to screen
-
 proc print_it* (printItBeing :string) =
   echo fmt_print_it(printItBeing)
 
 
-# Called with aScribe or children; writing to console or file with respect to cli flag
+# Writing to console or file with respect to cli flag
 
 proc write_log (scribo :aScribe, writeMsg :string) =
   if scribo.willWrite:
+    let frmtdMsg = "[" & now().format("HH:mm:ss") & "]: " & writeMsg
+
     try:
-      scribo.writeHandle.write("[" & now().format("HH:mm:ss") & "]: " & writeMsg & "\n")
+      scribo.writeHandle.write(frmtdMsg & "\n")
       scribo.writeHandle.flushFile()
     except IOError as ioE:
       echo &"Issue writing to log file:\n    {ioE.name}: {ioE.msg}"
 
+    if scribo.willExpose:
+      if scribo.recentWrites.len >= logLinesToKeep:
+        discard scribo.recentWrites.popFirst()
+
+      scribo.recentWrites.addLast(frmtdMsg)
+
+
+proc peek_log* (scribo :aScribe) :string =
+  var peekBlob = ""
+
+  for logLine in scribo.recentWrites:
+    peekBlob.add(logLine & "\n")
+
+  return peekBlob
+
+
 proc scribe_inner (scribo :aScribe, scribeMsg :string) =
   echo scribeMsg
   scribo.write_log(scribeMsg)
+
 
 proc log_issues* (scribo :aScribe, logStuff :seq[string]) =
   if scribo.willYap:
@@ -132,8 +159,11 @@ proc spam_it* (scribo :aScribe, spamItBeing :string) =
     fScribe(scribo).captured_msgs.add(fmt_print_it(spamItBeing))
 
 
+# Shutdown and clearout
 proc o66* (scribo :aScribe) =
   scribo.spam_it("webdevn - shutting down...")
 
   if scribo.willWrite:
+    if scribo.willExpose:
+      scribo.recentWrites.clear()
     scribo.writeHandle.close()

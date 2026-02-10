@@ -10,6 +10,8 @@ const
   ]
   # How many ms to wait when server is busy
   napTime* :int = 500
+  # Number of recent logs to save for readout when log is requested/served
+  logLinesToKeep* :int = 50
   # Single instance for getting the mime type on each request
   mimeLookup* :MimeDB = newMimeTypes()
   notFoundContent* :string = "<h2 style=\"justify-self:center\">404: Not Found</h2>"
