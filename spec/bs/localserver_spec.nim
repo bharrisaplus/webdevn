@@ -15,8 +15,8 @@ import ../../source/webdevn/[type_defs, scribe, localserver]
 
 let quietLoserSpecScribe = mockScribe()
 
-proc loserSpecMilieu (lBasePath = "./spec/appa/has_index", lIndexfile = "index.html", lNoServLog = false, lPort = 0, lZero = false) :webdevnMilieu =
-  return defaultWebdevnMilieu(webdevnConfig(
+proc loserSpecMilieu (lBasePath = "./spec/appa/has_index", lIndexfile = "index.html", lNoServLog = false, lPort = 0, lZero = false) :milieu =
+  return webdevnMilieu(webdevnConfig(
     basePath: absolutePath(Path(lBasePath)),
     indexFile: lIndexfile,
     indexFileExt: "html",

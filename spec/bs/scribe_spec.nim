@@ -3,12 +3,12 @@ from std/paths import Path
 from std/uri import parseUri
 from std/strutils import startsWith, endsWith, contains
 
-import ../../source/webdevn/[type_defs, scribe]
+import ../../source/webdevn/[type_defs, scribe, localserver]
 
 
 let
   scribeWebdevnConfig = defaultWebdevnConfig()
-  scribeWebdevnMilieu = defaultWebdevnMilieu(scribeWebdevnConfig)
+  scribeWebdevnMilieu = webdevnMilieu(scribeWebdevnConfig)
   scribeUri = parseUri("http://localhost:54321/")
   scribePath = Path("./spec/appa/has_index")
 
@@ -58,21 +58,19 @@ suite "Scribe_BS":
     let yapScribe = mockScribe(verbose = true)
 
     yapScribe.log_issues(@["Something smells", "There's a snake in my boot"])
-    yapScribe.log_milieu(scribeWebdevnMilieu)
     yapScribe.log_lookup(scribeUri, logMPath = scribePath, logDRoot = scribePath)
-    yapScribe.log_it("Just some text")
+    yapScribe.log_it($scribeWebdevnMilieu)
 
     check:
-      yapScribe.captured_msgs.len == 4
+      yapScribe.captured_msgs.len == 3
 
 
   test "Should not log when yap is false":
     let yapScribe = mockScribe()
 
     yapScribe.log_issues(@["Something doesn't smells", "There's not a snake in my boot"])
-    yapScribe.log_milieu(scribeWebdevnMilieu)
     yapScribe.log_lookup(scribeUri, logMPath = scribePath, logDRoot = scribePath)
-    yapScribe.log_it("Not just some text")
+    yapScribe.log_it($scribeWebdevnMilieu)
 
     check:
       yapScribe.captured_msgs.len == 0
@@ -82,8 +80,7 @@ suite "Scribe_BS":
     let yapScribe = mockScribe(verbose = true)
 
     yapScribe.spam_issues(@["Something smells spammy", "There's a snake in my spam"])
-    yapScribe.spam_milieu(scribeWebdevnMilieu)
-    yapScribe.spam_it("Just some spam")
+    yapScribe.spam_it($scribeWebdevnMilieu)
 
     check:
-      yapScribe.captured_msgs.len == 3
+      yapScribe.captured_msgs.len == 2

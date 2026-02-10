@@ -13,7 +13,7 @@ import type_defs, meta, scribe, utils
 proc config_from_cli* (osCliParams :seq[string]) :(webdevnConfig, seq[string]) =
   var
     cliProblems: seq[string]
-    maybeConfig = defaultwebdevnConfig()
+    maybeConfig = defaultWebdevnConfig()
 
   var
     maybeIndexFile: string

@@ -100,14 +100,6 @@ proc log_issues* (scribo :aScribe, logStuff :seq[string]) =
       fScribe(scribo).captured_msgs.add(fmt_print_issues(logStuff))
 
 
-proc log_milieu* (scribo :aScribe, logThingy :webdevnMilieu) =
-  if scribo.willYap:
-    if scribo of rScribe:
-      scribo.scribe_inner($logThingy)
-    if scribo of fScribe:
-      fScribe(scribo).captured_msgs.add($logThingy)
-
-
 proc log_lookup* (scribo :aScribe, logReq :Uri, logMPath, logDRoot :Path) =
   if scribo.willYap:
     if scribo of rScribe:
@@ -131,13 +123,6 @@ proc spam_issues* (scribo :aScribe, spamStuff :seq[string]) =
     scribo.scribe_inner(fmt_print_issues(spamStuff))
   if scribo of fScribe:
     fScribe(scribo).captured_msgs.add(fmt_print_issues(spamStuff))
-
-
-proc spam_milieu* (scribo :aScribe, spamThingy :webdevnMilieu) =
-  if scribo of rScribe:
-    scribo.scribe_inner($spamThingy)
-  if scribo of fScribe:
-    fScribe(scribo).captured_msgs.add($spamThingy)
 
 
 proc spam_it* (scribo :aScribe, spamItBeing :string) =

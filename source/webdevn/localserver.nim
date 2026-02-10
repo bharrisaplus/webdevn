@@ -3,12 +3,39 @@ from std/asyncfutures import Future, newFuture, complete
 from std/asyncmacro import `async`, `await`
 from std/strutils import startsWith, endsWith
 from std/times import now, utc, format
-from std/strformat import `&`
+from std/strformat import fmt, `&`
 from std/nativesockets import `$`
+from std/net import Port, `$`
 from std/httpcore import HttpHeaders, HttpCode, Http200, Http404, newHttpHeaders, `$`
 from std/asynchttpserver import AsyncHttpServer, Request, listen, getPort
 
 import meta, type_defs, scribe, utils
+
+
+# Runtime environment
+
+type milieu* = object
+  virtualFS :webFS
+  listenPort :Port
+  anyAddr :bool
+
+proc webdevnMilieu* (someConfig :webdevnConfig) :milieu =
+  return milieu(
+    virtualFS: webdevnFS(someConfig),
+    listenPort: Port(someConfig.inputPortNum),
+    anyAddr: someConfig.zeroHost
+  )
+
+
+proc `$`* (someMilieu :milieu) :string =
+  return fmt"""
+webdevn - milieu:
+  - docRoot => {someMilieu.virtualFS.docRoot}
+  - docIndex => {someMilieu.virtualFS.docIndex}
+  - docIndexExt => {someMilieu.virtualFS.docIndexExt}
+  - listenPort => {someMilieu.listenPort}
+"""
+
 
 
 proc stamp_headers* (fileExt :string, fileLen :int) :HttpHeaders =
@@ -29,7 +56,7 @@ proc stamp_headers* (fileExt :string, fileLen :int) :HttpHeaders =
   })
 
 
-proc spawn_daemon* (envv :webdevnMilieu, netHandle :AsyncHttpServer, spawnScribe :aScribe) :seq[string] =
+proc spawn_daemon* (envv :milieu, netHandle :AsyncHttpServer, spawnScribe :aScribe) :seq[string] =
   let listenAddress = if envv.anyAddr: "0.0.0.0" else: "localhost"
   var spawnIssues :seq[string] = @[]
 
@@ -45,7 +72,7 @@ proc spawn_daemon* (envv :webdevnMilieu, netHandle :AsyncHttpServer, spawnScribe
   return spawnIssues
 
 
-proc aio_for* (aioReq :Request, envv :webdevnMilieu, aioScribe :aScribe) :Future[aioResponse] {.async.} =
+proc aio_for* (aioReq :Request, envv :milieu, aioScribe :aScribe) :Future[aioResponse] {.async.} =
   let lookupInfo = lookup_from_url(aioReq.url, envv.virtualFS, aioScribe)
 
   var

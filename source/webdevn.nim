@@ -8,7 +8,7 @@ from std/asynchttpserver import Request, newAsyncHttpServer, shouldAcceptRequest
 import webdevn/[type_defs, scribe, cli, localserver]
 
 
-proc wake_up (wakeupMilieu :webdevnMilieu, journal :aScribe) {.async.} =
+proc wake_up (wakeupMilieu :milieu, journal :aScribe) {.async.} =
   let innerDaemon = newAsyncHttpServer(reuseAddr = false, reusePort = false)
   var wakeupIssues :seq[string] = @[]
 
@@ -36,7 +36,7 @@ when isMainModule:
     userArgs = commandLineParams()
     (cliConfig, cliIssues) = configFromCLi(userArgs)
     runScribe = webdevnScribe(cliConfig)
-    laMilieu = defaultWebdevnMilieu(cliConfig)
+    laMilieu = webdevnMilieu(cliConfig)
 
   if not cliConfig.oneOff:
     if cliIssues.len > 0:
@@ -47,11 +47,11 @@ when isMainModule:
 
     setControlCHook(proc() {.noconv.} =
       echo "" # To not be interrupted by SIGINT message
-      runScribe.log_milieu(laMilieu)
+      runScribe.log_it($laMilieu)
       runScribe.o66()
       quit(0)
     )
 
-    runScribe.spam_milieu(laMilieu)
+    runScribe.spam_it($laMilieu)
 
     waitFor wake_up(laMilieu, runScribe)
