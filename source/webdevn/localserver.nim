@@ -14,20 +14,20 @@ import meta, type_defs, scribe, utils
 
 # Runtime environment
 
-type milieu* = object
+type Milieu* = object
   virtualFS :webFS
   listenPort :Port
   anyAddr :bool
 
-proc webdevnMilieu* (someConfig :webdevnConfig) :milieu =
-  return milieu(
+proc webdevnMilieu* (someConfig :webdevnConfig) :Milieu =
+  return Milieu(
     virtualFS: webdevnFS(someConfig),
     listenPort: Port(someConfig.inputPortNum),
     anyAddr: someConfig.zeroHost
   )
 
 
-proc `$`* (someMilieu :milieu) :string =
+proc `$`* (someMilieu :Milieu) :string =
   return fmt"""
 webdevn - milieu:
   - docRoot => {someMilieu.virtualFS.docRoot}
@@ -56,7 +56,7 @@ proc stamp_headers* (fileExt :string, fileLen :int) :HttpHeaders =
   })
 
 
-proc spawn_daemon* (envv :milieu, netHandle :AsyncHttpServer, spawnScribe :aScribe) :seq[string] =
+proc spawn_daemon* (envv :Milieu, netHandle :AsyncHttpServer, spawnScribe :aScribe) :seq[string] =
   let listenAddress = if envv.anyAddr: "0.0.0.0" else: "localhost"
   var spawnIssues :seq[string] = @[]
 
@@ -72,7 +72,7 @@ proc spawn_daemon* (envv :milieu, netHandle :AsyncHttpServer, spawnScribe :aScri
   return spawnIssues
 
 
-proc aio_for* (aioReq :Request, envv :milieu, aioScribe :aScribe) :Future[aioResponse] {.async.} =
+proc aio_for* (aioReq :Request, envv :Milieu, aioScribe :aScribe) :Future[aioResponse] {.async.} =
   let lookupInfo = lookup_from_url(aioReq.url, envv.virtualFS, aioScribe)
 
   var

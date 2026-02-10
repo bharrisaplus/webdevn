@@ -8,7 +8,7 @@ from std/asynchttpserver import Request, newAsyncHttpServer, shouldAcceptRequest
 import webdevn/[type_defs, scribe, cli, localserver]
 
 
-proc wake_up (wakeupMilieu :milieu, journal :aScribe) {.async.} =
+proc wake_up (wakeupMilieu :Milieu, journal :aScribe) {.async.} =
   let innerDaemon = newAsyncHttpServer(reuseAddr = false, reusePort = false)
   var wakeupIssues :seq[string] = @[]
 
