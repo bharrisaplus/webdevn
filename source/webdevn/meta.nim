@@ -35,3 +35,33 @@ OPTION:
     [-V, --version]: Current build version
     [-h, --help]: This message
 """
+
+  # Minimal page when serving logs 
+  logWebDocStart* :string = """
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      html { height:100%; width:100%; }
+      body { width:calc(100% - 16px);height:calc(100% - 16px);margin:8px;overflow:hidden; }
+      #container { max-height:99%;max-width:99%;overflow:hidden; }
+      #container h2 { margin-top:0; }
+      #logview { font-size:14px;min-width:200px;min-height:300px;height:99%;width:99%;max-width:99%;max-height:99%;background-color:grey;overflow:scroll;resize:both; }
+      #logview pre { margin:0;padding:4.5px; }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <h2>webdevn.log</h2>
+      <div id="logview">
+        <pre>
+          <code>
+"""
+  logWebDocEnd* :string = """
+          </code>
+        </pre>
+      </div>
+    </div>
+  </body>
+</html>
+"""

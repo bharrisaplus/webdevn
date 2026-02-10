@@ -87,17 +87,23 @@ proc aio_for* (aioReq :Request, envv :Milieu, aioScribe :aScribe) :Future[AIORes
     aioScribe.log_issues(lookupInfo.issues)
 
   if lookupOk:
-    let gobbleInfo = await lazy_gobble(lookupInfo.loc, aioScribe)
-
-    if gobbleInfo.issues.len == 0:
-      aioScribe.log_it(&"(200) Found File")
-      resContent = gobbleInfo.contents
+    if aioReq.url.path == "/" & logName:
+      aioScribe.log_it(&"(200) Found webdevn.log")
+      resContent = logWebDocStart & aioScribe.peek_log() & logWebDocEnd
       resCode = Http200
-      resHeaders = stamp_headers(lookupInfo.ext, resContent.len)
-
+      resHeaders = stamp_headers("html", resContent.len)
     else:
-      aioScribe.log_issues(gobbleInfo.issues)
-      lookupOk = false
+      let gobbleInfo = await lazy_gobble(lookupInfo.loc, aioScribe)
+
+      if gobbleInfo.issues.len == 0:
+        aioScribe.log_it(&"(200) Found File")
+        resContent = gobbleInfo.contents
+        resCode = Http200
+        resHeaders = stamp_headers(lookupInfo.ext, resContent.len)
+
+      else:
+        aioScribe.log_issues(gobbleInfo.issues)
+        lookupOk = false
 
   if not lookupOk:
     if aioReq.url.path == "/favicon.ico": # Use fallback favicon
