@@ -51,12 +51,12 @@ type webFS* = ref object
   docIndexExt* :string
   excludeLog* :bool
 
-type lookupResult* = tuple
+type LookupResult* = tuple
   loc :string
   ext :string
   issues :seq[string]
 
-type gobbleResult* = tuple
+type GobbleResult* = tuple
   contents :string
   issues :seq[string]
 
