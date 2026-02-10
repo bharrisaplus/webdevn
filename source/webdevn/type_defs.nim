@@ -1,5 +1,5 @@
 from std/paths import Path, getCurrentDir
-from std/mimetypes import MimeDB, newMimeTypes, getMimeType
+from std/mimetypes import MimeDB, newMimeTypes
 from std/httpcore import HttpHeaders, HttpCode
 
 
@@ -26,7 +26,7 @@ const
     "Server": "webdevn; nim/c",
     "Cache-Control": "public, max-age=300",
     "X-Content-Type-Options": "nosniff",
-    "Content-Type": mimeLookup.getMimeType("ico")
+    "Content-Type": "image/x-icon"
   }
 
 
