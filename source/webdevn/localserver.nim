@@ -15,7 +15,7 @@ import meta, type_defs, scribe, utils
 # Runtime environment
 
 type Milieu* = object
-  virtualFS :webFS
+  virtualFS :WebFS
   listenPort :Port
   anyAddr :bool
 

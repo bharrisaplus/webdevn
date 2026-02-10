@@ -9,8 +9,8 @@ import ../../source/webdevn/[type_defs, scribe, utils]
 
 let quietUtilSpecScribe = mockScribe()
 
-proc utilSpecFS (drStr :string) :webFS =
-  return webFS(
+proc utilSpecFS (drStr :string) :WebFS =
+  return WebFS(
     docRoot: absolutePath(Path(drStr)),
     docIndex: "index.html",
     docIndexExt: "html"

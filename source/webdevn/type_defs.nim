@@ -45,7 +45,7 @@ type webdevnConfig* = object
 
 # Misc
 
-type webFS* = ref object
+type WebFS* = ref object
   docRoot* :Path
   docIndex* :string
   docIndexExt* :string
@@ -77,8 +77,8 @@ proc defaultWebdevnConfig* :webdevnConfig =
   )
 
 
-proc webdevnFS* (someConfig :webdevnConfig) :webFS =
-  return webFS(
+proc webdevnFS* (someConfig :webdevnConfig) :WebFS =
+  return WebFS(
     docRoot: someConfig.basePath,
     docIndex: someConfig.indexFile,
     docIndexExt: someConfig.indexFileExt,

@@ -20,7 +20,7 @@ proc dir_contains_file* (maybeParent :Path, maybeChild :string) :bool =
   return fileExists(maybeParent / maybeChildPath)
 
 
-proc lookup_from_url* (reqUrl :Uri, lookupFS :webFS, urlScribe :aScribe) :LookupResult =
+proc lookup_from_url* (reqUrl :Uri, lookupFS :WebFS, urlScribe :aScribe) :LookupResult =
   let urlPath = reqUrl.path.strip(chars ={'/'})
   var
     maybeFilePath :Path
