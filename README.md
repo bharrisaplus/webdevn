@@ -59,12 +59,12 @@ __Linux/Mac__:
 
 Make sure to install `shasum` if it's not already installed
 ```
-# Verify the hash matches the "webdevn.zip.sha256"
+# Verify the hash matches contents of "webdevn.zip.sha256"
 $ shasum -a 256 "webdevn.zip"
 
 $ unzip "webdevn.zip"
 
-# Verify the hash matches the "webdevn.sha256"
+# Verify the hash matches contents "webdevn.sha256"
 $ shasum -a 256 "webdevn"
 ```
 __Windows__:
@@ -72,13 +72,13 @@ __Windows__:
 `certutil` should come with the system
 ```
 > certutil -hashfile "webdevn.zip" SHA256
-:: Verify the hash matches the "webdevn.zip.sha256" then continue
+:: Verify the hash matches contents of "webdevn.zip.sha256" then continue
 
 > tar -xf "webdevn.zip"
 :: Extract
 
 > certutil -hashfile "webdevn.exe" SHA256
-:: Verify the hash matches the webdevn.exe.sha256
+:: Verify the hash matches contents of webdevn.exe.sha256
 ```
 
 
