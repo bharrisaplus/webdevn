@@ -6,6 +6,8 @@ const
   appDepVersions* {.strdefine.} :string = "unknown"
   # Since read at compile time the path is relative to this file not where run from
   webdevnFavicon* :string = staticRead("assets/img/raster/icon.ico")
+  logWebDocStart* :string = staticRead("assets/doc/log_page_template/begin.html_part")
+  logWebDocEnd* :string = staticRead("assets/doc/log_page_template/end.html_part")
   appVersionBlurb* = 
     if (appDepVersions == "unknown" or appDepVersions.isEmptyOrWhitespace()):
       "version: " & appVersion
@@ -36,34 +38,4 @@ OPTION[-SHORT:, --LONG]:
     [-h, --help]: This message
 
 For short options like '-d:' be sure to include the no space after the colon
-"""
-
-  # Minimal page when serving logs (maybe read from file at compile time instead)
-  logWebDocStart* :string = """
-<!DOCTYPE html>
-<html>
-  <head>
-    <style>
-      html { height:100%; width:100%; }
-      body { width:calc(100% - 16px);height:calc(100% - 16px);margin:8px;overflow:hidden; }
-      #container { max-height:99%;max-width:99%;overflow:hidden; }
-      #container h2 { margin-top:0; }
-      #logview { font-size:14px;min-width:200px;min-height:300px;height:99%;width:99%;max-width:99%;max-height:99%;background-color:grey;overflow:scroll;resize:both; }
-      #logview pre { margin:0;padding:4.5px; }
-    </style>
-  </head>
-  <body>
-    <div id="container">
-      <h2>webdevn.log</h2>
-      <div id="logview">
-        <pre>
-          <code>
-"""
-  logWebDocEnd* :string = """
-          </code>
-        </pre>
-      </div>
-    </div>
-  </body>
-</html>
 """
