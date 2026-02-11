@@ -36,7 +36,7 @@ OPTION:
     [-h, --help]: This message
 """
 
-  # Minimal page when serving logs 
+  # Minimal page when serving logs (maybe read from file at compile time instead)
   logWebDocStart* :string = """
 <!DOCTYPE html>
 <html>

@@ -5,6 +5,7 @@ from std/httpcore import HttpHeaders, HttpCode
 
 const
   # Cli options that don't need input
+  # See shortNoVal and longNoVal in call to getopt from cli.nim
   flagOpts* :seq[string] = @[
     "v", "verbose", "l", "logfile", "f", "forbidlogserve", "z", "zero", "V", "version", "h", "help"
   ]
