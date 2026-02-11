@@ -161,26 +161,26 @@ proc o66* (scribo :aScribe) =
     scribo.writeHandle.close()
 
 
-# For testing 
+# Only for testing 
+when not defined(release):
+  proc mockScribe* (verbose :bool = false, toFile :string = "", doRecent :bool = false) :fScribe =
+    let scribo = fScribe(
+      willYap: verbose,
+      willExpose: doRecent
+    )
 
-proc mockScribe* (verbose :bool = false, toFile :string = "", doRecent :bool = false) :fScribe =
-  let scribo = fScribe(
-    willYap: verbose,
-    willExpose: doRecent
-  )
+    if toFile != "":
+      scribo.willWrite = true
+      if not open(scribo.writeHandle, toFile, fmAppend):
+        scribo.willWrite = false
+        echo "Couldn't open log file"
 
-  if toFile != "":
-    scribo.willWrite = true
-    if not open(scribo.writeHandle, toFile, fmAppend):
-      scribo.willWrite = false
-      echo "Couldn't open log file"
+    if doRecent:
+      scribo.willExpose = true
+      scribo.recentWrites = initDeque[string](5)
 
-  if doRecent:
-    scribo.willExpose = true
-    scribo.recentWrites = initDeque[string](5)
-
-  return scribo
+    return scribo
 
 
-proc mock_write_log* (scribo :fScribe, mockWriteMsg :string) =
-  scribo.write_log(mockWriteMsg)
+  proc mock_write_log* (scribo :fScribe, mockWriteMsg :string) =
+    scribo.write_log(mockWriteMsg)
