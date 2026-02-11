@@ -2,6 +2,7 @@ import std/unittest
 from std/paths import Path
 from std/uri import parseUri
 from std/strutils import startsWith, endsWith, contains
+from std/syncio import writeFile, readFile
 
 import ../../source/webdevn/[type_defs, scribe, localserver]
 
@@ -11,6 +12,12 @@ let
   scribeWebdevnMilieu = webdevnMilieu(scribeWebdevnConfig)
   scribeUri = parseUri("http://localhost:54321/")
   scribePath = Path("./spec/appa/has_index")
+  scribeLog = scribePath.string & "/webdevn.log"
+
+# Clear log file
+proc clearLogFile (logFilePathStr :string = scribeLog) =
+  writeFile(filename = logFilePathStr, content = "")
+
 
 suite "Scribe_BS":
 
@@ -84,3 +91,70 @@ suite "Scribe_BS":
 
     check:
       yapScribe.captured_msgs.len == 2
+
+
+  test "Should append to log file when write is true":
+    let
+      swearMsg = "Something Something"
+      swearScribe = mockScribe(toFile = scribeLog)
+
+    clearLogFile()
+    swearScribe.mock_write_log(swearMsg)
+    swearScribe.o66()
+
+    let maybeSolution = readFile(scribeLog)
+
+    clearLogFile()
+
+    check:
+      maybeSolution.endsWith(swearMsg & "\n")
+
+
+  test "Should not append to log file when write is false":
+    let
+      swearMsg = "Something Something"
+      swearScribe = mockScribe()
+
+    clearLogFile()
+    swearScribe.mock_write_log(swearMsg)
+
+    let maybeSolution = readFile(scribeLog)
+
+    clearLogFile()
+
+    check:
+      maybeSolution == ""
+
+
+  test "Should have previous logs when keep recent is true":
+    let
+      swearMsg = "Something Something"
+      swearScribe = mockScribe(toFile = scribeLog, doRecent = true)
+
+    clearLogFile()
+    swearScribe.mock_write_log(swearMsg)
+
+    let maybeSolution = swearScribe.peek_log()
+
+    swearScribe.o66()
+    clearLogFile()
+
+    check:
+      maybeSolution.endsWith(swearMsg & "\n")
+
+
+  test "Should not have previous logs when keep recent is false":
+    let
+      swearMsg = "Something Something"
+      swearScribe = mockScribe()
+
+    clearLogFile()
+    swearScribe.mock_write_log(swearMsg)
+
+    let maybeSolution = swearScribe.peek_log()
+
+    swearScribe.o66()
+    clearLogFile()
+
+    check:
+      maybeSolution == ""

@@ -10,7 +10,7 @@ from std/os import sleep
 from std/net import Port, newSocket, connect, close, bindAddr
 from std/strformat import `&`
 
-import ../../source/webdevn/[type_defs, scribe, localserver]
+import ../../source/webdevn/[type_defs, meta, scribe, localserver]
 
 
 let quietLoserSpecScribe = mockScribe()
@@ -95,8 +95,8 @@ suite "LocalServer_BS":
 
     check:
       maybeSolution.responseCode == Http200
-      maybeSolution.responseHeaders.table["content-type"] == @["text/plain; charset=utf-8"]
-      maybeSolution.responseContent == "webdevn - Starting up server"
+      maybeSolution.responseHeaders.table["content-type"] == @["text/html; charset=utf-8"]
+      maybeSolution.responseContent == logWebDocStart & logWebDocEnd
 
 
   test "Should have bad response code if request is for log and logs are excluded":

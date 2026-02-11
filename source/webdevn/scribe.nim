@@ -2,7 +2,7 @@ from std/paths import Path, getCurrentDir, parentDir, `$`
 from std/strformat import fmt, `&`
 from std/strutils import join
 from std/uri import Uri, `$`
-from std/syncio import File, fmAppend, close, write, flushFile
+from std/syncio import File, open, fmAppend, close, write, flushFile
 from std/times import now, format
 from std/deques import Deque, initDeque, len, popFirst, addLast, items, clear
 
@@ -42,14 +42,6 @@ proc webdevnScribe* (appConfig :BluePrint) :rScribe =
       echo "webdevn - Could not open log file"
 
   return scribo
-
-
-proc mockScribe* (verbose :bool = false, toFile :bool = false, doRecent :bool = false) :fScribe =
-  return fScribe(
-    willYap: verbose,
-    willWrite: toFile,
-    willExpose: doRecent
-  )
 
 
 # Getting the text together
@@ -167,3 +159,28 @@ proc o66* (scribo :aScribe) =
     if scribo.willExpose:
       scribo.recentWrites.clear()
     scribo.writeHandle.close()
+
+
+# For testing 
+
+proc mockScribe* (verbose :bool = false, toFile :string = "", doRecent :bool = false) :fScribe =
+  let scribo = fScribe(
+    willYap: verbose,
+    willExpose: doRecent
+  )
+
+  if toFile != "":
+    scribo.willWrite = true
+    if not open(scribo.writeHandle, toFile, fmAppend):
+      scribo.willWrite = false
+      echo "Couldn't open log file"
+
+  if doRecent:
+    scribo.willExpose = true
+    scribo.recentWrites = initDeque[string](5)
+
+  return scribo
+
+
+proc mock_write_log* (scribo :fScribe, mockWriteMsg :string) =
+  scribo.write_log(mockWriteMsg)
