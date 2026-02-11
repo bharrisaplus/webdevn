@@ -25,9 +25,9 @@ Usage:
 OPTION[-SHORT:, --LONG]:
   What to serve:
     [-d:PATH, --dir PATH]: Location of the base folder from which to find requested files
-    [-i:PATTERN, --index PATTERN]: Filename (with ext) of the file served when a directory is requested
+    [-i:FILENAME, --index FILENAME]: Name (with ext) of the file served when a directory is requested
   How to serve:
-    [-p:54321, --port 54321]: Number for which port to listen for requests on
+    [-p:PORT, --port PORT]: Number for which port to listen for requests on
     [-z, --zero]: Use the any address 0.0.0.0 (instead of explicit localhost)
   How to yap:
     [-v, --verbose]: Extra information about the server as it runs will be logged
@@ -36,6 +36,11 @@ OPTION[-SHORT:, --LONG]:
   One-off Prints:
     [-V, --version]: Current build version
     [-h, --help]: This message
+
+DEFAULTS:
+  PATH: ./
+  FILENAME: index.html
+  PORT: 0
 
 For short options like '-d:' be sure to include no space after the colon
 """
