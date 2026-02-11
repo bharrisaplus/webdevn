@@ -35,17 +35,8 @@ suite "Scribe_BS":
       maybeSolution_2.endsWith("  * Here we go again\n")
 
 
-  test "Should print milieu as expected":
-    let maybeSolution = $scribeWebdevnMilieu
-
-    check:
-      maybeSolution.startsWith("webdevn - milieu:\n")
-      maybeSolution.contains("  - docIndex => index.html\n")
-      maybeSolution.endsWith("  - listenPort => 0\n")
-
-
   test "Should print lookup as expected":
-    let maybeSolution = fmt_print_lookup(scribeUri, mPath = scribePath, dRoot = scribePath)
+    let maybeSolution = scribe.fmt_print_lookup(scribeUri, mPath = scribePath, dRoot = scribePath)
 
     check:
       maybeSolution.startsWith("webdevn - request lookup:\n")
@@ -54,11 +45,12 @@ suite "Scribe_BS":
 
 
   test "Should print it as expected":
-    let maybeSolution = scribe.fmt_print_it("A log for log's sake")
+    let maybeSolution = scribe.fmt_print_it($scribeWebdevnMilieu)
 
     check:
-      maybeSolution.startsWith("webdevn - ")
-      maybeSolution.endsWith("sake")
+      maybeSolution.startsWith("webdevn - milieu:\n")
+      maybeSolution.contains("  - docIndex => index.html\n")
+      maybeSolution.endsWith("  - listenPort => 0\n")
 
 
   test "Should log when yap is true":

@@ -29,7 +29,7 @@ proc webdevnMilieu* (someConfig :BluePrint) :Milieu =
 
 proc `$`* (someMilieu :Milieu) :string =
   return fmt"""
-webdevn - milieu:
+milieu:
   - docRoot => {someMilieu.virtualFS.docRoot}
   - docIndex => {someMilieu.virtualFS.docIndex}
   - docIndexExt => {someMilieu.virtualFS.docIndexExt}
