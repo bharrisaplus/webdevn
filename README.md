@@ -1,15 +1,35 @@
 # (Web)(dev)(n)im
 A web server for local development. Inspired by [webfs](https://linux.bytesex.org/misc/webfs.html).
 
-## Usage
+* [Usage](#usage)
+  - [Examples](#examples)
+  - [Help Output](#help-output)
+* [Obtaining](#obtaining)
+  - [Building](#building)
 
-### Help Ouput
+## Usage
+### Examples
+serving the current folder
+```
+$ webdevn
+```
+
+serving a specific folder on a specific port
+```
+$ webdevn -d:./path/to/some/dir -p:54321
+```
+
+serving the current folder with an index file not named `index.html`
+```
+$ webdevn -i:custom_index.html
+```
+
+### Help Output
 ```
 $ webdevn -h
 webdevn - source lang: nim
 package manager: nimble
 binary version: 0.0.0
-dependency versions: zip@0.3.1
 
 Usage:
   webdevn [OPTION]
@@ -33,8 +53,37 @@ For short options like '-d:' be sure to include no space after the colon
 ```
 
 ## Obtaining
+Pre-built binaries for supported platforms are available __only__ via [GitHub Releases](https://github.com/bharrisaplus/webdevn/releases). To verify a download:
+
+__Linux/Mac__:
+
+Make sure to install `shasum` if it's not already installed
+```
+# Verify the hash matches the "webdevn.zip.sha256"
+$ shasum -a 256 "webdevn.zip"
+
+$ unzip "webdevn.zip"
+
+# Verify the hash matches the "webdevn.sha256"
+$ shasum -a 256 "webdevn"
+```
+__Windows__:
+
+`certutil` should come with the system
+```
+> certutil -hashfile "webdevn.zip" SHA256
+:: Verify the hash matches the "webdevn.zip.sha256" then continue
+
+> tar -xf "webdevn.zip"
+:: Extract
+
+> certutil -hashfile "webdevn.exe" SHA256
+:: Verify the hash matches the webdevn.exe.sha256
+```
+
 
 ### Building
-This project is built using [nim](https://nim-lang.org/) + [nimble](https://nim-lang.github.io/nimble/) and [Task](https://taskfile.dev/). To compile the code yourself refer to the Task file for your platform.
-
-For example to build for windows-64bit look at [`build/win/_tasks.yml`](build/win/_tasks.yml) and there (should) be a section/task called `rear-x64`; the contents of the `cmds` section will contain the steps for building. Variables common to all builds are defined in the toplevel [`Taskfile.yml`](Taskfile.yml) and also [`build/_tasks.yml`](build/_tasks.yml)
+To generate a binary be sure to have [nim](https://nim-lang.org/) installed. Then run the following to compile the code:
+```
+nim c -d:release --outDir:./ ./source/webdevn.nim
+```
