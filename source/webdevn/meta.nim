@@ -20,7 +20,7 @@ package manager: nimble
 Usage:
   webdevn [OPTION]
 
-OPTION:
+OPTION[-SHORT:, --LONG]:
   What to serve:
     [-d:PATH, --dir PATH]: Location of the base folder from which to find requested files
     [-i:PATTERN, --index PATTERN]: Filename (with ext) of the file served when a directory is requested
@@ -34,6 +34,8 @@ OPTION:
   One-off Prints:
     [-V, --version]: Current build version
     [-h, --help]: This message
+
+For short options like '-d:' be sure to include the no space after the colon
 """
 
   # Minimal page when serving logs (maybe read from file at compile time instead)

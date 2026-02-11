@@ -14,7 +14,7 @@ dependency versions: zip@0.3.1
 Usage:
   webdevn [OPTION]
 
-OPTION:
+OPTION[-SHORT:, --LONG]:
   What to serve:
     [-d:PATH, --dir PATH]: Location of the base folder from which to find requested files
     [-i:PATTERN, --index PATTERN]: Filename (with ext) of the file served when a directory is requested
@@ -28,6 +28,8 @@ OPTION:
   One-off Prints:
     [-V, --version]: Current build version
     [-h, --help]: This message
+
+For short options like '-d:' be sure to include the no space after the colon
 ```
 
 ## Obtaining
