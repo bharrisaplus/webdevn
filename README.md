@@ -29,7 +29,7 @@ OPTION[-SHORT:, --LONG]:
     [-V, --version]: Current build version
     [-h, --help]: This message
 
-For short options like '-d:' be sure to include the no space after the colon
+For short options like '-d:' be sure to include no space after the colon
 ```
 
 ## Obtaining
