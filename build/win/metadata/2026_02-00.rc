@@ -15,12 +15,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName",      "Barry Tools"
             VALUE "FileDescription",  "Local server for local development"
-            VALUE "FileVersion",      "2026_02-01"
+            VALUE "FileVersion",      "2026_02-00"
             VALUE "InternalName",     "webdevn"
             VALUE "LegalCopyright",   "Licensed under GPLv3. Copyright 2026 Barry Harris."
             VALUE "OriginalFilename", "webdevn.exe"
             VALUE "ProductName",      "Webdevn"
-            VALUE "ProductVersion",   "2026_02-01"
+            VALUE "ProductVersion",   "2026_02-00"
         END
     END
     BLOCK "VarFileInfo"

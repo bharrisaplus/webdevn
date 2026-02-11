@@ -3,7 +3,7 @@
 //  FILEVERSION, PRODUCTVERSION
 //  VALUE "FileVersion"
 //  VALUE "ProductVersion"
-//  
+//
 
 1 ICON "icon.ico"
 
@@ -24,7 +24,7 @@ BEGIN
             VALUE "FileDescription",  "Webdevn: Local server for local development"
             VALUE "FileVersion",      "0.0.0"
             VALUE "InternalName",     "webdevn"
-            VALUE "LegalCopyright",   "© 2026 BarryHarris"
+            VALUE "LegalCopyright",   "Licensed under GPLv3. Copyright 2026 Barry Harris."
             VALUE "OriginalFilename", "webdevn.exe"
             VALUE "ProductName",      "Webdevn"
             VALUE "ProductVersion",   "0.0.0"
