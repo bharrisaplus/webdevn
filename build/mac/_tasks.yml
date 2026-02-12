@@ -24,7 +24,7 @@ tasks:
     vars:
       BUILD_OUTPUT_FILE: '{{.MAC_DARWIN_BUILD_OUTPUT_DIR}}/webdevn'
       BUILD_OUTPUT_FILE_CHKSUM: '{{.BUILD_OUTPUT_FILE}}.sha256'
-      BUILD_OUTPUT_ZIP: '{{.MAC_DARWIN_BUILD_OUTPUT_DIR}}/webdevn_winx64-$VERSION_NUM.zip'
+      BUILD_OUTPUT_ZIP: '{{.MAC_DARWIN_BUILD_OUTPUT_DIR}}/webdevn_macdarwinx64-$VERSION_NUM.zip'
       BUILD_OUTPUT_ZIP_CHKSUM: '{{.BUILD_OUTPUT_ZIP}}.sha256'
     cmds:
       - task: rear-darwinx64
