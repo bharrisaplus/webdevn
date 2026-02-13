@@ -18,6 +18,9 @@ vars:
   GNU_X64_BUILD_OUTPUT_DIR:
     "{{.BUILD_ROOT}}/gnu/x64"
 
+  GNU_ARM64_BUILD_OUTPUT_DIR:
+    "{{.BUILD_ROOT}}/gnu/arm64"
+
   MAC_DARWIN_BUILD_OUTPUT_DIR:
     "{{.BUILD_ROOT}}/mac/darwin"
 
@@ -81,3 +84,18 @@ tasks:
     aliases: [sweep-gnu]
     cmds:
       - task: gnubuild:sweep-x64
+
+  rear-gnubuildarm64:
+    aliases: [rear-gnuarm]
+    cmds:
+      - task: gnubuild:rear-arm64
+
+  wrap-gnubuildarm64:
+    aliases: [wrap-gnuarm]
+    cmds:
+      - task: gnubuild:wrap-arm64
+
+  sweep-gnubuildarm64:
+    aliases: [sweep-gnuarm]
+    cmds:
+      - task: gnubuild:sweep-arm64
