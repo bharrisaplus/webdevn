@@ -62,9 +62,9 @@ Pre-built binaries for supported platforms are available __only__ via [GitHub Re
 
 __Linux/Mac__:
 
-Make sure to install `shasum` if it's not already installed
+Make sure to install `shasum` and `zip` if not already installed
 ```
-# Verify the hash matches contents of "webdevn.zip.sha256"
+# Verify the hash matches contents within "checksums.txt"
 $ shasum -a 256 "webdevn.zip"
 
 $ unzip "webdevn.zip"
@@ -72,12 +72,13 @@ $ unzip "webdevn.zip"
 # Verify the hash matches contents "webdevn.sha256"
 $ shasum -a 256 "webdevn"
 ```
+
 __Windows__:
 
-`certutil` should come with the system
+`certutil` and `tar` should come with the system
 ```
 > certutil -hashfile "webdevn.zip" SHA256
-:: Verify the hash matches contents of "webdevn.zip.sha256" then continue
+:: Verify the hash matches contents within "checksums.txt" then continue
 
 > tar -xf "webdevn.zip"
 :: Extract
@@ -90,5 +91,6 @@ __Windows__:
 ### Building
 To generate a binary be sure to have [nim](https://nim-lang.org/) installed. Then run the following to compile the code:
 ```
-nim c -d:release --outDir:./ ./source/webdevn.nim
+$ nim c -d:release --outDir:./ ./source/webdevn.nim
 ```
+There should now be a `webdevn` or `webdevn.exe` in the project root that you can then place somewhere accessible from the PATH.
