@@ -47,7 +47,7 @@ tasks:
       BUILD_OUTPUT_ZIP: '{{.GNU_ARM64_BUILD_OUTPUT_DIR}}/webdevn_gnuarm64-$VERSION_NUM.zip'
       BUILD_OUTPUT_ZIP_CHKSUM: '{{.BUILD_OUTPUT_ZIP}}.sha256'
     cmds:
-      - task: rear-x64
+      - task: rear-arm64
       - shasum -a 256 {{.BUILD_OUTPUT_FILE}} | cut -d ' ' -f 1 > {{.BUILD_OUTPUT_FILE_CHKSUM}}
       - zip -j {{.BUILD_OUTPUT_ZIP}} {{.BUILD_OUTPUT_FILE}} {{.BUILD_OUTPUT_FILE_CHKSUM}}
       - shasum -a 256 {{.BUILD_OUTPUT_ZIP}} | cut -d ' ' -f 1 > {{.BUILD_OUTPUT_ZIP_CHKSUM}}
