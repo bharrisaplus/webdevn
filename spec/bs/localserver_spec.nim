@@ -2,7 +2,7 @@ import std/unittest
 from std/paths import Path, absolutePath
 from std/uri import Uri, parseUri
 from std/asynchttpserver import Request, newAsyncHttpServer, close, listen
-from std/httpcore import HttpHeaders, Http200, Http404, `==`
+from std/httpcore import HttpHeaders, Http200, Http404, newHttpHeaders, `==`
 from asyncdispatch import waitFor
 from std/tables import `[]`
 from std/strutils import startsWith, endsWith, splitWhitespace, join
@@ -13,7 +13,9 @@ from std/strformat import `&`
 import ../../source/webdevn/[type_defs, meta, scribe, localserver]
 
 
-let quietLoserSpecScribe = mockScribe()
+let
+  quietLoserSpecScribe = mockScribe()
+  mockHtmlAcceptHeader = newHttpHeaders(@{"Accept": "text/plain,text/html"})
 
 proc loserSpecMilieu (lBasePath = "./spec/appa/has_index", lIndexfile = "index.html", lNoServLog = false, lPort = 0, lZero = false) :Milieu =
   return webdevnMilieu(BluePrint(
@@ -75,8 +77,12 @@ suite "LocalServer_BS":
       swearMilieu_2 = loserSpecMilieu(lbasePath = "./spec/appa/has_index_custom")
 
     let
-      maybeSolution_1 = waitFor localserver.aio_for(Request(url: swearUrl_1), swearMilieu_1, quietLoserSpecScribe)
-      maybeSolution_2 = waitFor localserver.aio_for(Request(url: swearUrl_2), swearMilieu_2, quietLoserSpecScribe)
+      maybeSolution_1 = waitFor localserver.aio_for(
+        Request(url: swearUrl_1, headers: mockHtmlAcceptHeader), swearMilieu_1, quietLoserSpecScribe
+      )
+      maybeSolution_2 = waitFor localserver.aio_for(
+        Request(url: swearUrl_2, headers: mockHtmlAcceptHeader), swearMilieu_2, quietLoserSpecScribe
+      )
 
     check:
       maybeSolution_1.responseCode == Http404
@@ -104,7 +110,9 @@ suite "LocalServer_BS":
       swearUrl = parseUri("http://localhost:54321/" & logName)
       swearMilieu = loserSpecMilieu(lBasePath = "./spec/appa/has_log", lNoServLog = true)
 
-    let maybeSolution = waitFor localserver.aio_for(Request(url: swearUrl), swearMilieu, quietLoserSpecScribe)
+    let maybeSolution = waitFor localserver.aio_for(
+      Request(url: swearUrl, headers: mockHtmlAcceptHeader), swearMilieu, quietLoserSpecScribe
+    )
 
     check:
       maybeSolution.responseCode == Http404
