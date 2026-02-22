@@ -1,11 +1,13 @@
-from std/mimetypes import getMimeType
+from std/mimetypes import getMimeType, getExt
 from std/asyncfutures import Future, newFuture, complete
 from std/asyncmacro import `async`, `await`
-from std/strutils import startsWith, endsWith
+from std/strutils import startsWith, endsWith, contains, split
+from std/sequtils import anyIt
 from std/times import now, utc, format
 from std/strformat import fmt, `&`
 from std/nativesockets import `$`
 from std/net import Port, `$`
+from std/tables import hasKey, `[]`
 from std/httpcore import HttpHeaders, HttpCode, Http200, Http404, newHttpHeaders, `$`
 from std/asynchttpserver import AsyncHttpServer, Request, listen, getPort
 
@@ -113,9 +115,22 @@ proc aio_for* (aioReq :Request, envv :Milieu, aioScribe :aScribe) :Future[AIORes
       resHeaders = newHttpHeaders(faviconHeaderBits)
     else:
       aioScribe.log_it(&"(404) File Not Found")
-      resContent = notFoundContent
       resCode = Http404
-      resHeaders = stamp_headers( "html", resContent.len)
+
+      if aioReq.headers != nil and aioReq.headers.table.hasKey("accept"):
+        if aioReq.headers.table["accept"].anyIt("text/html" in it):
+          resContent = notFoundMarkup
+          resHeaders = stamp_headers("html", resContent.len)
+        elif aioReq.headers.table["accept"].anyIt("text/plain" in it):
+          resContent = notFoundPlain
+          resHeaders = stamp_headers("txt", resContent.len)
+        else:
+          resContent = ""
+          resHeaders = stamp_headers(mimeLookup.getExt(aioReq.headers.table["accept"][0].split(",")[0]), 0)
+      else:
+        resContent = ""
+        resHeaders = stamp_headers("txt", 0)
+
 
   aioScribe.log_it(&"Stamped Headers: {resHeaders}")
   aioScribe.spam_it(&"Responding to request: {aioReq.url}\n=============")
